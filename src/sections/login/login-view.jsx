@@ -1,20 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+// import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
+// import AlertTitle from '@mui/material/AlertTitle';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { useRouter } from 'src/routes/hooks';
+// import { useRouter } from 'src/routes/hooks';
 
+import { useNavigate } from 'react-router-dom';
+
+import { authAPI } from 'src/api/APIs';
 import { bgGradient } from 'src/theme/css';
 
 import Logo from 'src/components/logo';
@@ -25,23 +30,68 @@ import Iconify from 'src/components/iconify';
 export default function LoginView() {
   const theme = useTheme();
 
-  const router = useRouter();
+  // const router = useRouter();
+  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [loginData, setLoginData] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({});
 
-  const handleClick = () => {
-    router.push('/dashboard');
+  useEffect(() => {
+    if (localStorage.getItem('token')) navigate('/');
+  }, [navigate]);
+
+  const validateForm = () => {
+    const errs = {};
+
+    // Validate email
+    if (!loginData.email.trim()) {
+      errs.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(loginData.email)) {
+      errs.email = 'Invalid email address';
+    }
+
+    // Validate password
+    if (!loginData.password.trim()) {
+      errs.password = 'Password is required';
+    }
+
+    setErrors(() => errs);
+    return Object.keys(errs).length === 0; // Return true if there are no errors
+  };
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      const res = await authAPI('login', 'POST', loginData);
+      if (!res.error) {
+        localStorage.setItem('token', res.token);
+        navigate('/');
+      }
+    }
   };
 
   const renderForm = (
-    <>
+    <Box component="form">
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextField
+          value={loginData.email}
+          onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+          name="email"
+          label="Email address"
+          type="email"
+          error={errors.email}
+          helperText={errors.email}
+        />
 
         <TextField
           name="password"
           label="Password"
           type={showPassword ? 'text' : 'password'}
+          value={loginData.password}
+          onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+          error={errors.password}
+          helperText={errors.password}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -70,7 +120,7 @@ export default function LoginView() {
       >
         Login
       </LoadingButton>
-    </>
+    </Box>
   );
 
   return (
