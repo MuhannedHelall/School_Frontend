@@ -1,17 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { UserView } from 'src/sections/user/view';
+import { DepartmentView } from 'src/sections/department/view';
 
 // ----------------------------------------------------------------------
 
-export default function UserPage() {
+export default function DepartmentPage() {
   return (
     <>
       <Helmet>
-        <title> Admins </title>
+        <title> Departments </title>
       </Helmet>
 
-      <UserView />
+      <DepartmentView />
     </>
   );
 }
