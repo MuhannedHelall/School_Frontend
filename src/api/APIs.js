@@ -1,7 +1,7 @@
-const TOKEN = localStorage.getItem('token');
 const URL = 'http://127.0.0.1:8000/api/';
 
 export async function authAPI(path, methodName = 'GET', bodyData = {}) {
+  const TOKEN = localStorage.getItem('token');
   let methodData = {
     method: methodName,
     headers: {

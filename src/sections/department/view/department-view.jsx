@@ -33,8 +33,8 @@ export default function DepartmentView() {
     setOpenAddDialog(true);
   };
 
-  const handleClickOpenUpdate = (idValue, title) => {
-    setUpdateDeptData({ ...updateDeptData, id: idValue, name: title });
+  const handleClickOpenUpdate = (dept) => {
+    setUpdateDeptData({ ...updateDeptData, ...dept });
     setOpenUpdateDialog(true);
   };
 

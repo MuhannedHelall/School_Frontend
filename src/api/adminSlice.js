@@ -10,48 +10,28 @@ const initialState = {
 };
 
 export const addAdmin = createAsyncThunk('admin/addAdmin', async (admin) => {
-  try {
-    const response = await authAPI('admin', 'POST', admin);
-    return response;
-  } catch (error) {
-    return error.response;
-  }
+  const response = await authAPI('admin', 'POST', admin);
+  return response;
 });
 
 export const getAdmins = createAsyncThunk('admin/getAdmins', async () => {
-  try {
-    const response = await authAPI('admin');
-    return response;
-  } catch (error) {
-    return error.response;
-  }
+  const response = await authAPI('admin');
+  return response;
 });
 
 export const getAdmin = createAsyncThunk('admin/getAdmin', async (id) => {
-  try {
-    const response = await authAPI(`admin/${id}`);
-    return response;
-  } catch (error) {
-    return error.response;
-  }
+  const response = await authAPI(`admin/${id}`);
+  return response;
 });
 
 export const updateAdmin = createAsyncThunk('admin/updateAdmin', async (admin) => {
-  try {
-    const response = await authAPI(`admin/${admin.id}`, 'PUT', admin);
-    return response;
-  } catch (error) {
-    return error.response;
-  }
+  const response = await authAPI(`admin/${admin.id}`, 'PUT', admin);
+  return response;
 });
 
 export const deleteAdmin = createAsyncThunk('admin/deleteAdmin', async (admin) => {
-  try {
-    const response = await authAPI(`admin/${admin.id}`, 'DELETE');
-    return response;
-  } catch (error) {
-    return error.response;
-  }
+  const response = await authAPI(`admin/${admin.id}`, 'DELETE');
+  return response;
 });
 
 const adminSlice = createSlice({
@@ -81,8 +61,6 @@ const adminSlice = createSlice({
       .addCase(getAdmins.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
-        state.error = '';
-        state.message = '';
       })
       .addCase(getAdmins.rejected, (state, action) => {
         state.loading = false;

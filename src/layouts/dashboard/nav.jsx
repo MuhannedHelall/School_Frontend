@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -14,8 +15,6 @@ import { RouterLink } from 'src/routes/components';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
-import { account } from 'src/_mock/account';
-
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
 
@@ -26,9 +25,9 @@ import navConfig from './config-navigation';
 
 export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
-
   const upLg = useResponsive('up', 'lg');
-
+  const loginInfo = useSelector((state) => state.auth);
+  
   useEffect(() => {
     if (openNav) {
       onCloseNav();
@@ -49,13 +48,21 @@ export default function Nav({ openNav, onCloseNav }) {
         bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
       }}
     >
-      <Avatar src={account.photoURL} alt="photoURL" />
+      <Avatar
+        src={
+          loginInfo.data.employee.user.avatar_url ||
+          `/assets/images/avatars/avatar_${loginInfo.data.employee.id % 25}.jpg`
+        }
+        alt={loginInfo.data.employee.user.name}
+      >
+        {loginInfo.data.employee.user.name.charAt(0).toUpperCase()}
+      </Avatar>
 
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{account.displayName}</Typography>
+        <Typography variant="subtitle2">{loginInfo.data.employee.user.name}</Typography>
 
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {account.role}
+        <Typography variant="body2" textTransform="uppercase" sx={{ color: 'text.secondary' }}>
+          {loginInfo.data.employee.role}
         </Typography>
       </Box>
     </Box>
@@ -68,7 +75,6 @@ export default function Nav({ openNav, onCloseNav }) {
       ))}
     </Stack>
   );
-
 
   const renderContent = (
     <Scrollbar
@@ -88,7 +94,6 @@ export default function Nav({ openNav, onCloseNav }) {
       {renderMenu}
 
       <Box sx={{ flexGrow: 1 }} />
-
     </Scrollbar>
   );
 

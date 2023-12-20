@@ -33,17 +33,11 @@ export default function AdminView() {
   const departments = useSelector((state) => state.department.data);
 
   const [page, setPage] = useState(0);
-
   const [order, setOrder] = useState('asc');
-
   const [selected, setSelected] = useState([]);
-
   const [orderBy, setOrderBy] = useState('name');
-
   const [filterName, setFilterName] = useState('');
-
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
   const [open, setOpen] = useState(false);
 
   useEffect(() => {

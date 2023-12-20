@@ -1,34 +1,39 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import Popover from '@mui/material/Popover';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 
+import { changeLanguage } from 'src/api/LangSlice';
+
 // ----------------------------------------------------------------------
 
-const LANGS = [
+const LANGUAGES = [
   {
     value: 'en',
     label: 'English',
     icon: '/assets/icons/ic_flag_en.svg',
+    direction: 'ltr',
   },
   {
-    value: 'de',
-    label: 'German',
-    icon: '/assets/icons/ic_flag_de.svg',
-  },
-  {
-    value: 'fr',
-    label: 'French',
-    icon: '/assets/icons/ic_flag_fr.svg',
+    value: 'ar',
+    label: 'العربية',
+    icon: '/assets/icons/ic_flag_ar.svg',
+    direction: 'rtl',
   },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function LanguagePopover() {
+  const dispatch = useDispatch();
+  const LANG = useSelector((state) => state.language);
   const [open, setOpen] = useState(null);
+
+  const lang = LANGUAGES.filter((lan) => lan.value !== LANG.value);
+  // const lang = LANGS;
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -36,6 +41,11 @@ export default function LanguagePopover() {
 
   const handleClose = () => {
     setOpen(null);
+  };
+
+  const handleLang = (val) => {
+    handleClose();
+    dispatch(changeLanguage(val));
   };
 
   return (
@@ -50,7 +60,7 @@ export default function LanguagePopover() {
           }),
         }}
       >
-        <img src={LANGS[0].icon} alt={LANGS[0].label} />
+        <img src={LANG.icon} alt={LANG.label} />
       </IconButton>
 
       <Popover
@@ -68,11 +78,11 @@ export default function LanguagePopover() {
           },
         }}
       >
-        {LANGS.map((option) => (
+        {lang.map((option) => (
           <MenuItem
             key={option.value}
-            selected={option.value === LANGS[0].value}
-            onClick={() => handleClose()}
+            selected={option.value === LANG.value}
+            onClick={() => handleLang(option)}
             sx={{ typography: 'body2', py: 1 }}
           >
             <Box component="img" alt={option.label} src={option.icon} sx={{ width: 28, mr: 2 }} />

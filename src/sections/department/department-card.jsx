@@ -21,6 +21,16 @@ import SvgColor from 'src/components/svg-color';
 // ----------------------------------------------------------------------
 
 export default function DepartmentCard({ dept, onUpdate }) {
+  const {
+    id,
+    name = 'Not Found',
+    numOfAdmins = 0,
+    numOfEmps = 0,
+    mainAdmin = {
+      name: 'Not Assigned',
+      avatarUrl: `/assets/images/avatars/avatar_${id % 25}.jpg`,
+    },
+  } = dept;
   const dispatch = useDispatch();
   const colors = [
     'red',
@@ -34,16 +44,6 @@ export default function DepartmentCard({ dept, onUpdate }) {
     'aqua',
     'orange',
   ];
-  const {
-    id,
-    name = 'Not Found',
-    numOfAdmins = 0,
-    numOfEmps = 0,
-    mainAdmin = {
-      name: 'Not Assigned',
-      avatarUrl: `/assets/images/avatars/avatar_${(id + 1) % 25}.jpg`,
-    },
-  } = dept;
 
   const handleDelete = () => {
     dispatch(deleteDepartment(dept));
@@ -69,7 +69,7 @@ export default function DepartmentCard({ dept, onUpdate }) {
 
           <Avatar
             alt={mainAdmin.name}
-            src={mainAdmin.avatarUrl || `/assets/images/avatars/avatar_${(id + 1) % 25}.jpg`}
+            src={mainAdmin.avatarUrl || `/assets/images/avatars/avatar_${id % 25}.jpg`}
             sx={{
               position: 'absolute',
               zIndex: 9,
@@ -157,7 +157,7 @@ export default function DepartmentCard({ dept, onUpdate }) {
                     },
                   },
                 }}
-                onClick={() => onUpdate(id, name)}
+                onClick={() => onUpdate(dept)}
               >
                 <Iconify width={16} icon="mdi:pencil-outline" sx={{ mr: 0.5 }} />
                 <Typography variant="caption">update</Typography>

@@ -8,7 +8,6 @@ export const DepartmentPage = lazy(() => import('src/pages/department'));
 export const AdminPage = lazy(() => import('src/pages/admin'));
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
-// export const ProductsPage = lazy(() => import('src/pages/products'));
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +25,6 @@ export default function Router() {
         { element: <IndexPage />, index: true },
         { path: 'admins', element: <AdminPage /> },
         { path: 'departments', element: <DepartmentPage /> },
-        // { path: 'products', element: <ProductsPage /> },
       ],
     },
     {

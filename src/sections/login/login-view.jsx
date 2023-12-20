@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -15,11 +17,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
-// import { useRouter } from 'src/routes/hooks';
-
-import { useNavigate } from 'react-router-dom';
-
-import { authAPI } from 'src/api/APIs';
+import { login } from 'src/api/authSlice';
 import { bgGradient } from 'src/theme/css';
 
 import Logo from 'src/components/logo';
@@ -30,12 +28,13 @@ import Iconify from 'src/components/iconify';
 export default function LoginView() {
   const theme = useTheme();
 
-  // const router = useRouter();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
+  const loginInfo = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (localStorage.getItem('token')) navigate('/');
@@ -63,9 +62,10 @@ export default function LoginView() {
   const handleClick = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      const res = await authAPI('login', 'POST', loginData);
-      if (!res.error) {
-        localStorage.setItem('token', res.token);
+      const res = await dispatch(login(loginData));
+      if (res.meta.requestStatus === 'fulfilled') {
+        localStorage.setItem('token', res.payload.token);
+        localStorage.setItem('user', JSON.stringify(res.payload));
         navigate('/');
       }
     }
@@ -117,6 +117,7 @@ export default function LoginView() {
         variant="contained"
         color="inherit"
         onClick={handleClick}
+        loading={loginInfo.loading}
       >
         Login
       </LoadingButton>
@@ -149,7 +150,7 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">Sign in to Minimal</Typography>
+          <Typography variant="h4">Sign in to Eduplat !</Typography>
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             Don’t have an account?
