@@ -15,6 +15,11 @@ export const login = createAsyncThunk('auth/login', async (loginData) => {
   return response;
 });
 
+export const logout = createAsyncThunk('auth/logout', async () => {
+  const response = await authAPI('logout', 'POST');
+  return response;
+});
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -30,6 +35,20 @@ const authSlice = createSlice({
         state.error = '';
       })
       .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+      });
+
+    builder
+      .addCase(logout.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.loading = false;
+        state.data = {};
+        state.error = '';
+      })
+      .addCase(logout.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
       });

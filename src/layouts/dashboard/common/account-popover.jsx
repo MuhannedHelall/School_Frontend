@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -10,6 +11,8 @@ import { alpha } from '@mui/material/styles';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+
+import { logout } from 'src/api/authSlice';
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +32,7 @@ export default function AccountPopover() {
     },
   ];
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const loginInfo = useSelector((state) => state.auth);
   const [open, setOpen] = useState(null);
@@ -46,10 +50,16 @@ export default function AccountPopover() {
     handleClose();
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/login');
+  const handleLogout = async () => {
+    const res = await dispatch(logout());
+    if (res.meta.requestStatus === 'fulfilled') {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      toast.success(res.payload.message);
+      navigate('/login');
+    } else {
+      toast.error(res.error.message);
+    }
   };
 
   return (
@@ -68,17 +78,17 @@ export default function AccountPopover() {
       >
         <Avatar
           src={
-            loginInfo.data.employee.user.avatar_url ||
-            `/assets/images/avatars/avatar_${loginInfo.data.employee.id % 26}.jpg`
+            loginInfo.data.employee?.user.avatar_url ||
+            `/assets/images/avatars/avatar_${loginInfo.data.employee?.id || 1 % 25}.jpg`
           }
-          alt={loginInfo.data.employee.user.name}
+          alt={loginInfo.data.employee?.user.name}
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {loginInfo.data.employee.user.name.charAt(0).toUpperCase()}
+          {loginInfo.data.employee?.user.name.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
 
@@ -99,10 +109,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2 }}>
           <Typography variant="subtitle2" noWrap>
-            {loginInfo.data.employee.user.name}
+            {loginInfo.data.employee?.user.name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {loginInfo.data.employee.user.email}
+            {loginInfo.data.employee?.user.email}
           </Typography>
         </Box>
 

@@ -123,6 +123,7 @@ export default function AdminView() {
 
       <Card>
         <UserTableToolbar
+          showSearch={dataFiltered.length > 1}
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
@@ -134,44 +135,48 @@ export default function AdminView() {
           </Typography>
         ) : (
           <Scrollbar>
-            <TableContainer sx={{ overflow: 'unset' }}>
-              <Table sx={{ minWidth: 800 }}>
-                <UserTableHead
-                  order={order}
-                  orderBy={orderBy}
-                  rowCount={admins.data.length}
-                  numSelected={selected.length}
-                  onRequestSort={handleSort}
-                  onSelectAllClick={handleSelectAllClick}
-                  headLabel={[
-                    { id: 'name', label: 'Name' },
-                    { id: 'department', label: 'Department' },
-                    { id: 'status', label: 'Status' },
-                    { id: 'action', label: 'Action', align: 'center' },
-                  ]}
-                />
-
-                <TableBody>
-                  {dataFiltered
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                      <UserTableRow
-                        key={row.id}
-                        admin={row}
-                        selected={selected.indexOf(row.name) !== -1}
-                        handleClick={(event) => handleClick(event, row.name)}
-                      />
-                    ))}
-
-                  <TableEmptyRows
-                    height={77}
-                    emptyRows={emptyRows(page, rowsPerPage, admins.data.length)}
+            {dataFiltered.length < 1 ? (
+              <h1 style={{ textAlign: 'center' }}>No Admins to show !</h1>
+            ) : (
+              <TableContainer sx={{ overflow: 'unset' }}>
+                <Table sx={{ minWidth: 800 }}>
+                  <UserTableHead
+                    order={order}
+                    orderBy={orderBy}
+                    rowCount={admins.data.length}
+                    numSelected={selected.length}
+                    onRequestSort={handleSort}
+                    onSelectAllClick={handleSelectAllClick}
+                    headLabel={[
+                      { id: 'name', label: 'Name' },
+                      { id: 'department', label: 'Department' },
+                      { id: 'status', label: 'Status' },
+                      { id: 'action', label: 'Action', align: 'center' },
+                    ]}
                   />
 
-                  {notFound && <TableNoData query={filterName} />}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                  <TableBody>
+                    {dataFiltered
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row) => (
+                        <UserTableRow
+                          key={row.id}
+                          admin={row}
+                          selected={selected.indexOf(row.name) !== -1}
+                          handleClick={(event) => handleClick(event, row.name)}
+                        />
+                      ))}
+
+                    <TableEmptyRows
+                      height={77}
+                      emptyRows={emptyRows(page, rowsPerPage, admins.data.length)}
+                    />
+
+                    {notFound && <TableNoData query={filterName} />}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
           </Scrollbar>
         )}
 

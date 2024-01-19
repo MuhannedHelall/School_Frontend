@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -29,10 +30,15 @@ export default function UserAddDialog({ open, setOpen }) {
   };
 
   const handleAdd = () => {
-    dispatch(addAdmin(adminData));
+    toast.promise(dispatch(addAdmin(adminData)), {
+      pending: 'Admin is being added ...',
+      success: 'Admin is added !',
+      error: 'An Error Occured !',
+    });
     dispatch(getDepartments());
     dispatch(getAdmins());
     setOpen(false);
+    setAdminData({ name: '', email: '', department_id: 1 });
   };
 
   return (

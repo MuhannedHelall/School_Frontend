@@ -27,7 +27,7 @@ export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
   const upLg = useResponsive('up', 'lg');
   const loginInfo = useSelector((state) => state.auth);
-  
+
   useEffect(() => {
     if (openNav) {
       onCloseNav();
@@ -50,19 +50,19 @@ export default function Nav({ openNav, onCloseNav }) {
     >
       <Avatar
         src={
-          loginInfo.data.employee.user.avatar_url ||
-          `/assets/images/avatars/avatar_${loginInfo.data.employee.id % 25}.jpg`
+          loginInfo.data.employee?.user.avatar_url ||
+          `/assets/images/avatars/avatar_${loginInfo.data.employee?.id || 1 % 25}.jpg`
         }
-        alt={loginInfo.data.employee.user.name}
+        alt={loginInfo.data.employee?.user.name}
       >
-        {loginInfo.data.employee.user.name.charAt(0).toUpperCase()}
+        {loginInfo.data.employee?.user.name.charAt(0).toUpperCase()}
       </Avatar>
 
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{loginInfo.data.employee.user.name}</Typography>
+        <Typography variant="subtitle2">{loginInfo.data.employee?.user.name}</Typography>
 
         <Typography variant="body2" textTransform="uppercase" sx={{ color: 'text.secondary' }}>
-          {loginInfo.data.employee.role}
+          {loginInfo.data.employee?.role}
         </Typography>
       </Box>
     </Box>

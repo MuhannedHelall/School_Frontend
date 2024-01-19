@@ -3,6 +3,8 @@ import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
 
+import Auth from './auth';
+
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const DepartmentPage = lazy(() => import('src/pages/department'));
 export const AdminPage = lazy(() => import('src/pages/admin'));
@@ -15,11 +17,13 @@ export default function Router() {
   const routes = useRoutes([
     {
       element: (
-        <DashboardLayout>
-          <Suspense>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
+        <Auth>
+          <DashboardLayout>
+            <Suspense>
+              <Outlet />
+            </Suspense>
+          </DashboardLayout>
+        </Auth>
       ),
       children: [
         { element: <IndexPage />, index: true },

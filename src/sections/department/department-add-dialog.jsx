@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -23,7 +24,12 @@ export default function DepartmentAddDialog({ open, setOpen }) {
   };
 
   const handleAdd = () => {
-    dispatch(addDepartment(deptData));
+    toast.promise(dispatch(addDepartment(deptData)), {
+      pending: 'Department is being added ...',
+      success: 'Department is added !',
+      error: 'An Error Occured !',
+    });
+    
     setOpen(false);
     setDeptData({ name: '' });
     dispatch(getDepartments());

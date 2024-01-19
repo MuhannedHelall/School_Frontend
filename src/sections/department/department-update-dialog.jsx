@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 
 import Dialog from '@mui/material/Dialog';
@@ -21,7 +22,11 @@ export default function DepartmentUpdateDialog({ open, setOpen, deptData, setDep
   };
 
   const handleUpdate = () => {
-    dispatch(updateDepartment(deptData));
+    toast.promise(dispatch(updateDepartment(deptData)), {
+      pending: 'Department is being updated ...',
+      success: 'Department is updated !',
+      error: 'An Error Occured !',
+    });
     dispatch(getDepartments());
     setOpen(false);
   };

@@ -1,7 +1,6 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 
@@ -12,15 +11,8 @@ import Header from './header';
 // ----------------------------------------------------------------------
 
 export default function DashboardLayout({ children }) {
-  const navigate = useNavigate();
-
-  const TOKEN = localStorage.getItem('token');
   const [openNav, setOpenNav] = useState(false);
   const lang = useSelector((state) => state.language);
-
-  useEffect(() => {
-    if (!TOKEN || TOKEN === undefined) navigate('/login');
-  }, [TOKEN, navigate]);
 
   return (
     <Box sx={{ direction: lang.direction }}>
@@ -37,6 +29,7 @@ export default function DashboardLayout({ children }) {
 
         <Main>{children}</Main>
       </Box>
+      
     </Box>
   );
 }

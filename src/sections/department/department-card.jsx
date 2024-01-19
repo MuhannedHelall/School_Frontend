@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 
 import Box from '@mui/material/Box';
@@ -46,7 +47,11 @@ export default function DepartmentCard({ dept, onUpdate }) {
   ];
 
   const handleDelete = () => {
-    dispatch(deleteDepartment(dept));
+    toast.promise(dispatch(deleteDepartment(dept)), {
+      pending: 'Department is being deleted ...',
+      success: 'Department is deleted !',
+      error: 'An error occured !',
+    });
     dispatch(getDepartments());
   };
 

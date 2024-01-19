@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Box } from '@mui/material';
@@ -55,7 +56,11 @@ export default function UserTableRow({ admin, selected, handleClick }) {
   };
 
   const handleDeleteRecord = () => {
-    dispatch(deleteAdmin(admin));
+    toast.promise(dispatch(deleteAdmin(admin)), {
+      pending: 'Admin is being deleted ...',
+      success: 'Admin is deleted !',
+      error: 'An Error Occured !',
+    });
     dispatch(getAdmins());
     dispatch(getDepartments());
     setAdminData({ ...adminData, status: false });
@@ -73,7 +78,11 @@ export default function UserTableRow({ admin, selected, handleClick }) {
       setEdit(false);
       return;
     }
-    dispatch(updateAdmin(adminData));
+    toast.promise(dispatch(updateAdmin(adminData)), {
+      pending: 'Admin is being updated ...',
+      success: 'Admin is updated !',
+      error: 'An Error Occured !',
+    });
     dispatch(getAdmins());
     dispatch(getDepartments());
     setEdit(false);
@@ -138,7 +147,7 @@ export default function UserTableRow({ admin, selected, handleClick }) {
               </Select>
             </FormControl>
           ) : (
-            department.name
+            department.name || <Typography color="red">Not Found</Typography>
           )}
         </TableCell>
 
