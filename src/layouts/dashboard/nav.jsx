@@ -50,30 +50,22 @@ export default function Nav({ openNav, onCloseNav }) {
     >
       <Avatar
         src={
-          loginInfo.data.employee?.user.avatar_url ||
-          `/assets/images/avatars/avatar_${loginInfo.data.employee?.id || 1 % 25}.jpg`
+          loginInfo.data?.user?.avatar_url ||
+          `/assets/images/avatars/avatar_${loginInfo.data?.user?.id || 1 % 25}.jpg`
         }
-        alt={loginInfo.data.employee?.user.name}
+        alt={loginInfo.data?.user?.name}
       >
-        {loginInfo.data.employee?.user.name.charAt(0).toUpperCase()}
+        {loginInfo.data?.user?.name.charAt(0).toUpperCase()}
       </Avatar>
 
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{loginInfo.data.employee?.user.name}</Typography>
+        <Typography variant="subtitle2">{loginInfo.data?.user?.name}</Typography>
 
         <Typography variant="body2" textTransform="uppercase" sx={{ color: 'text.secondary' }}>
-          {loginInfo.data.employee?.role}
+          {loginInfo.data?.role}
         </Typography>
       </Box>
     </Box>
-  );
-
-  const renderMenu = (
-    <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
-      {navConfig.map((item) => (
-        <NavItem key={item.title} item={item} />
-      ))}
-    </Stack>
   );
 
   const renderContent = (
@@ -91,7 +83,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
       {renderAccount}
 
-      {renderMenu}
+      <RenderMenu />
 
       <Box sx={{ flexGrow: 1 }} />
     </Scrollbar>
@@ -136,6 +128,30 @@ Nav.propTypes = {
   openNav: PropTypes.bool,
   onCloseNav: PropTypes.func,
 };
+
+// ----------------------------------------------------------------------
+
+function RenderMenu() {
+  const user = JSON.parse(localStorage.getItem('user'));
+  let navMenu = [];
+  switch (user?.role) {
+    case 'superAdmin':
+      navMenu = navConfig.super;
+      break;
+    case 'admin':
+      navMenu = navConfig.admin;
+      break;
+    default:
+      navMenu = [];
+  }
+  return (
+    <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
+      {navMenu.map((item) => (
+        <NavItem key={item.title} item={item} />
+      ))}
+    </Stack>
+  );
+}
 
 // ----------------------------------------------------------------------
 

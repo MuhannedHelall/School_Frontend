@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +18,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
+import route from 'src/routes';
 import { login } from 'src/api/authSlice';
 import { bgGradient } from 'src/theme/css';
 
@@ -34,11 +36,26 @@ export default function LoginView() {
   const [showPassword, setShowPassword] = useState(false);
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
-  const loginInfo = useSelector((state) => state.auth);
+  const { data, error, loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (localStorage.getItem('token')) navigate('/');
-  }, [navigate]);
+    if (localStorage.getItem('token')) {
+      switch (data.role) {
+        case 'superAdmin':
+          navigate(route.super.index);
+          break;
+        case 'admin':
+          navigate(route.admin.index);
+          break;
+        default:
+          navigate(route.landing);
+      }
+    }
+  }, [navigate, data.role]);
+
+  useEffect(() => {
+    toast.error(error);
+  }, [error]);
 
   const validateForm = () => {
     const errs = {};
@@ -59,14 +76,23 @@ export default function LoginView() {
     return Object.keys(errs).length === 0; // Return true if there are no errors
   };
 
-  const handleClick = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       const res = await dispatch(login(loginData));
       if (res.meta.requestStatus === 'fulfilled') {
-        localStorage.setItem('token', res.payload.token);
-        localStorage.setItem('user', JSON.stringify(res.payload));
-        navigate('/');
+        switch (res.payload.employee.role) {
+          case 'superAdmin':
+            navigate(route.super.index);
+            break;
+          case 'admin':
+            navigate(route.admin.index);
+            break;
+          default:
+            navigate(route.login);
+        }
+      } else if (res.meta.requestStatus === 'rejected') {
+        toast.error(error);
       }
     }
   };
@@ -116,8 +142,8 @@ export default function LoginView() {
         type="submit"
         variant="contained"
         color="inherit"
-        onClick={handleClick}
-        loading={loginInfo.loading}
+        onClick={handleLogin}
+        loading={loading}
       >
         Login
       </LoadingButton>

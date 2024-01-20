@@ -47,7 +47,7 @@ export default function AppView() {
               title="Admins"
               total={data.numOfAdmins}
               color="success"
-              icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
+              icon={<img alt="icon" src="/assets/icons/glass/admins.png" />}
               sx={{ display: 'flex', justifyContent: 'center' }}
             />
           </Grid>
@@ -57,7 +57,7 @@ export default function AppView() {
               title="Employees"
               total={data.numOfEmployees}
               color="info"
-              icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
+              icon={<img alt="icon" src="/assets/icons/glass/employee.png" />}
               sx={{ display: 'flex', justifyContent: 'center' }}
             />
           </Grid>
@@ -67,7 +67,7 @@ export default function AppView() {
               title="Students"
               total={data.numOfStudents}
               color="warning"
-              icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
+              icon={<img alt="icon" src="/assets/icons/glass/students.png" />}
               sx={{ display: 'flex', justifyContent: 'center' }}
             />
           </Grid>
@@ -77,7 +77,7 @@ export default function AppView() {
               title="Departments"
               total={data.numOfDepartments}
               color="error"
-              icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
+              icon={<img alt="icon" src="/assets/icons/glass/departments.png" />}
               sx={{ display: 'flex', justifyContent: 'center' }}
             />
           </Grid>

@@ -23,12 +23,14 @@ export default function AppWidgetSummary({ title, total, icon, color = 'primary'
       }}
       {...other}
     >
-      {icon && <Box sx={{ width: 64, height: 64 }}>{icon}</Box>}
+      {icon && <Box sx={{ width: 72, height: 72 }}>{icon}</Box>}
 
       <Stack spacing={0.5}>
-        <Typography variant="h4">{fShortenNumber(total)}</Typography>
+        <Typography variant="h4" textAlign="center">
+          {fShortenNumber(total)}
+        </Typography>
 
-        <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
+        <Typography variant="h6" sx={{ color: 'text.disabled' }}>
           {title}
         </Typography>
       </Stack>

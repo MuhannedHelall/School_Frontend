@@ -33,7 +33,7 @@ export default function AccountPopover() {
   ];
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  
   const loginInfo = useSelector((state) => state.auth);
   const [open, setOpen] = useState(null);
 
@@ -78,17 +78,17 @@ export default function AccountPopover() {
       >
         <Avatar
           src={
-            loginInfo.data.employee?.user.avatar_url ||
-            `/assets/images/avatars/avatar_${loginInfo.data.employee?.id || 1 % 25}.jpg`
+            loginInfo.data?.user?.avatar_url ||
+            `/assets/images/avatars/avatar_${loginInfo.data.id || 1 % 25}.jpg`
           }
-          alt={loginInfo.data.employee?.user.name}
+          alt={loginInfo.data.user?.name}
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {loginInfo.data.employee?.user.name.charAt(0).toUpperCase()}
+          {loginInfo.data.user?.name.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
 
@@ -109,10 +109,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2 }}>
           <Typography variant="subtitle2" noWrap>
-            {loginInfo.data.employee?.user.name}
+            {loginInfo.data.user?.name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {loginInfo.data.employee?.user.email}
+            {loginInfo.data.user?.email}
           </Typography>
         </Box>
 
