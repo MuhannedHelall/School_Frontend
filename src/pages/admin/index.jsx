@@ -1,5 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 
+import { AppView } from 'src/sections/admin/overview/view';
+
 function AdminIndex() {
   return (
     <>
@@ -7,7 +9,7 @@ function AdminIndex() {
         <title>Dashboard</title>
       </Helmet>
 
-      <h1>Home Dashboard</h1>
+      <AppView />
     </>
   );
 }

@@ -26,16 +26,69 @@ const navConfig = {
       icon: icon('ic_blog'),
     },
   ],
-  admin: [
+  admin: {
+    teacher: [
+      {
+        title: 'Dashboard',
+        path: route.admin.index,
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Teachers',
+        path: route.admin.emps,
+        icon: icon('ic_user'),
+      },
+      {
+        title: 'Subjects',
+        path: route.admin.subjects,
+        icon: icon('ic_blog'),
+      },
+    ],
+    student: [
+      {
+        title: 'Dashboard',
+        path: route.admin.index,
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Students',
+        path: route.admin.students,
+        icon: icon('ic_user'),
+      },
+      {
+        title: 'Classes',
+        path: route.admin.classes,
+        icon: icon('ic_cart'),
+      },
+    ],
+    employee: [
+      {
+        title: 'Dashboard',
+        path: route.admin.index,
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Employees',
+        path: route.admin.emps,
+        icon: icon('ic_user'),
+      },
+    ],
+  },
+  teacher: [
     {
       title: 'Dashboard',
-      path: route.admin.index,
+      path: route.teacher.index,
       icon: icon('ic_analytics'),
     },
     {
-      title: 'Employees',
-      path: route.admin.emps,
-      icon: icon('ic_user'),
+      title: 'Classes',
+      path: route.teacher.classes,
+      icon: icon('ic_blog'),
+    },
+    {
+      title: 'Schedule',
+      path: route.teacher.schedule,
+      icon: icon('ic_blog'),
     },
   ],
 };

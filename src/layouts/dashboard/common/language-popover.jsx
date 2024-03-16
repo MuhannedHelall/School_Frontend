@@ -6,7 +6,7 @@ import Popover from '@mui/material/Popover';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 
-import { changeLanguage } from 'src/api/LangSlice';
+import { changeLanguage } from 'src/api/languageSlice';
 
 // ----------------------------------------------------------------------
 

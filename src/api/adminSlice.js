@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { authAPI } from './APIs';
+import { authAPI, fileAPI, downloadAPI } from './APIs';
 
 const initialState = {
   loading: false,
   data: [],
   error: '',
-  message: '',
+  success: '',
 };
 
 export const addAdmin = createAsyncThunk('admin/addAdmin', async (admin) => {
@@ -34,6 +34,21 @@ export const deleteAdmin = createAsyncThunk('admin/deleteAdmin', async (admin) =
   return response;
 });
 
+export const resetPassword = createAsyncThunk('admin/resetPassword', async (id) => {
+  const response = await authAPI(`resetPassword/${id}`);
+  return response;
+});
+
+export const downloadFile = createAsyncThunk('admin/downloadFile', async () => {
+  const response = await downloadAPI('DownloadAdminTemplate', 'admin-Template.xlsx');
+  return response;
+});
+
+export const uploadFile = createAsyncThunk('admin/uploadFile', async (file) => {
+  const response = await fileAPI('importAdmin', 'POST', file);
+  return response;
+});
+
 const adminSlice = createSlice({
   name: 'admin',
   initialState,
@@ -46,12 +61,12 @@ const adminSlice = createSlice({
       .addCase(addAdmin.fulfilled, (state, action) => {
         state.loading = false;
         state.error = '';
-        state.message = action.payload || 'Added Successfully !';
+        state.success = action.payload.success || 'Added Successfully !';
       })
       .addCase(addAdmin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
-        state.message = '';
+        state.success = '';
       });
 
     builder
@@ -66,7 +81,7 @@ const adminSlice = createSlice({
         state.loading = false;
         state.data = [];
         state.error = action.error.message || 'Something went wrong';
-        state.message = '';
+        state.success = '';
       });
 
     builder
@@ -77,12 +92,12 @@ const adminSlice = createSlice({
         state.loading = false;
         state.data = action.payload;
         state.error = '';
-        state.message = '';
+        state.success = '';
       })
       .addCase(getAdmin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
-        state.message = '';
+        state.success = '';
       });
 
     builder
@@ -92,12 +107,12 @@ const adminSlice = createSlice({
       .addCase(updateAdmin.fulfilled, (state, action) => {
         state.loading = false;
         state.error = '';
-        state.message = action.payload || 'Updated Successfully !';
+        state.success = action.payload.success || 'Updated Successfully !';
       })
       .addCase(updateAdmin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
-        state.message = '';
+        state.success = '';
       });
 
     builder
@@ -107,9 +122,51 @@ const adminSlice = createSlice({
       .addCase(deleteAdmin.fulfilled, (state, action) => {
         state.loading = false;
         state.error = '';
-        state.message = action.payload;
+        state.success = action.payload.success || 'Deleted Successfully !';
       })
       .addCase(deleteAdmin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+      });
+
+    builder
+      .addCase(resetPassword.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = '';
+        state.success = action.payload.message;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+      });
+
+    builder
+      .addCase(downloadFile.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(downloadFile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = '';
+        state.message = action.payload;
+      })
+      .addCase(downloadFile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+      });
+
+    builder
+      .addCase(uploadFile.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(uploadFile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = '';
+        state.message = action.payload;
+      })
+      .addCase(uploadFile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
       });

@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { AdminView } from 'src/sections/admin/view';
+import { AdminView } from 'src/sections/superAdmin/admin/view';
 
 // ----------------------------------------------------------------------
 

@@ -12,6 +12,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
+import { goHome } from 'src/utils/utilies';
+
 import { logout } from 'src/api/authSlice';
 
 // ----------------------------------------------------------------------
@@ -19,6 +21,12 @@ import { logout } from 'src/api/authSlice';
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [open, setOpen] = useState(null);
+  const user = useSelector((state) => state.auth);
+
   const MENU_OPTIONS = [
     {
       label: 'Home',
@@ -26,16 +34,11 @@ export default function AccountPopover() {
       action: () => handleHome(),
     },
     {
-      label: 'Settings',
+      label: 'Edit Profile',
       icon: 'eva:settings-2-fill',
-      action: () => handleClose(),
+      action: () => navigate('/editProfile'),
     },
   ];
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  
-  const loginInfo = useSelector((state) => state.auth);
-  const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -46,20 +49,32 @@ export default function AccountPopover() {
   };
 
   const handleHome = () => {
-    navigate('/');
+    navigate(goHome(user?.data?.role));
     handleClose();
   };
 
   const handleLogout = async () => {
-    const res = await dispatch(logout());
-    if (res.meta.requestStatus === 'fulfilled') {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      toast.success(res.payload.message);
-      navigate('/login');
-    } else {
-      toast.error(res.error.message);
-    }
+    toast.promise(dispatch(logout()), {
+      pending: {
+        render() {
+          return 'Logging out ...';
+        },
+      },
+      success: {
+        render({ data }) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('role');
+          localStorage.removeItem('user');
+          navigate('/login');
+          return data.payload.message;
+        },
+      },
+      error: {
+        render({ data }) {
+          return data.error.message;
+        },
+      },
+    });
   };
 
   return (
@@ -78,17 +93,17 @@ export default function AccountPopover() {
       >
         <Avatar
           src={
-            loginInfo.data?.user?.avatar_url ||
-            `/assets/images/avatars/avatar_${loginInfo.data.id || 1 % 25}.jpg`
+            user.data?.user?.avatar_url ||
+            `/assets/images/avatars/avatar_${user.data.id || 1 % 25}.jpg`
           }
-          alt={loginInfo.data.user?.name}
+          alt={user.data.user?.name}
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {loginInfo.data.user?.name.charAt(0).toUpperCase()}
+          {user.data.user?.name.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
 
@@ -109,10 +124,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2 }}>
           <Typography variant="subtitle2" noWrap>
-            {loginInfo.data.user?.name}
+            {user.data.user?.name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {loginInfo.data.user?.email}
+            {user.data.user?.email}
           </Typography>
         </Box>
 

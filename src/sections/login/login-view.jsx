@@ -18,7 +18,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import route from 'src/routes';
+import { goHome } from 'src/utils/utilies';
+
 import { login } from 'src/api/authSlice';
 import { bgGradient } from 'src/theme/css';
 
@@ -40,16 +41,7 @@ export default function LoginView() {
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
-      switch (data.role) {
-        case 'superAdmin':
-          navigate(route.super.index);
-          break;
-        case 'admin':
-          navigate(route.admin.index);
-          break;
-        default:
-          navigate(route.landing);
-      }
+      navigate(goHome(data.role));
     }
   }, [navigate, data.role]);
 
@@ -81,16 +73,7 @@ export default function LoginView() {
     if (validateForm()) {
       const res = await dispatch(login(loginData));
       if (res.meta.requestStatus === 'fulfilled') {
-        switch (res.payload.employee.role) {
-          case 'superAdmin':
-            navigate(route.super.index);
-            break;
-          case 'admin':
-            navigate(route.admin.index);
-            break;
-          default:
-            navigate(route.login);
-        }
+        navigate(goHome(res.payload.employee.role));
       } else if (res.meta.requestStatus === 'rejected') {
         toast.error(error);
       }

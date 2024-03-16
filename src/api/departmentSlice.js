@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { authAPI } from './APIs';
+import { authAPI, fileAPI, downloadAPI } from './APIs';
 
 const initialState = {
   loading: false,
@@ -10,48 +10,38 @@ const initialState = {
 };
 
 export const addDepartment = createAsyncThunk('department/addDepartment', async (dept) => {
-  try {
-    const response = await authAPI('department', 'POST', dept);
-    return response;
-  } catch (error) {
-    return error.response;
-  }
+  const response = await authAPI('department', 'POST', dept);
+  return response;
 });
 
 export const getDepartments = createAsyncThunk('department/getDepartments', async () => {
-  try {
-    const response = await authAPI('department');
-    return response;
-  } catch (error) {
-    return error.response;
-  }
+  const response = await authAPI('department');
+  return response;
 });
 
 export const getDepartment = createAsyncThunk('department/getDepartment', async (id) => {
-  try {
-    const response = await authAPI(`department/${id}`);
-    return response;
-  } catch (error) {
-    return error.response;
-  }
+  const response = await authAPI(`department/${id}`);
+  return response;
 });
 
 export const updateDepartment = createAsyncThunk('department/updateDepartment', async (dept) => {
-  try {
-    const response = await authAPI(`department/${dept.id}`, 'PUT', dept);
-    return response;
-  } catch (error) {
-    return error.response;
-  }
+  const response = await authAPI(`department/${dept.id}`, 'PUT', dept);
+  return response;
 });
 
 export const deleteDepartment = createAsyncThunk('department/deleteDepartment', async (dept) => {
-  try {
-    const response = await authAPI(`department/${dept.id}`, 'DELETE');
-    return response;
-  } catch (error) {
-    return error.response;
-  }
+  const response = await authAPI(`department/${dept.id}`, 'DELETE');
+  return response;
+});
+
+export const downloadFile = createAsyncThunk('department/downloadFile', async () => {
+  const response = await downloadAPI('DownloadDepartmentTemplate', 'department-Template.xlsx');
+  return response;
+});
+
+export const uploadFile = createAsyncThunk('department/uploadFile', async (file) => {
+  const response = await fileAPI('importDepartment', 'POST', file);
+  return response;
 });
 
 const departmentSlice = createSlice({
@@ -70,7 +60,7 @@ const departmentSlice = createSlice({
       })
       .addCase(addDepartment.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Something went wrong';
+        state.error = JSON.parse(action.error.message).error.name[0] || 'Something went wrong';
         state.message = '';
       });
 
@@ -130,6 +120,34 @@ const departmentSlice = createSlice({
         state.message = action.payload;
       })
       .addCase(deleteDepartment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+      });
+
+    builder
+      .addCase(downloadFile.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(downloadFile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = '';
+        state.message = action.payload;
+      })
+      .addCase(downloadFile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+      });
+
+    builder
+      .addCase(uploadFile.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(uploadFile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = '';
+        state.message = action.payload;
+      })
+      .addCase(uploadFile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
       });
