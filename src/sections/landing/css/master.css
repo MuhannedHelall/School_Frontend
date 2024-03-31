@@ -1,0 +1,101 @@
+:root{
+    --main-color:#FF9800;
+}
+body{
+    font-family: 'Open Sans', sans-serif;
+    font-family: 'Work Sans', sans-serif;
+}
+/* starting Settings Box */
+.settings-box{
+ position: fixed;
+ left: 0;
+ top: 0;
+ background-color: #ffffff4d;
+ width: 200px;
+ z-index: 1000;
+ min-height: 100vh;
+transition: .3s;
+}
+.settings-box .fa-gear{
+    position: absolute;
+    right: 0;
+    top: 100px;
+    background-color: #fff;
+    padding: 8px;
+    width: 30px;
+}
+/* .settings-box .settings-content{
+    
+} */
+/* end Settings Box */
+ /* start landing page */
+.landing-page{
+    min-height: 100vh;
+    background-image: url("../imgs/rf5JAc.jpg");
+    background-size: cover;
+    position: relative;
+}
+.landing-page .overlay{
+    background-color: #000000a8;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 1;
+}
+.header-area{
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    display: flex;
+    padding: 10px;
+}
+.header-area .logo{
+    width: 300px;
+    padding: 15px;
+    font-weight: bold;
+}
+.header-area .links{
+    list-style: none;
+    padding-left: 0;
+    padding-right: 20px;
+    width: 100%;
+    text-align: right;
+    font-size: 15px;
+}
+.header-area .links li{
+    display: inline-block;
+    margin-left: 10px;
+
+}
+.header-area .links li a{
+    color: #fff;
+    text-decoration: none;
+    transition: .3s;
+}
+.header-area .links li a:hover,
+.header-area .links li a.active{
+    color: var(--main-color);
+}
+.introduction-text{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    color: #fff;
+    text-align: center;
+}
+.introduction-text h1{
+    font-size: 40px;
+    margin: 0 0 10px;
+}
+.introduction-text h1 span {
+    color: var(--main-color);
+}
+.introduction-text p{
+    line-height: 1.6;
+    font-size: 20;
+}
+/* end landing page */

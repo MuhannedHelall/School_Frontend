@@ -157,7 +157,7 @@ export default function EmpTableRow({ user, selected, handleClick }) {
                 </Select>
               </FormControl>
             ) : (
-              subject[0].name || <Typography color="red">Not Found</Typography>
+              subject[0]?.name || <Typography color="red">Not Found</Typography>
             )}
           </TableCell>
         )}

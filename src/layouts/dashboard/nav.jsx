@@ -51,7 +51,7 @@ export default function Nav({ openNav, onCloseNav }) {
       <Avatar
         src={
           loginInfo.data?.user?.avatar_url ||
-          `/assets/images/avatars/avatar_${loginInfo.data?.id || 1 % 25}.jpg`
+          `/assets/images/avatars/avatar_${loginInfo.data?.user_id || 1 % 25}.jpg`
         }
         alt={loginInfo.data?.user?.name}
       >

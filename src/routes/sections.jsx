@@ -28,6 +28,7 @@ export const TeacherClasses = lazy(() => import('src/pages/teacher/class'));
 export const SchedulePage = lazy(() => import('src/pages/teacher/schedule'));
 
 // Other Pages
+export const LandingPage = lazy(() => import('src/pages/landing'));
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const EditProfilePage = lazy(() => import('src/pages/editProfile'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
@@ -42,7 +43,7 @@ export default function Router() {
     },
     {
       path: route.landing,
-      element: <h1>Landing Page</h1>,
+      element: <LandingPage />,
     },
     {
       element: (

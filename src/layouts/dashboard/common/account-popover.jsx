@@ -94,7 +94,7 @@ export default function AccountPopover() {
         <Avatar
           src={
             user.data?.user?.avatar_url ||
-            `/assets/images/avatars/avatar_${user.data.id || 1 % 25}.jpg`
+            `/assets/images/avatars/avatar_${user.data.user_id || 1 % 25}.jpg`
           }
           alt={user.data.user?.name}
           sx={{
