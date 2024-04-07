@@ -34,18 +34,13 @@ export const deleteEmployee = createAsyncThunk('employee/deleteEmployee', async 
   return response;
 });
 
-// export const resetPassword = createAsyncThunk('employee/resetPassword', async (id) => {
-//   const response = await authAPI(`resetPassword/${id}`);
-//   return response;
-// });
-
 export const downloadFile = createAsyncThunk('employee/downloadFile', async () => {
   const response = await downloadAPI('DownloadEmployeeTemplate', 'employee-Template.xlsx');
   return response;
 });
 
-export const uploadFile = createAsyncThunk('employee/uploadFile', async (file) => {
-  const response = await fileAPI('importEmployee', 'POST', file);
+export const uploadFile = createAsyncThunk('employee/uploadFile', async (data) => {
+  const response = await fileAPI(`importEmployee/${data.id}`, 'POST', data.file);
   return response;
 });
 

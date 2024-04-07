@@ -55,7 +55,7 @@ export default function CardView({ title, items, onUpload, onDownload, Card, Car
         </Tooltip>
       </Stack>
 
-      {items.error && <h1 style={{ textAlign: 'center' }}>{items.error}</h1>}
+      {/* {items.error && <h1 style={{ textAlign: 'center' }}>{items.error}</h1>} */}
       {items.loading ? (
         <h1 style={{ textAlign: 'center', marginTop: '150px' }}>Loading ...</h1>
       ) : (

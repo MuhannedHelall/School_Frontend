@@ -92,7 +92,7 @@ export default function ClassCard({ item, onUpdate }) {
 
         <Box sx={{ p: (theme) => theme.spacing(4, 3, 3, 3) }}>
           <Typography variant="caption" component="div" sx={{ mb: 1, color: 'text.disabled' }}>
-            {class_number || 'Not Assigned'}
+            {grade || 'Not Assigned'}
           </Typography>
 
           <Link
@@ -108,7 +108,7 @@ export default function ClassCard({ item, onUpdate }) {
               textTransform: 'capitalize',
             }}
           >
-            {grade}
+            {class_number}
           </Link>
           <Box display="flex" justifyContent="space-between">
             <Stack

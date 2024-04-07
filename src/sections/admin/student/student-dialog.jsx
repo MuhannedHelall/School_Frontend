@@ -102,7 +102,7 @@ export default function StudentDialog({ open, setOpen, title }) {
           >
             {classes.map((sub) => (
               <MenuItem key={sub.id} value={sub.id}>
-                {sub.grade}
+                {`${sub.grade} / ${sub.class_number}`}
               </MenuItem>
             ))}
           </Select>

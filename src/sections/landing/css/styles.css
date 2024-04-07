@@ -12,8 +12,6 @@ span{
     color: var(#3970ab);
 }
 :root{
-    /* #3970ab:#3970ab; */
-    /* #2c4755:#2c4755; */
     --section-padding:60px;
     --section-backgraund:#f6f6f6;
 }
@@ -26,8 +24,6 @@ span{
     padding-right: 15px;
     margin-left: auto;
     margin-right: auto;
-    /* width: 600px; */
-    /* background-color:#aaa ; */
 }
 html{
     scroll-behavior: smooth;
@@ -291,20 +287,6 @@ html{
     color: #fff;
   }
   
-  .btn {
-    margin-top: 1rem;
-    height: 2.6rem;
-    width: 13.3rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 4px;
-    background: linear-gradient(135deg, rgba(163, 168, 240, 1) 0%, rgba(105, 111, 221, 1) 100%);
-    color: #fff;
-    outline: none;
-    border: 0;
-    font-weight: bold;
-  }
   .active-btn {
     background: #fff;
     color: hsl(237, 63%, 64%);

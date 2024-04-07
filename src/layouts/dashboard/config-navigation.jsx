@@ -43,6 +43,11 @@ const navConfig = {
         path: route.admin.subjects,
         icon: icon('ic_blog'),
       },
+      {
+        title: 'Timetables',
+        path: route.admin.timetable,
+        icon: icon('ic_lock'),
+      },
     ],
     student: [
       {
@@ -81,14 +86,14 @@ const navConfig = {
       icon: icon('ic_analytics'),
     },
     {
-      title: 'Classes',
-      path: route.teacher.classes,
+      title: 'Subjects',
+      path: route.teacher.subjects,
       icon: icon('ic_blog'),
     },
     {
       title: 'Schedule',
       path: route.teacher.schedule,
-      icon: icon('ic_blog'),
+      icon: icon('ic_lock'),
     },
   ],
 };

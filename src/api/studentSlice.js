@@ -11,7 +11,7 @@ const initialState = {
 };
 
 export const addStudent = createAsyncThunk('student/addStudent', async (student) => {
-  const response = await authAPI('student', 'POST', student);
+  const response = await authAPI('createStudent', 'POST', student);
   return response;
 });
 

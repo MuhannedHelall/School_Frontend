@@ -8,6 +8,7 @@ const initialState = {
   loading: false,
   data: USER || {},
   error: null,
+  message: null,
 };
 
 export const login = createAsyncThunk('auth/login', async (loginData) => {
@@ -17,6 +18,11 @@ export const login = createAsyncThunk('auth/login', async (loginData) => {
 
 export const logout = createAsyncThunk('auth/logout', async () => {
   const response = await authAPI('logout', 'POST');
+  return response;
+});
+
+export const editProfile = createAsyncThunk('auth/editProfile', async (userData) => {
+  const response = await authAPI('user/update', 'POST', userData);
   return response;
 });
 
@@ -50,8 +56,23 @@ const authSlice = createSlice({
         state.loading = false;
         state.data = {};
         state.error = null;
+        state.message = 'logged out successfully';
       })
       .addCase(logout.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+      });
+
+    builder
+      .addCase(editProfile.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(editProfile.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+        state.message = 'Profile Updated Successfully';
+      })
+      .addCase(editProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
       });

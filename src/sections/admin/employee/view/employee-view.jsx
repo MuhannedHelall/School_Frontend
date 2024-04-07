@@ -1,8 +1,9 @@
+import { toast } from 'react-toastify';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getSubjects } from 'src/api/subjectSlice';
-import { getEmployees } from 'src/api/employeeSlice';
+import { uploadFile, downloadFile, getEmployees } from 'src/api/employeeSlice';
 
 import { TableView } from 'src/sections/table/view';
 
@@ -57,11 +58,21 @@ function EmployeeView() {
   }, [dispatch]); // eslint-disable-line
 
   const handleDownload = () => {
-    console.log('file is downloaded !');
+    dispatch(downloadFile());
   };
 
   const handleUpload = (file) => {
-    console.log(file);
+    const DTO = { file, id: user.department_id };
+    toast.promise(dispatch(uploadFile(DTO)), {
+      pending: 'File is being uploaded ...',
+      success: {
+        render({ data }) {
+          dispatch(getEmployees(user.department_id));
+          return data.payload[1];
+        },
+      },
+      error: 'An error occured !',
+    });
   };
 
   return (

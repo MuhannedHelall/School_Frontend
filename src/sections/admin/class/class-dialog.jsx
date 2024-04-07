@@ -56,6 +56,18 @@ export default function ClassDialog({ open, setOpen, updateData, setUpdateData }
           class.
         </DialogContentText>
         <TextField
+          margin="dense"
+          label="Grade"
+          type="text"
+          value={updateData?.grade ? updateData.grade : classData.grade}
+          onChange={
+            updateData?.id
+              ? (e) => setUpdateData({ ...updateData, grade: e.target.value })
+              : (e) => setClassData({ ...classData, grade: e.target.value })
+          }
+          fullWidth
+        />
+        <TextField
           autoFocus
           margin="dense"
           label="Class Number"
@@ -65,18 +77,6 @@ export default function ClassDialog({ open, setOpen, updateData, setUpdateData }
             updateData?.id
               ? (e) => setUpdateData({ ...updateData, class_number: e.target.value })
               : (e) => setClassData({ ...classData, class_number: e.target.value })
-          }
-          fullWidth
-        />
-        <TextField
-          margin="dense"
-          label="Grade"
-          type="text"
-          value={updateData?.grade ? updateData.grade : classData.grade}
-          onChange={
-            updateData?.id
-              ? (e) => setUpdateData({ ...updateData, grade: e.target.value })
-              : (e) => setClassData({ ...classData, grade: e.target.value })
           }
           fullWidth
         />

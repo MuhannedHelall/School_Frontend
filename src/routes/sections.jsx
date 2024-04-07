@@ -18,13 +18,17 @@ export const AdminsPage = lazy(() => import('src/pages/superAdmin/admin'));
 export const AdminIndex = lazy(() => import('src/pages/admin'));
 export const EmpsPage = lazy(() => import('src/pages/admin/employee'));
 export const SubjectsPage = lazy(() => import('src/pages/admin/subject'));
+export const TimeTablePage = lazy(() => import('src/pages/admin/timetable'));
 export const StudentPage = lazy(() => import('src/pages/admin/showStudent'));
 export const StudentsPage = lazy(() => import('src/pages/admin/student'));
 export const ClassesPage = lazy(() => import('src/pages/admin/class'));
 
 // Teacher Pages
 export const TeacherIndex = lazy(() => import('src/pages/teacher/index'));
-export const TeacherClasses = lazy(() => import('src/pages/teacher/class'));
+export const TeacherSubjects = lazy(() => import('src/pages/teacher/subject'));
+export const TeacherSubjectsLectures = lazy(() => import('src/pages/teacher/subjectLectures'));
+export const TeacherSubjectsGrades = lazy(() => import('src/pages/teacher/subjectGrade'));
+export const TeacherLecturePage = lazy(() => import('src/pages/teacher/LecturePage'));
 export const SchedulePage = lazy(() => import('src/pages/teacher/schedule'));
 
 // Other Pages
@@ -81,7 +85,7 @@ export default function Router() {
               ),
             },
             {
-              path: route.super.deptsId,
+              path: `${route.super.deptsId}:id`,
               element: (
                 <SuperAuth>
                   <DeptsIdPage />
@@ -134,14 +138,37 @@ export default function Router() {
                 </AdminAuth>
               ),
             },
+            {
+              path: route.admin.timetable,
+              element: (
+                <AdminAuth>
+                  <TimeTablePage />
+                </AdminAuth>
+              ),
+            },
           ],
         },
         {
           path: route.teacher.index,
           children: [
             { element: <TeacherIndex />, index: true },
-            { path: route.teacher.classes, element: <TeacherClasses /> },
             { path: route.teacher.schedule, element: <SchedulePage /> },
+            {
+              path: route.teacher.subjects,
+              element: <TeacherSubjects />,
+            },
+            {
+              path: `${route.teacher.subjectLectures}:id`,
+              element: <TeacherSubjectsLectures />,
+            },
+            {
+              path: `${route.teacher.subjectGrades}:id`,
+              element: <TeacherSubjectsGrades />,
+            },
+            {
+              path: `${route.teacher.lecture}:id`,
+              element: <TeacherLecturePage />,
+            },
           ],
         },
       ],

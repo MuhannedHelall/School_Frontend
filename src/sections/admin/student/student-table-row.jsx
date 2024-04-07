@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Box } from '@mui/material';
@@ -20,7 +20,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
 
-import { getClasses } from 'src/api/classSlice';
+// import { getClasses } from 'src/api/classSlice';
 import { getStudents, deleteStudent, updateStudent } from 'src/api/studentSlice';
 
 import Label from 'src/components/label';
@@ -29,7 +29,7 @@ import Iconify from 'src/components/iconify';
 
 export default function StudentTableRow({ user, selected, handleClick }) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { id, name, email, avatarUrl, status } = user;
   const classes = useSelector((state) => state.class.data);
 
@@ -59,12 +59,12 @@ export default function StudentTableRow({ user, selected, handleClick }) {
 
   const handleDeleteRecord = () => {
     toast.promise(dispatch(deleteStudent(user)), {
-      pending: 'Employee is being deleted ...',
-      success: 'Employee is deleted !',
+      pending: 'Student is being deleted ...',
+      success: 'Student is deleted !',
       error: 'An Error Occured !',
     });
     dispatch(getStudents());
-    dispatch(getClasses());
+    // dispatch(getClasses());
     setEmpData({ ...empData, status: false });
     handleCloseMenu();
   };
@@ -81,14 +81,13 @@ export default function StudentTableRow({ user, selected, handleClick }) {
       return;
     }
     toast.promise(dispatch(updateStudent(empData)), {
-      pending: 'Employee is being updated ...',
-      success: 'Employee is updated !',
+      pending: 'Student is being updated ...',
+      success: 'Student is Updated !',
       error: 'An Error Occured !',
     });
     dispatch(getStudents());
-    dispatch(getClasses());
+    // dispatch(getClasses());
     setEdit(false);
-    // setEmpData()
   };
 
   const reset = () => {
@@ -108,7 +107,12 @@ export default function StudentTableRow({ user, selected, handleClick }) {
         </TableCell>
 
         <TableCell component="th" scope="row" padding="none">
-          <Stack onClick={() => navigate(`${id}`)} direction="row" alignItems="center" spacing={2}>
+          <Stack
+            // onClick={() => navigate(`${id}`)}
+            direction="row"
+            alignItems="center"
+            spacing={2}
+          >
             <Avatar alt={name} src={avatarUrl || `/assets/images/avatars/avatar_${id % 25}.jpg`} />
             {edit ? (
               <Box display="flex" gap="10px">
@@ -151,13 +155,15 @@ export default function StudentTableRow({ user, selected, handleClick }) {
               >
                 {classes?.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
-                    {item.grade}
+                    {`${item.grade} / ${item.class_number}`}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           ) : (
-            user.class?.grade || <Typography color="red">Not Found</Typography>
+            `${user.class?.grade} / ${user.class?.class_number}` || (
+              <Typography color="red">Not Found</Typography>
+            )
           )}
         </TableCell>
 

@@ -6,6 +6,7 @@ import adminSlice from './adminSlice';
 import studentSlice from './studentSlice';
 import subjectSlice from './subjectSlice';
 import languageSlice from './languageSlice';
+import lecturesSlice from './lecturesSlice';
 import employeeSlice from './employeeSlice';
 import dashboardSlice from './dashboardSlice';
 import departmentSlice from './departmentSlice';
@@ -17,6 +18,7 @@ const store = configureStore({
     class: classSlice,
     student: studentSlice,
     subject: subjectSlice,
+    lectures: lecturesSlice,
     language: languageSlice,
     employee: employeeSlice,
     dashboard: dashboardSlice,

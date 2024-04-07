@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Box } from '@mui/material';
-import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Select from '@mui/material/Select';
 import Avatar from '@mui/material/Avatar';
@@ -19,30 +18,28 @@ import InputLabel from '@mui/material/InputLabel';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
-import OutlinedInput from '@mui/material/OutlinedInput';
 
-import { getSubjects } from 'src/api/subjectSlice';
-import { getEmployees, deleteEmployee, updateEmployee } from 'src/api/employeeSlice';
+import { getDepartments } from 'src/api/departmentSlice';
+import { getAdmins, deleteAdmin, updateAdmin, resetPassword } from 'src/api/adminSlice';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
-export default function EmpTableRow({ user, selected, handleClick }) {
+export default function GradeTableRow({ user, selected, handleClick }) {
   const dispatch = useDispatch();
-  const { id, name, email, avatarUrl, subject, status } = user;
-  const subjects = useSelector((state) => state.subject.data);
-  const logedUser = useSelector((state) => state.auth.data);
+  const { id, name, email, avatarUrl, department, status } = user;
+  const departments = useSelector((state) => state.department.data);
 
   const [open, setOpen] = useState(null);
   const [edit, setEdit] = useState(false);
-  const [empData, setEmpData] = useState({
+  const [adminData, setAdminData] = useState({
     id,
     name,
     email,
     status,
     avatarUrl,
-    subject_id: subject[0]?.id ? [subject[0].id] : [],
+    department_id: department.id,
   });
 
   const handleOpenMenu = (event) => {
@@ -59,45 +56,44 @@ export default function EmpTableRow({ user, selected, handleClick }) {
   };
 
   const handleDeleteRecord = () => {
-    toast.promise(dispatch(deleteEmployee(user)), {
-      pending: 'Employee is being deleted ...',
-      success: 'Employee is deleted !',
+    toast.promise(dispatch(deleteAdmin(user)), {
+      pending: 'Admin is being deleted ...',
+      success: 'Admin is deleted !',
       error: 'An Error Occured !',
     });
-    dispatch(getEmployees(logedUser.department_id));
-    dispatch(getSubjects());
-    setEmpData({ ...empData, status: false });
+    dispatch(getAdmins());
+    dispatch(getDepartments());
+    setAdminData({ ...adminData, status: false });
     handleCloseMenu();
   };
 
   const saveEditedRecord = () => {
     if (
-      empData.avatarUrl === avatarUrl &&
-      empData.name === name &&
-      empData.email === email &&
-      empData.subject_id === subjects.id &&
-      empData.status === status
+      adminData.avatarUrl === avatarUrl &&
+      adminData.name === name &&
+      adminData.email === email &&
+      adminData.department_id === department.id &&
+      adminData.status === status
     ) {
       setEdit(false);
       return;
     }
-    toast.promise(dispatch(updateEmployee(empData)), {
-      pending: 'Employee is being updated ...',
-      success: 'Employee is updated !',
+    toast.promise(dispatch(updateAdmin(adminData)), {
+      pending: 'Admin is being updated ...',
+      success: 'Admin is updated !',
       error: 'An Error Occured !',
     });
-    dispatch(getEmployees(logedUser.department_id));
-    dispatch(getSubjects());
+    dispatch(getAdmins());
+    dispatch(getDepartments());
     setEdit(false);
-    // setEmpData()
   };
 
   const reset = () => {
-    // toast.promise(dispatch(resetPassword(id)), {
-    //   pending: 'Password is being reset ...',
-    //   success: 'Password is reset successfully !',
-    //   error: 'An Error Occured !',
-    // });
+    toast.promise(dispatch(resetPassword(id)), {
+      pending: 'Password is being reset ...',
+      success: 'Password is reset successfully !',
+      error: 'An Error Occured !',
+    });
     handleCloseMenu();
   };
 
@@ -116,14 +112,14 @@ export default function EmpTableRow({ user, selected, handleClick }) {
                 <TextField
                   label="Name"
                   size="small"
-                  value={empData.name}
-                  onChange={(e) => setEmpData({ ...empData, name: e.target.value })}
+                  value={adminData.name}
+                  onChange={(e) => setAdminData({ ...adminData, name: e.target.value })}
                 />
                 <TextField
                   label="Email"
                   size="small"
-                  value={empData.email}
-                  onChange={(e) => setEmpData({ ...empData, email: e.target.value })}
+                  value={adminData.email}
+                  onChange={(e) => setAdminData({ ...adminData, email: e.target.value })}
                 />
               </Box>
             ) : (
@@ -139,42 +135,28 @@ export default function EmpTableRow({ user, selected, handleClick }) {
           </Stack>
         </TableCell>
 
-        {logedUser.department_id === 4 && (
-          <TableCell sx={{ textTransform: 'capitalize' }}>
-            {edit ? (
-              <FormControl size="small" sx={{ m: 1, width: 300 }}>
-                <InputLabel id="demo-multiple-chip-label">Subject</InputLabel>
-                <Select
-                  labelId="demo-multiple-chip-label"
-                  id="demo-multiple-chip"
-                  multiple
-                  value={empData.subject_id}
-                  onChange={(e) => setEmpData({ ...empData, subject_id: e.target.value })}
-                  input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                  renderValue={(select) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {select.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
-                >
-                  {subjects?.map((item) => (
-                    <MenuItem key={item.id} value={item.id}>
-                      {item.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            ) : (
-              subject[0]?.name || (
-                <Typography variant="caption" className="btn btn-danger">
-                  Not Found
-                </Typography>
-              )
-            )}
-          </TableCell>
-        )}
+        <TableCell>
+          {edit ? (
+            <FormControl size="small" fullWidth>
+              <InputLabel id="department-edit-select-label">Department</InputLabel>
+              <Select
+                labelId="department-edit-select-label"
+                id="department-edit-select"
+                label="Department"
+                value={adminData.department_id}
+                onChange={(e) => setAdminData({ ...adminData, department_id: e.target.value })}
+              >
+                {departments?.map((dept) => (
+                  <MenuItem key={dept.id} value={dept.id}>
+                    {dept.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          ) : (
+            department.name || <Typography color="red">Not Found</Typography>
+          )}
+        </TableCell>
 
         <TableCell>
           {edit && !status ? (
@@ -184,8 +166,8 @@ export default function EmpTableRow({ user, selected, handleClick }) {
                 labelId="status-edit-select-label"
                 id="status-edit-select"
                 label="Status"
-                value={empData.status}
-                onChange={(e) => setEmpData({ ...empData, status: e.target.value })}
+                value={adminData.status}
+                onChange={(e) => setAdminData({ ...adminData, status: e.target.value })}
               >
                 {[
                   { name: 'Active', value: 1 },
@@ -253,7 +235,7 @@ export default function EmpTableRow({ user, selected, handleClick }) {
   );
 }
 
-EmpTableRow.propTypes = {
+GradeTableRow.propTypes = {
   user: PropTypes.any,
   handleClick: PropTypes.func,
   selected: PropTypes.any,
