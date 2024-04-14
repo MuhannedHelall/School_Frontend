@@ -16,6 +16,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 
 import { getSubjects } from 'src/api/subjectSlice';
+import { getAdminDashboardData } from 'src/api/dashboardSlice';
 import { addEmployee, getEmployees } from 'src/api/employeeSlice';
 
 import Iconify from 'src/components/iconify';
@@ -44,6 +45,7 @@ export default function EmpAddDialog({ open, setOpen, title }) {
     });
     dispatch(getSubjects());
     dispatch(getEmployees(user.department_id));
+    dispatch(getAdminDashboardData());
     setOpen(false);
     setEmpData({ name: '', email: '', department_id: user.department_id, subject_id: null });
   };

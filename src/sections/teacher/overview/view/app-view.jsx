@@ -8,6 +8,8 @@ import Typography from '@mui/material/Typography';
 
 import { getTeacherDashboardData } from 'src/api/dashboardSlice';
 
+import { Loader } from 'src/sections/loader';
+
 import AppWidgetSummary from '../app-widget-summary';
 // ----------------------------------------------------------------------
 
@@ -39,7 +41,8 @@ export default function AppView() {
         })}
 
       {loading ? (
-        <h1 style={{ textAlign: 'center', marginTop: '30vh' }}>Loading ...</h1>
+          <Loader />
+          // <h1 style={{ textAlign: 'center', marginTop: '30vh' }}>Loading ...</h1>
       ) : (
         <Grid container spacing={3} padding={10}>
           <Grid xs={12} sm={6}>

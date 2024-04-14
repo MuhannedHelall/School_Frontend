@@ -15,6 +15,8 @@ import route from 'src/routes';
 import Iconify from 'src/components/iconify';
 import SvgColor from 'src/components/svg-color';
 
+import { Loader } from 'src/sections/loader';
+
 export default function SubjectsView() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth);
@@ -39,7 +41,8 @@ export default function SubjectsView() {
 
       {user.error && <h1 style={{ textAlign: 'center' }}>{user.error}</h1>}
       {user.loading ? (
-        <h1 style={{ textAlign: 'center', marginTop: '150px' }}>Loading ...</h1>
+          <Loader />
+          // <h1 style={{ textAlign: 'center', marginTop: '150px' }}>Loading ...</h1>
       ) : (
         <div>
           {user.data?.subject?.length < 1 ? (

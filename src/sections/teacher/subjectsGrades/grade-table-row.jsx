@@ -33,7 +33,7 @@ export default function GradeTableRow({ user, selected, handleClick }) {
 
   const [open, setOpen] = useState(null);
   const [edit, setEdit] = useState(false);
-  const [adminData, setAdminData] = useState({
+  const [studentData, setStudentData] = useState({
     id,
     name,
     email,
@@ -63,22 +63,22 @@ export default function GradeTableRow({ user, selected, handleClick }) {
     });
     dispatch(getAdmins());
     dispatch(getDepartments());
-    setAdminData({ ...adminData, status: false });
+    setStudentData({ ...studentData, status: false });
     handleCloseMenu();
   };
 
   const saveEditedRecord = () => {
     if (
-      adminData.avatarUrl === avatarUrl &&
-      adminData.name === name &&
-      adminData.email === email &&
-      adminData.department_id === department.id &&
-      adminData.status === status
+      studentData.avatarUrl === avatarUrl &&
+      studentData.name === name &&
+      studentData.email === email &&
+      studentData.department_id === department.id &&
+      studentData.status === status
     ) {
       setEdit(false);
       return;
     }
-    toast.promise(dispatch(updateAdmin(adminData)), {
+    toast.promise(dispatch(updateAdmin(studentData)), {
       pending: 'Admin is being updated ...',
       success: 'Admin is updated !',
       error: 'An Error Occured !',
@@ -112,14 +112,14 @@ export default function GradeTableRow({ user, selected, handleClick }) {
                 <TextField
                   label="Name"
                   size="small"
-                  value={adminData.name}
-                  onChange={(e) => setAdminData({ ...adminData, name: e.target.value })}
+                  value={studentData.name}
+                  onChange={(e) => setStudentData({ ...studentData, name: e.target.value })}
                 />
                 <TextField
                   label="Email"
                   size="small"
-                  value={adminData.email}
-                  onChange={(e) => setAdminData({ ...adminData, email: e.target.value })}
+                  value={studentData.email}
+                  onChange={(e) => setStudentData({ ...studentData, email: e.target.value })}
                 />
               </Box>
             ) : (
@@ -143,8 +143,8 @@ export default function GradeTableRow({ user, selected, handleClick }) {
                 labelId="department-edit-select-label"
                 id="department-edit-select"
                 label="Department"
-                value={adminData.department_id}
-                onChange={(e) => setAdminData({ ...adminData, department_id: e.target.value })}
+                value={studentData.department_id}
+                onChange={(e) => setStudentData({ ...studentData, department_id: e.target.value })}
               >
                 {departments?.map((dept) => (
                   <MenuItem key={dept.id} value={dept.id}>
@@ -166,8 +166,8 @@ export default function GradeTableRow({ user, selected, handleClick }) {
                 labelId="status-edit-select-label"
                 id="status-edit-select"
                 label="Status"
-                value={adminData.status}
-                onChange={(e) => setAdminData({ ...adminData, status: e.target.value })}
+                value={studentData.status}
+                onChange={(e) => setStudentData({ ...studentData, status: e.target.value })}
               >
                 {[
                   { name: 'Active', value: 1 },

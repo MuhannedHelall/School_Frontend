@@ -22,6 +22,7 @@ import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 
 import { getSubjects } from 'src/api/subjectSlice';
+import { getAdminDashboardData } from 'src/api/dashboardSlice';
 import { getEmployees, deleteEmployee, updateEmployee } from 'src/api/employeeSlice';
 
 import Label from 'src/components/label';
@@ -66,6 +67,7 @@ export default function EmpTableRow({ user, selected, handleClick }) {
     });
     dispatch(getEmployees(logedUser.department_id));
     dispatch(getSubjects());
+    dispatch(getAdminDashboardData());
     setEmpData({ ...empData, status: false });
     handleCloseMenu();
   };

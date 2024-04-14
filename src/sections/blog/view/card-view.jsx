@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 
 import Iconify from 'src/components/iconify';
 
+import { Loader } from 'src/sections/loader';
 import FileUploadDialog from 'src/sections/file-upload/fileUpload-dialog';
 
 import CardSearch from '../card-search';
@@ -57,7 +58,8 @@ export default function CardView({ title, items, onUpload, onDownload, Card, Car
 
       {/* {items.error && <h1 style={{ textAlign: 'center' }}>{items.error}</h1>} */}
       {items.loading ? (
-        <h1 style={{ textAlign: 'center', marginTop: '150px' }}>Loading ...</h1>
+        // <h1 style={{ textAlign: 'center', marginTop: '150px' }}>Loading ...</h1>
+        <Loader />
       ) : (
         <div>
           {items.data.length < 1 ? (

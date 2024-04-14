@@ -108,7 +108,7 @@ export default function ClassCard({ item, onUpdate }) {
               textTransform: 'capitalize',
             }}
           >
-            {class_number}
+            {`${grade}/${class_number}`}
           </Link>
           <Box display="flex" justifyContent="space-between">
             <Stack

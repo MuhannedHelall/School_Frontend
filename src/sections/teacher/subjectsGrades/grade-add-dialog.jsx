@@ -23,14 +23,14 @@ import Iconify from 'src/components/iconify';
 export default function GradeAddDialog({ open, setOpen }) {
   const dispatch = useDispatch();
   const departments = useSelector((state) => state.department.data);
-  const [adminData, setAdminData] = useState({ name: '', email: '', department_id: '1' });
+  const [studentGrades, setStudentGrades] = useState({ name: '', email: '', department_id: '1' });
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleAdd = () => {
-    toast.promise(dispatch(addAdmin(adminData)), {
+    toast.promise(dispatch(addAdmin(studentGrades)), {
       pending: 'Admin is being added ...',
       success: 'Admin is added !',
       error: 'An Error Occured !',
@@ -38,7 +38,7 @@ export default function GradeAddDialog({ open, setOpen }) {
     dispatch(getDepartments());
     dispatch(getAdmins());
     setOpen(false);
-    setAdminData({ name: '', email: '', department_id: '1' });
+    setStudentGrades({ name: '', email: '', department_id: '1' });
   };
 
   return (
@@ -54,16 +54,16 @@ export default function GradeAddDialog({ open, setOpen }) {
           margin="dense"
           label="Name"
           type="text"
-          value={adminData.name}
-          onChange={(e) => setAdminData({ ...adminData, name: e.target.value })}
+          value={studentGrades.name}
+          onChange={(e) => setStudentGrades({ ...studentGrades, name: e.target.value })}
           fullWidth
         />
         <TextField
           margin="dense"
           label="Email Address"
           type="email"
-          value={adminData.email}
-          onChange={(e) => setAdminData({ ...adminData, email: e.target.value })}
+          value={studentGrades.email}
+          onChange={(e) => setStudentGrades({ ...studentGrades, email: e.target.value })}
           fullWidth
         />
         <FormControl fullWidth required style={{ marginTop: '10px' }}>
@@ -72,8 +72,8 @@ export default function GradeAddDialog({ open, setOpen }) {
             labelId="department-select-label"
             id="department-select"
             label="Department *"
-            value={adminData.department_id}
-            onChange={(e) => setAdminData({ ...adminData, department_id: e.target.value })}
+            value={studentGrades.department_id}
+            onChange={(e) => setStudentGrades({ ...studentGrades, department_id: e.target.value })}
           >
             {departments.map((dept) => (
               <MenuItem key={dept.id} value={dept.id}>

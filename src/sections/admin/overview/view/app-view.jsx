@@ -8,6 +8,8 @@ import Typography from '@mui/material/Typography';
 
 import { getAdminDashboardData } from 'src/api/dashboardSlice';
 
+import { Loader } from 'src/sections/loader';
+
 import TeacherAdminOverview from '../teacher-admin-overview';
 import StudentAdminOverview from '../student-admin-overview';
 import EmployeeAdminOverview from '../employee-admin-overview';
@@ -61,7 +63,8 @@ export default function AppView() {
         })}
 
       {loading ? (
-        <h1 style={{ textAlign: 'center', marginTop: '30vh' }}>Loading ...</h1>
+        // <h1 style={{ textAlign: 'center', marginTop: '30vh' }}>Loading ...</h1>
+        <Loader />
       ) : (
         <ShowDashboard data={data} dept_id={user.department_id} />
       )}

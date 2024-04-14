@@ -1,6 +1,6 @@
-import { Link, useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 
 import { Box, Stack, Button, Tooltip, Container, Typography, IconButton } from '@mui/material';
 
@@ -9,6 +9,7 @@ import { getLectures } from 'src/api/lecturesSlice';
 
 import Iconify from 'src/components/iconify';
 
+import { Loader } from 'src/sections/loader';
 import FileUploadDialog from 'src/sections/file-upload/fileUpload-dialog';
 
 import './style.css';
@@ -18,11 +19,12 @@ import LectureDialog from '../lecture-dialog';
 function SubjectLecturesView() {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const lectures = useSelector((state) => state.lectures);
   const user = useSelector((state) => state.auth.data);
 
-  const subject = user.subject.find((sub) => sub.id === +id);
+  const subject = user.subject?.find((sub) => sub.id === +id);
 
   const [dropDown, setDropDown] = useState(true);
   const [openUpload, setOpenUpload] = useState(false);
@@ -43,7 +45,8 @@ function SubjectLecturesView() {
 
   useEffect(() => {
     dispatch(getLectures(id));
-  }, [dispatch, id]);
+    if (!subject?.name) navigate(route.notFound);
+  }, [dispatch, id, subject?.name, navigate]);
 
   return (
     <Container>
@@ -64,7 +67,7 @@ function SubjectLecturesView() {
       </Stack>
 
       <Stack mb={2} direction="row" alignItems="center" justifyContent="space-between">
-        <Typography variant="h2">{subject.name}</Typography>
+        <Typography variant="h2">{subject?.name}</Typography>
         <Tooltip title="Upload file">
           <IconButton component="label" onClick={() => setOpenUpload(true)}>
             <Iconify icon="solar:upload-outline" />
@@ -93,7 +96,8 @@ function SubjectLecturesView() {
         <Box className="path-container-content">
           <ul>
             {lectures.loading ? (
-              <h1 style={{ textAlign: 'center', marginTop: '150px' }}>Loading ...</h1>
+              //   <h1 style={{ textAlign: 'center', marginTop: '150px' }}>Loading ...</h1>
+              <Loader />
             ) : (
               <>
                 {lectures.data.length < 1 ? (
@@ -102,7 +106,7 @@ function SubjectLecturesView() {
                   </h1>
                 ) : (
                   dropDown &&
-                  lectures.data.length > 1 &&
+                  lectures.data.length > 0 &&
                   lectures.data?.map((lecture) => (
                     <LectureCard
                       key={lecture.title}

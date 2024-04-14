@@ -12,6 +12,7 @@ import GradeAddDialog from '../grade-add-dialog';
 const Title = 'Student Gardes';
 const Labels = [
   { id: 'name', label: 'Name' },
+  { id: 'class', label: 'Class' },
   { id: 'status', label: 'Status' },
   { id: 'action', label: 'Action' },
 ];
@@ -19,6 +20,7 @@ const Labels = [
 
 function SubjectGradesView() {
   const { id } = useParams();
+
   const handleDownload = () => {
     alert('file is downloaded !');
   };
@@ -32,7 +34,7 @@ function SubjectGradesView() {
     <TableView
       title={Title}
       headLabel={Labels}
-      items={{ data: [] }}
+      items={{ loading: false, data: [] }}
       onDownload={handleDownload}
       onUpload={handleUpload}
       TableRow={GradeTableRow}

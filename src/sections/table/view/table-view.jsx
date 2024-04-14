@@ -14,6 +14,7 @@ import TablePagination from '@mui/material/TablePagination';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
+import { Loader } from 'src/sections/loader';
 import FileUploadDialog from 'src/sections/file-upload/fileUpload-dialog';
 
 import TableNoData from '../table-no-data';
@@ -125,9 +126,10 @@ export default function TableView({
         />
 
         {items.loading ? (
-          <Typography variant="h3" textAlign="center" my="100px">
-            Loading ...
-          </Typography>
+          //   <Typography variant="h3" textAlign="center" my="100px">
+          //     Loading ...
+          //   </Typography>
+          <Loader />
         ) : (
           <Scrollbar>
             {dataFiltered.length < 1 ? (
