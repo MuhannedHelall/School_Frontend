@@ -1,7 +1,10 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Box, Badge, Avatar } from '@mui/material';
+
+import { editProfile, changePassword } from 'src/api/authSlice';
 
 import Iconify from 'src/components/iconify';
 
@@ -10,7 +13,43 @@ import './css/edit.css';
 // ----------------------------------------------------------------------
 
 export default function EditProfileView() {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.data);
+  const [selected, setSelected] = useState(1);
+  const [userData, setUserData] = useState({
+    id: user?.user?.id,
+    name: user?.user?.name || '',
+    email: user?.user?.email || '',
+    phone: user?.user?.phone || '',
+    address: user?.user?.address || '',
+  });
+  const [userPassword, setUserPassword] = useState({
+    id: user?.user?.id,
+    current_password: '',
+    new_password: '',
+    confirmed_Password: '',
+  });
+
+  const handleEditUser = (e) => {
+    e.preventDefault();
+    toast.promise(dispatch(editProfile(userData)), {
+      pending: `Profile is being updated ...`,
+      success: `Profile is updated !`,
+      error: `An Error Occured !`,
+    });
+  };
+
+  const handleEditPassword = (e) => {
+    e.preventDefault();
+    if (userPassword.new_password === userPassword.confirmed_Password) {
+      toast.promise(dispatch(changePassword(userPassword)), {
+        pending: `Password is being updated ...`,
+        success: `Password is updated !`,
+        error: `An Error Occured !`,
+      });
+    }
+  };
+
   return (
     <div className="container">
       <div className="row flex-lg-nowrap">
@@ -52,7 +91,9 @@ export default function EditProfileView() {
                         >
                           <Avatar
                             alt={user.name}
-                            src={`/assets/images/avatars/avatar_${user.user_id % 25}.jpg`}
+                            /* eslint-disable no-unsafe-optional-chaining */
+                            src={`/assets/images/avatars/avatar_${user?.user?.id % 25}.jpg`}
+                            /* eslint-enable no-unsafe-optional-chaining */
                             sx={{ width: 140, height: 140, border: '2px solid #87CEEB' }}
                           />
                         </Badge>
@@ -60,219 +101,218 @@ export default function EditProfileView() {
                     </div>
                     <ul className="nav nav-tabs">
                       <li className="nav-item">
-                        <a href="" className="active nav-link">
+                        <button
+                          type="button"
+                          className={`${selected === 1 && 'active'} nav-link`}
+                          onClick={() => setSelected(1)}
+                        >
                           Settings
-                        </a>
+                        </button>
+                      </li>
+                      <li className="nav-item">
+                        <button
+                          type="button"
+                          className={`${selected === 2 && 'active'} nav-link`}
+                          onClick={() => setSelected(2)}
+                        >
+                          Password
+                        </button>
                       </li>
                     </ul>
                     <div className="tab-content pt-3">
                       <div className="tab-pane active">
-                        <form className="form" noValidate="">
-                          <div className="row">
-                            <div className="col">
-                              <div className="row">
-                                <div className="col">
-                                  <div className="form-group">
-                                    <label htmlFor="fullName" className="w-100">
-                                      Full Name
-                                      <input
-                                        id="fullName"
-                                        className="form-control"
-                                        type="text"
-                                        value={user?.user?.name}
-                                      />
-                                    </label>
+                        {selected === 1 ? (
+                          <form className="form" onSubmit={handleEditUser}>
+                            <div className="row">
+                              <div className="col">
+                                <div className="row">
+                                  <div className="col">
+                                    <div className="form-group">
+                                      <label htmlFor="fullName" className="w-100">
+                                        Full Name
+                                        <input
+                                          id="fullName"
+                                          className="form-control"
+                                          type="text"
+                                          value={userData.name}
+                                          onChange={(e) =>
+                                            setUserData({ ...userData, name: e.target.value })
+                                          }
+                                        />
+                                      </label>
+                                    </div>
+                                  </div>
+                                  <div className="col">
+                                    <div className="form-group">
+                                      <label htmlFor="userName" className="w-100">
+                                        User Type
+                                        <input
+                                          id="userName"
+                                          className="form-control"
+                                          type="text"
+                                          name="username"
+                                          placeholder="rana.g"
+                                          value={user?.role?.toUpperCase()}
+                                          disabled
+                                        />
+                                      </label>
+                                    </div>
                                   </div>
                                 </div>
-                                <div className="col">
-                                  <div className="form-group">
-                                    <label htmlFor="userName" className="w-100">
-                                      User Type
-                                      <input
-                                        id="userName"
-                                        className="form-control"
-                                        type="text"
-                                        name="username"
-                                        placeholder="rana.g"
-                                        value={user.user.user_type}
-                                        disabled
-                                      />
-                                    </label>
+                                <br />
+                                <div className="row">
+                                  <div className="col">
+                                    <div className="form-group">
+                                      <label htmlFor="email" className="w-100">
+                                        Email
+                                        <input
+                                          id="email"
+                                          className="form-control"
+                                          type="text"
+                                          placeholder="user@example.com"
+                                          value={userData.email}
+                                          onChange={(e) =>
+                                            setUserData({ ...userData, email: e.target.value })
+                                          }
+                                        />
+                                      </label>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                              <br />
-                              <div className="row">
-                                <div className="col">
-                                  <div className="form-group">
-                                    <label htmlFor="email" className="w-100">
-                                      Email
-                                      <input
-                                        id="email"
-                                        className="form-control"
-                                        type="text"
-                                        placeholder="user@example.com"
-                                      />
-                                    </label>
+                                <br />
+                                <div className="row">
+                                  <div className="col">
+                                    <div className="form-group">
+                                      <label className="w-100" htmlFor="phoneNumber">
+                                        Contacts Number
+                                        <input
+                                          id="phoneNumber"
+                                          className="form-control"
+                                          type="text"
+                                          placeholder="661-724-7734"
+                                          value={userData.phone}
+                                          onChange={(e) =>
+                                            setUserData({ ...userData, phone: e.target.value })
+                                          }
+                                        />
+                                      </label>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                              <br />
-                              <div className="row">
-                                <div className="col">
-                                  <div className="form-group">
-                                    <label className="w-100" htmlFor="phoneNumber">
-                                      Contacts Number
-                                      <input
-                                        id="phoneNumber"
-                                        className="form-control"
-                                        type="text"
-                                        placeholder="661-724-7734"
-                                      />
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                              <br />
-                              <div className="row">
-                                <div className="col mb-3">
-                                  <div className="form-group">
-                                    <label className="w-100" htmlFor="address">
-                                      Address
-                                      <input
-                                        id="address"
-                                        className="form-control"
-                                        type="text"
-                                        placeholder="1368 Hayhurst Lane"
-                                      />
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="row">
-                                <div className="col">
-                                  <div className="form-group">
-                                    <label className="w-100" htmlFor="city">
-                                      City
-                                      <input
-                                        id="city"
-                                        className="form-control"
-                                        type="text"
-                                        name="name"
-                                        placeholder="Mcallen"
-                                      />
-                                    </label>
-                                  </div>
-                                </div>
-                                <div className="col">
-                                  <div className="form-group">
-                                    <label className="w-100" htmlFor="State">
-                                      State
-                                      <input
-                                        id="state"
-                                        className="form-control"
-                                        type="text"
-                                        name="username"
-                                        placeholder="New York"
-                                      />
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                              <br />
-                              <div className="row">
-                                <div className="col">
-                                  <div className="form-group">
-                                    <label className="w-100" htmlFor="zip">
-                                      Zip code
-                                      <input
-                                        id="zip"
-                                        className="form-control"
-                                        type="text"
-                                        name="name"
-                                        placeholder="11357"
-                                      />
-                                    </label>
-                                  </div>
-                                </div>
-                                <div className="col">
-                                  <div className="form-group">
-                                    <label className="w-100" htmlFor="country">
-                                      Country
-                                      <input
-                                        id="country"
-                                        className="form-control"
-                                        type="text"
-                                        name="username"
-                                        placeholder="United State"
-                                      />
-                                    </label>
+                                <br />
+                                <div className="row">
+                                  <div className="col mb-3">
+                                    <div className="form-group">
+                                      <label className="w-100" htmlFor="address">
+                                        Address
+                                        <input
+                                          id="address"
+                                          className="form-control"
+                                          type="text"
+                                          placeholder="1368 Hayhurst Lane"
+                                          value={userData.address}
+                                          onChange={(e) =>
+                                            setUserData({ ...userData, address: e.target.value })
+                                          }
+                                        />
+                                      </label>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                          <br />
-                          <div className="row">
-                            <div className="col-12 col-sm-6 mb-3">
-                              <div className="mb-2">
-                                <b>Change Password</b>
+                            <div className="row">
+                              <div className="col d-flex justify-content-end">
+                                <button className="btn btn-primary" type="submit">
+                                  Save Changes
+                                </button>
                               </div>
-                              <div className="row">
-                                <div className="col">
-                                  <div className="form-group">
-                                    <label className="w-100" htmlFor="curPass">
-                                      Current Password
-                                      <input
-                                        id="curPass"
-                                        className="form-control"
-                                        type="password"
-                                        placeholder="••••••"
-                                      />
-                                    </label>
+                            </div>
+                          </form>
+                        ) : (
+                          <form className="form" onSubmit={handleEditPassword}>
+                            <div className="row">
+                              <div className="col-12 col-sm-6 mb-3">
+                                <div className="mb-2">
+                                  <b>Change Password</b>
+                                </div>
+                                <div className="row">
+                                  <div className="col">
+                                    <div className="form-group">
+                                      <label className="w-100" htmlFor="curPass">
+                                        Current Password
+                                        <input
+                                          id="curPass"
+                                          className="form-control"
+                                          type="password"
+                                          placeholder="• • • • • • • • • • • • • • • • • • •"
+                                          value={userPassword.current_password}
+                                          onChange={(e) =>
+                                            setUserPassword({
+                                              ...userPassword,
+                                              current_password: e.target.value,
+                                            })
+                                          }
+                                        />
+                                      </label>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div className="row">
-                                <div className="col">
-                                  <div className="form-group">
-                                    <label className="w-100" htmlFor="newPass">
-                                      New Password
-                                      <input
-                                        id="newPass"
-                                        className="form-control"
-                                        type="password"
-                                        placeholder="••••••"
-                                      />
-                                    </label>
+                                <div className="row">
+                                  <div className="col">
+                                    <div className="form-group">
+                                      <label className="w-100" htmlFor="newPass">
+                                        New Password
+                                        <input
+                                          id="newPass"
+                                          className="form-control"
+                                          type="password"
+                                          placeholder="• • • • • • • • • • • • • • • • • • •"
+                                          value={userPassword.new_password}
+                                          onChange={(e) =>
+                                            setUserPassword({
+                                              ...userPassword,
+                                              new_password: e.target.value,
+                                            })
+                                          }
+                                        />
+                                      </label>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div className="row">
-                                <div className="col">
-                                  <div className="form-group">
-                                    <label className="w-100" htmlFor="conPass">
-                                      Confirm <span className="d-none d-xl-inline">Password</span>
-                                      <input
-                                        id="conPass"
-                                        className="form-control"
-                                        type="password"
-                                        placeholder="••••••"
-                                      />
-                                    </label>
+                                <div className="row">
+                                  <div className="col">
+                                    <div className="form-group">
+                                      <label className="w-100" htmlFor="conPass">
+                                        Confirm <span className="d-none d-xl-inline">Password</span>
+                                        <input
+                                          id="conPass"
+                                          className="form-control"
+                                          type="password"
+                                          placeholder="• • • • • • • • • • • • • • • • • • •"
+                                          value={userPassword.confirmed_Password}
+                                          onChange={(e) =>
+                                            setUserPassword({
+                                              ...userPassword,
+                                              confirmed_Password: e.target.value,
+                                            })
+                                          }
+                                        />
+                                      </label>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="row">
-                            <div className="col d-flex justify-content-end">
-                              <button className="btn btn-primary" type="submit">
-                                Save Changes
-                              </button>
+                            <div className="row">
+                              <div className="col d-flex justify-content-end">
+                                <button className="btn btn-primary" type="submit">
+                                  Save Changes
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                        </form>
+                          </form>
+                        )}
                       </div>
                     </div>
                   </div>

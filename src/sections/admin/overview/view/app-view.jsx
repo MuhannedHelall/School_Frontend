@@ -40,8 +40,8 @@ export default function AppView() {
   const user = useSelector((state) => state.auth.data);
 
   useEffect(() => {
-    if (Object.keys(data).length < 1) dispatch(getAdminDashboardData());
-  }, [dispatch, data]);
+    dispatch(getAdminDashboardData());
+  }, [dispatch]);
 
   return (
     <Container maxWidth="xl">

@@ -2,13 +2,13 @@ import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 
-// import { uploadFile, downloadFile, getDepartments } from 'src/api/departmentSlice';
 import { uploadFile, getClasses, downloadFile } from 'src/api/classSlice';
 
 import { CardView } from 'src/sections/blog/view';
 
 import ClassCard from '../class-card';
 import ClassDialog from '../class-dialog';
+import AttachDialog from '../attach-dialog';
 
 // ----------------------------------------------------------------------
 
@@ -45,6 +45,7 @@ export default function ClassView() {
       onDownload={handleFileDownload}
       Card={ClassCard}
       CardDialog={ClassDialog}
+      CardSecondDialog={AttachDialog}
     />
   );
 }

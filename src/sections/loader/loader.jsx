@@ -1,10 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './style.css';
 
-function Loader() {
+function Loader({ sx }) {
   return (
-    <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '30vh' }}>
+    <div
+      className={`d-flex align-items-center justify-content-center ${sx}`}
+      style={{ minHeight: '30vh' }}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="200px"
@@ -79,5 +83,8 @@ function Loader() {
     </div>
   );
 }
+Loader.propTypes = {
+  sx: PropTypes.any,
+};
 
 export default Loader;

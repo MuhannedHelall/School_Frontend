@@ -4,26 +4,46 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
+import Radio from '@mui/material/Radio';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
+// import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControl from '@mui/material/FormControl';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+// import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import DialogContentText from '@mui/material/DialogContentText';
 
-import { addLecture, getLectures, updateLecture } from 'src/api/lecturesSlice';
+import { addLecture, getLectures, updateLecture, addLectureWithVideo } from 'src/api/lecturesSlice';
 
 import Iconify from 'src/components/iconify';
 
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 export default function LectureDialog({ open, setOpen, updateData, setUpdateData }) {
   const dispatch = useDispatch();
   const { id } = useParams();
   const user = useSelector((state) => state.auth.data);
+  const [label, setLabel] = useState('url');
   const [lectureData, setLectureData] = useState({
     title: '',
     url: '',
     description: '',
+    video: null,
     employee_id: user.id,
     subject_id: id,
   });
@@ -32,14 +52,42 @@ export default function LectureDialog({ open, setOpen, updateData, setUpdateData
     setOpen(false);
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setLectureData({ ...lectureData, video: file });
+  };
+
   const handleAdd = () => {
-    toast.promise(dispatch(addLecture(lectureData)), {
-      pending: 'Lecture is being added ...',
-      success: 'Lecture added successfully !',
-      error: 'An Error Occured !',
-    });
+    if (label === 'url') {
+      setLectureData((prev) => ({ ...prev, video: null }));
+      toast.promise(dispatch(addLecture(lectureData)), {
+        pending: 'Lecture is being added ...',
+        success: 'Lecture added successfully !',
+        error: 'An Error Occured !',
+      });
+    } else {
+      setLectureData((prev) => ({ ...prev, url: null }));
+      const formData = new FormData();
+      formData.append('employee_id', lectureData.employee_id);
+      formData.append('subject_id', lectureData.subject_id);
+      formData.append('title', lectureData.title);
+      formData.append('description', lectureData.description);
+      formData.append('video', lectureData.video);
+      toast.promise(dispatch(addLectureWithVideo(formData)), {
+        pending: 'Lecture is being added ...',
+        success: 'Lecture added successfully !',
+        error: 'An Error Occured !',
+      });
+    }
     setOpen(false);
-    setLectureData({ title: '', url: '', description: '', employee_id: '', subject_id: '' });
+    setLectureData({
+      title: '',
+      url: '',
+      video: '',
+      description: '',
+      employee_id: '',
+      subject_id: '',
+    });
     dispatch(getLectures(id));
   };
 
@@ -84,19 +132,6 @@ export default function LectureDialog({ open, setOpen, updateData, setUpdateData
 
         <TextField
           margin="dense"
-          label="URL"
-          type="text"
-          value={updateData?.url ? updateData.url : lectureData.url}
-          onChange={
-            updateData?.id
-              ? (e) => setUpdateData({ ...updateData, url: e.target.value })
-              : (e) => setLectureData({ ...lectureData, url: e.target.value })
-          }
-          fullWidth
-        />
-
-        <TextField
-          margin="dense"
           label="Description"
           type="text"
           value={updateData?.description ? updateData.description : lectureData.description}
@@ -107,6 +142,45 @@ export default function LectureDialog({ open, setOpen, updateData, setUpdateData
           }
           fullWidth
         />
+
+        <FormControl>
+          <RadioGroup
+            aria-labelledby="demo-radio-buttons-group-label"
+            defaultValue={label}
+            name="radio-buttons-group"
+            onChange={(e) => setLabel(e.target.value)}
+            row
+          >
+            <FormControlLabel value="url" control={<Radio />} label="URL" />
+            <FormControlLabel value="video" control={<Radio />} label="Video" />
+          </RadioGroup>
+        </FormControl>
+
+        {label === 'url' ? (
+          <TextField
+            margin="dense"
+            label="URL"
+            type="text"
+            value={updateData?.url ? updateData.url : lectureData.url}
+            onChange={
+              updateData?.id
+                ? (e) => setUpdateData({ ...updateData, url: e.target.value })
+                : (e) => setLectureData({ ...lectureData, url: e.target.value })
+            }
+            fullWidth
+          />
+        ) : (
+          <Button
+            component="label"
+            variant="contained"
+            tabIndex={-1}
+            size="large"
+            sx={{ display: 'block', textAlign: 'center' }}
+          >
+            Upload file
+            <VisuallyHiddenInput type="file" onChange={handleFileChange} />
+          </Button>
+        )}
       </DialogContent>
 
       <DialogActions>

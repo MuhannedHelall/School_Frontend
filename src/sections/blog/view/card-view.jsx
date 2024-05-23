@@ -19,14 +19,34 @@ import CardSearch from '../card-search';
 
 // ----------------------------------------------------------------------
 
-export default function CardView({ title, items, onUpload, onDownload, Card, CardDialog }) {
+export default function CardView({
+  title,
+  items,
+  onUpload,
+  onDownload,
+  Card,
+  CardDialog,
+  CardSecondDialog = () => null,
+}) {
   const [openDialog, setOpenDialog] = useState(false);
+  const [openSecondDialog, setOpenSecondDialog] = useState({ state: false, delete: false });
   const [openUpload, setOpenUpload] = useState(false);
   const [updateData, setUpdateData] = useState(null);
+  const [secondDialogData, setSecondDialogData] = useState(null);
 
   const handleOpenUpdate = (item) => {
     setUpdateData({ ...updateData, ...item });
     setOpenDialog(true);
+  };
+
+  const handleAttach = (item) => {
+    setSecondDialogData({ ...secondDialogData, ...item });
+    setOpenSecondDialog({ state: true, delete: false });
+  };
+
+  const handleDetach = (item) => {
+    setSecondDialogData({ ...secondDialogData, ...item });
+    setOpenSecondDialog({ state: true, delete: true });
   };
 
   return (
@@ -67,7 +87,13 @@ export default function CardView({ title, items, onUpload, onDownload, Card, Car
           ) : (
             <Grid container spacing={3}>
               {items.data.map((item) => (
-                <Card key={item.id} item={item} onUpdate={handleOpenUpdate} />
+                <Card
+                  key={item.id}
+                  item={item}
+                  onUpdate={handleOpenUpdate}
+                  onAttach={handleAttach}
+                  onDetach={handleDetach}
+                />
               ))}
             </Grid>
           )}
@@ -79,6 +105,12 @@ export default function CardView({ title, items, onUpload, onDownload, Card, Car
         setOpen={setOpenDialog}
         updateData={updateData}
         setUpdateData={setUpdateData}
+      />
+
+      <CardSecondDialog
+        open={openSecondDialog}
+        setOpen={setOpenSecondDialog}
+        data={secondDialogData}
       />
 
       <FileUploadDialog
@@ -101,4 +133,5 @@ CardView.propTypes = {
   onDownload: PropTypes.func,
   Card: PropTypes.any,
   CardDialog: PropTypes.any,
+  CardSecondDialog: PropTypes.any,
 };

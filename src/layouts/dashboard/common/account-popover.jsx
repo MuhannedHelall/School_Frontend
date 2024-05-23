@@ -14,6 +14,7 @@ import IconButton from '@mui/material/IconButton';
 
 import { goHome } from 'src/utils/utilies';
 
+import route from 'src/routes';
 import { logout } from 'src/api/authSlice';
 
 // ----------------------------------------------------------------------
@@ -36,7 +37,7 @@ export default function AccountPopover() {
     {
       label: 'Edit Profile',
       icon: 'eva:settings-2-fill',
-      action: () => navigate('/editProfile'),
+      action: () => navigate(route.editProfile),
     },
   ];
 
@@ -94,7 +95,7 @@ export default function AccountPopover() {
         <Avatar
           src={
             user.data?.user?.avatar_url ||
-            `/assets/images/avatars/avatar_${user.data.user_id || 1 % 25}.jpg`
+            `/assets/images/avatars/avatar_${user?.data?.user_id || 1 % 25}.jpg`
           }
           alt={user.data.user?.name}
           sx={{

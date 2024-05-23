@@ -27,6 +27,7 @@ import { emptyRows, applyFilter, getComparator } from '../utils';
 
 export default function TableView({
   title,
+  addTitle = '',
   headLabel,
   items,
   onDownload,
@@ -103,7 +104,7 @@ export default function TableView({
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">{title}</Typography>
+        <Typography variant="h4">{title + addTitle}</Typography>
 
         <Button
           variant="contained"
@@ -151,7 +152,7 @@ export default function TableView({
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row) => (
                         <TableRow
-                          key={row.id}
+                          key={row?.id || row.grades.id}
                           user={row}
                           selected={selected.indexOf(row.name) !== -1}
                           handleClick={(event) => handleClick(event, row.name)}
@@ -199,6 +200,7 @@ export default function TableView({
 
 TableView.propTypes = {
   title: PropTypes.any,
+  addTitle: PropTypes.any,
   headLabel: PropTypes.any,
   items: PropTypes.any,
   onDownload: PropTypes.func,

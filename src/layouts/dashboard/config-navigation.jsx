@@ -56,14 +56,14 @@ const navConfig = {
         icon: icon('ic_analytics'),
       },
       {
-        title: 'Students',
-        path: route.admin.students,
-        icon: icon('ic_user'),
-      },
-      {
         title: 'Classes',
         path: route.admin.classes,
         icon: icon('ic_cart'),
+      },
+      {
+        title: 'Students',
+        path: route.admin.students,
+        icon: icon('ic_user'),
       },
     ],
     employee: [
@@ -93,6 +93,23 @@ const navConfig = {
     {
       title: 'Schedule',
       path: route.teacher.schedule,
+      icon: icon('ic_lock'),
+    },
+  ],
+  student: [
+    {
+      title: 'Dashboard',
+      path: route.student.index,
+      icon: icon('ic_analytics'),
+    },
+    {
+      title: 'Subjects',
+      path: route.student.subjects,
+      icon: icon('ic_blog'),
+    },
+    {
+      title: 'Schedule',
+      path: route.student.schedule,
       icon: icon('ic_lock'),
     },
   ],

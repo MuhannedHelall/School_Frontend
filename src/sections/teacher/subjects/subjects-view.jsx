@@ -39,12 +39,10 @@ export default function SubjectsView() {
         <Typography variant="h4">Subjects</Typography>
       </Stack>
 
-      {user.error && <h1 style={{ textAlign: 'center' }}>{user.error}</h1>}
       {user.loading ? (
-          <Loader />
-          // <h1 style={{ textAlign: 'center', marginTop: '150px' }}>Loading ...</h1>
+        <Loader />
       ) : (
-        <div>
+        <Box>
           {user.data?.subject?.length < 1 ? (
             <h1 style={{ textAlign: 'center', marginTop: '150px' }}>No subjects to show ...</h1>
           ) : (
@@ -170,7 +168,7 @@ export default function SubjectsView() {
               ))}
             </Grid>
           )}
-        </div>
+        </Box>
       )}
     </Container>
   );

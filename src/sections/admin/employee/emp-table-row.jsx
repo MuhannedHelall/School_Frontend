@@ -2,6 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import { Box } from '@mui/material';
 import Chip from '@mui/material/Chip';
@@ -21,7 +22,8 @@ import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 
-import { getSubjects } from 'src/api/subjectSlice';
+// import { getSubjects } from 'src/api/subjectSlice';
+import route from 'src/routes';
 import { getAdminDashboardData } from 'src/api/dashboardSlice';
 import { getEmployees, deleteEmployee, updateEmployee } from 'src/api/employeeSlice';
 
@@ -30,15 +32,17 @@ import Iconify from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 export default function EmpTableRow({ user, selected, handleClick }) {
+  const { id } = useParams();
   const dispatch = useDispatch();
-  const { id, name, email, avatarUrl, subject, status } = user;
+  const navigate = useNavigate();
+  const { id: userId, teacher_id, name, email, avatarUrl, subject, status } = user;
   const subjects = useSelector((state) => state.subject.data);
   const logedUser = useSelector((state) => state.auth.data);
 
   const [open, setOpen] = useState(null);
   const [edit, setEdit] = useState(false);
   const [empData, setEmpData] = useState({
-    id,
+    id: userId,
     name,
     email,
     status,
@@ -65,8 +69,8 @@ export default function EmpTableRow({ user, selected, handleClick }) {
       success: 'Employee is deleted !',
       error: 'An Error Occured !',
     });
-    dispatch(getEmployees(logedUser.department_id));
-    dispatch(getSubjects());
+    dispatch(getEmployees(logedUser.department_id || +id));
+    // dispatch(getSubjects());
     dispatch(getAdminDashboardData());
     setEmpData({ ...empData, status: false });
     handleCloseMenu();
@@ -88,9 +92,9 @@ export default function EmpTableRow({ user, selected, handleClick }) {
       success: 'Employee is updated !',
       error: 'An Error Occured !',
     });
-    dispatch(getEmployees(logedUser.department_id));
-    dispatch(getSubjects());
+    dispatch(getEmployees(logedUser.department_id || +id));
     setEdit(false);
+    // dispatch(getSubjects());
     // setEmpData()
   };
 
@@ -112,7 +116,10 @@ export default function EmpTableRow({ user, selected, handleClick }) {
 
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl || `/assets/images/avatars/avatar_${id % 25}.jpg`} />
+            <Avatar
+              alt={name}
+              src={avatarUrl || `/assets/images/avatars/avatar_${userId % 25}.jpg`}
+            />
             {edit ? (
               <Box display="flex" gap="10px">
                 <TextField
@@ -129,7 +136,10 @@ export default function EmpTableRow({ user, selected, handleClick }) {
                 />
               </Box>
             ) : (
-              <Box>
+              <Box
+                sx={{ cursor: 'pointer' }}
+                onClick={() => navigate(route.admin.teacherTimetable + teacher_id)}
+              >
                 <Typography variant="subtitle2" noWrap>
                   {name}
                 </Typography>
@@ -141,7 +151,7 @@ export default function EmpTableRow({ user, selected, handleClick }) {
           </Stack>
         </TableCell>
 
-        {logedUser.department_id === 4 && (
+        {(logedUser.department_id === 4 || +id === 4) && (
           <TableCell sx={{ textTransform: 'capitalize' }}>
             {edit ? (
               <FormControl size="small" sx={{ m: 1, width: 300 }}>

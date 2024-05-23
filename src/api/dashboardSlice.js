@@ -32,6 +32,14 @@ export const getTeacherDashboardData = createAsyncThunk(
   }
 );
 
+export const getStudentDashboardData = createAsyncThunk(
+  'Dashboards/getStudentDashboardData',
+  async () => {
+    const response = await authAPI('dashboard');
+    return response;
+  }
+);
+
 const Dashboards = createSlice({
   name: 'Dashboards',
   initialState,
@@ -75,6 +83,20 @@ const Dashboards = createSlice({
         state.error = '';
       })
       .addCase(getTeacherDashboardData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+      });
+
+    builder
+      .addCase(getStudentDashboardData.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getStudentDashboardData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+        state.error = '';
+      })
+      .addCase(getStudentDashboardData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
       });

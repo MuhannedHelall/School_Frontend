@@ -106,7 +106,10 @@ export default function AdminTableRow({ user, selected, handleClick }) {
 
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl || `/assets/images/avatars/avatar_${id % 25}.jpg`} />
+            <Avatar
+              alt={name}
+              src={avatarUrl || `/assets/images/avatars/avatar_${id % 25}.jpg`}
+            />
             {edit ? (
               <Box display="flex" gap="10px">
                 <TextField

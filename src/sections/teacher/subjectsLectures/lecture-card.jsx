@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import { Box, Link, Stack } from '@mui/material';
@@ -11,10 +11,25 @@ import { getLectures, deleteLecture } from 'src/api/lecturesSlice';
 
 import Iconify from 'src/components/iconify';
 
+export const routeToLecture = (value) => {
+  switch (value) {
+    case 'admin':
+      return route.admin.lecture;
+    case 'teacher':
+      return route.teacher.lecture;
+    case 'student':
+      return route.student.lecture;
+    default:
+      return route.landing;
+  }
+};
+
 function LectureCard({ lecture, onUpdate }) {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.data);
+  const { role } = user;
 
   const handleDelete = () => {
     toast.promise(dispatch(deleteLecture(lecture)), {
@@ -31,7 +46,7 @@ function LectureCard({ lecture, onUpdate }) {
         <Box className="details-header">
           <Box
             className="details-header-left"
-            onClick={() => navigate(route.teacher.lecture + lecture.id)}
+            onClick={() => navigate(routeToLecture(role) + lecture.id)}
           >
             <i className="fa-regular fa-file" />
             <Link
@@ -50,47 +65,52 @@ function LectureCard({ lecture, onUpdate }) {
               {lecture.title}
             </Link>
           </Box>
-          <Stack
-            direction="row"
-            flexWrap="wrap"
-            spacing={1.5}
-            sx={{
-              mt: 3,
-              color: 'text.disabled',
-            }}
-          >
-            <Box sx={{ cursor: 'pointer', transition: '200ms' }}>
-              <Iconify
-                width={26}
-                icon="mdi:pencil-outline"
-                sx={{
-                  mr: 0.5,
-                  ...{
-                    '&:hover': {
-                      color: 'black',
+          {role === 'student' || (
+            <Stack
+              direction="row"
+              flexWrap="wrap"
+              spacing={1.5}
+              sx={{
+                mt: 3,
+                color: 'text.disabled',
+              }}
+            >
+              <Box sx={{ cursor: 'pointer', transition: '200ms' }}>
+                <Iconify
+                  width={26}
+                  icon="mdi:pencil-outline"
+                  sx={{
+                    mr: 0.5,
+                    ...{
+                      '&:hover': {
+                        color: 'black',
+                      },
                     },
-                  },
-                }}
-                onClick={() => onUpdate(lecture)}
-              />
-              <Iconify
-                width={32}
-                icon="bi:x"
-                sx={{
-                  mr: 0.5,
-                  ...{
-                    '&:hover': {
-                      color: 'red',
+                  }}
+                  onClick={() => onUpdate(lecture)}
+                />
+                <Iconify
+                  width={32}
+                  icon="bi:x"
+                  sx={{
+                    mr: 0.5,
+                    ...{
+                      '&:hover': {
+                        color: 'red',
+                      },
                     },
-                  },
-                }}
-                onClick={handleDelete}
-              />
-            </Box>
-          </Stack>
-          {/* <p className="details-header-right">Lorem, ipsum dolor.</p> */}
+                  }}
+                  onClick={handleDelete}
+                />
+              </Box>
+            </Stack>
+          )}
         </Box>
-        <p className="path-container-content-details-info">{lecture.description}</p>
+        <p className="path-container-content-details-info">
+          {lecture.description.length > 100
+            ? `${lecture.description.toLowerCase().slice(0, 100)}...`
+            : lecture.description.toLowerCase()}
+        </p>
       </Box>
     </li>
   );

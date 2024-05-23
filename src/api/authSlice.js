@@ -22,7 +22,12 @@ export const logout = createAsyncThunk('auth/logout', async () => {
 });
 
 export const editProfile = createAsyncThunk('auth/editProfile', async (userData) => {
-  const response = await authAPI('user/update', 'POST', userData);
+  const response = await authAPI(`user/update/${userData.id}`, 'POST', userData);
+  return response;
+});
+
+export const changePassword = createAsyncThunk('auth/changePassword', async (userData) => {
+  const response = await authAPI(`setPassword/${userData.id}`, 'POST', userData);
   return response;
 });
 
@@ -37,11 +42,11 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload.employee;
+        state.data = action.payload.user;
         state.error = null;
         localStorage.setItem('token', action.payload.token);
-        localStorage.setItem('role', action.payload.employee.role);
-        localStorage.setItem('user', JSON.stringify(action.payload.employee));
+        localStorage.setItem('role', action.payload.user.role);
+        localStorage.setItem('user', JSON.stringify(action.payload.user));
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -73,6 +78,20 @@ const authSlice = createSlice({
         state.message = 'Profile Updated Successfully';
       })
       .addCase(editProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+      });
+
+    builder
+      .addCase(changePassword.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(changePassword.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+        state.message = 'Password Changed Successfully';
+      })
+      .addCase(changePassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
       });

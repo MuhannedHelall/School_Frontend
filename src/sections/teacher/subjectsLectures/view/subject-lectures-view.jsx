@@ -16,6 +16,19 @@ import './style.css';
 import LectureCard from '../lecture-card';
 import LectureDialog from '../lecture-dialog';
 
+export const routeBackToSubjects = (value) => {
+  switch (value) {
+    case 'admin':
+      return route.admin.subjects;
+    case 'teacher':
+      return route.teacher.subjects;
+    case 'student':
+      return route.student.subjects;
+    default:
+      return route.landing;
+  }
+};
+
 function SubjectLecturesView() {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -23,8 +36,11 @@ function SubjectLecturesView() {
 
   const lectures = useSelector((state) => state.lectures);
   const user = useSelector((state) => state.auth.data);
+  const subjects = useSelector((state) => state.subject.data);
 
-  const subject = user.subject?.find((sub) => sub.id === +id);
+  const { role } = user;
+  const subject =
+    user.subject?.find((sub) => sub.id === +id) || subjects.find((sub) => sub.id === +id);
 
   const [dropDown, setDropDown] = useState(true);
   const [openUpload, setOpenUpload] = useState(false);
@@ -44,14 +60,13 @@ function SubjectLecturesView() {
   };
 
   useEffect(() => {
-    dispatch(getLectures(id));
-    if (!subject?.name) navigate(route.notFound);
+    dispatch(getLectures(+id));
   }, [dispatch, id, subject?.name, navigate]);
 
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Link to={route.teacher.subjects}>go back</Link>
+        <Link to={routeBackToSubjects(role)}>go back</Link>
 
         <Button
           variant="contained"
@@ -68,11 +83,13 @@ function SubjectLecturesView() {
 
       <Stack mb={2} direction="row" alignItems="center" justifyContent="space-between">
         <Typography variant="h2">{subject?.name}</Typography>
-        <Tooltip title="Upload file">
-          <IconButton component="label" onClick={() => setOpenUpload(true)}>
-            <Iconify icon="solar:upload-outline" />
-          </IconButton>
-        </Tooltip>
+        {role === 'student' || (
+          <Tooltip title="Upload file">
+            <IconButton component="label" onClick={() => setOpenUpload(true)}>
+              <Iconify icon="solar:upload-outline" />
+            </IconButton>
+          </Tooltip>
+        )}
       </Stack>
 
       {lectures.data.length > 0 && <Box className="horizontal-line" />}
@@ -96,7 +113,6 @@ function SubjectLecturesView() {
         <Box className="path-container-content">
           <ul>
             {lectures.loading ? (
-              //   <h1 style={{ textAlign: 'center', marginTop: '150px' }}>Loading ...</h1>
               <Loader />
             ) : (
               <>

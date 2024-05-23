@@ -19,6 +19,11 @@ export const getSubjects = createAsyncThunk('subject/getSubjects', async () => {
   return response;
 });
 
+export const getSubjectsForClass = createAsyncThunk('subject/getSubjectsForClass', async (id) => {
+  const response = await authAPI(`getClassSubjects/${id}`);
+  return response;
+});
+
 export const getSubject = createAsyncThunk('subject/getSubject', async (id) => {
   const response = await authAPI(`subject/${id}`);
   return response;
@@ -41,6 +46,16 @@ export const downloadFile = createAsyncThunk('subject/downloadFile', async () =>
 
 export const uploadFile = createAsyncThunk('subject/uploadFile', async (file) => {
   const response = await fileAPI('importSubject', 'POST', file);
+  return response;
+});
+
+export const attachSubject = createAsyncThunk('subject/attachSubject', async (data) => {
+  const response = await authAPI(`grade/attach/${data.grade}`, 'POST', data);
+  return response;
+});
+
+export const detachSubject = createAsyncThunk('subject/detachSubject', async (data) => {
+  const response = await authAPI(`grade/detach/${data.grade}`, 'POST', data);
   return response;
 });
 
@@ -73,6 +88,21 @@ const subjectSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(getSubjects.rejected, (state, action) => {
+        state.loading = false;
+        state.data = [];
+        state.error = action.error.message || 'Something went wrong';
+        state.success = '';
+      });
+
+    builder
+      .addCase(getSubjectsForClass.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getSubjectsForClass.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(getSubjectsForClass.rejected, (state, action) => {
         state.loading = false;
         state.data = [];
         state.error = action.error.message || 'Something went wrong';
@@ -148,6 +178,34 @@ const subjectSlice = createSlice({
         state.message = action.payload;
       })
       .addCase(uploadFile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+      });
+
+    builder
+      .addCase(attachSubject.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(attachSubject.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = '';
+        state.message = action.payload;
+      })
+      .addCase(attachSubject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+      });
+
+    builder
+      .addCase(detachSubject.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(detachSubject.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = '';
+        state.message = action.payload;
+      })
+      .addCase(detachSubject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
       });

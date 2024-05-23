@@ -15,6 +15,14 @@ export const addLecture = createAsyncThunk('lectures/addLecture', async (lecture
   return response;
 });
 
+export const addLectureWithVideo = createAsyncThunk(
+  'lectures/addLectureWithVideo',
+  async (lecture) => {
+    const response = await authAPI('video/uploadLecture', 'POST', lecture);
+    return response;
+  }
+);
+
 export const getLectures = createAsyncThunk('lectures/getLectures', async (id) => {
   const response = await authAPI(`getSubjectLectures/${id}`);
   return response;
@@ -60,6 +68,21 @@ const lecturesSlice = createSlice({
         state.success = action.payload.success || 'Added Successfully !';
       })
       .addCase(addLecture.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+        state.success = '';
+      });
+
+    builder
+      .addCase(addLectureWithVideo.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addLectureWithVideo.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = '';
+        state.success = action.payload.success || 'Added Successfully !';
+      })
+      .addCase(addLectureWithVideo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
         state.success = '';

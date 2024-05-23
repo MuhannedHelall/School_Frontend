@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Select from '@mui/material/Select';
@@ -22,6 +23,7 @@ import { addEmployee, getEmployees } from 'src/api/employeeSlice';
 import Iconify from 'src/components/iconify';
 
 export default function EmpAddDialog({ open, setOpen, title }) {
+  const { id } = useParams();
   const dispatch = useDispatch();
   const subjects = useSelector((state) => state.subject.data);
   const user = useSelector((state) => state.auth.data);
@@ -29,7 +31,7 @@ export default function EmpAddDialog({ open, setOpen, title }) {
   const [empData, setEmpData] = useState({
     name: '',
     email: '',
-    department_id: user.department_id,
+    department_id: user.department_id || +id,
     subject_id: null,
   });
 
@@ -39,15 +41,15 @@ export default function EmpAddDialog({ open, setOpen, title }) {
 
   const handleAdd = () => {
     toast.promise(dispatch(addEmployee(empData)), {
-      pending: 'Admin is being added ...',
-      success: 'Admin is added !',
-      error: 'An Error Occured !',
+      pending: `${title.slice(0, title.length - 1)} is being added ...`,
+      success: `${title.slice(0, title.length - 1)} is added !`,
+      error: `An Error Occured !`,
     });
     dispatch(getSubjects());
-    dispatch(getEmployees(user.department_id));
+    dispatch(getEmployees(user.department_id || +id));
     dispatch(getAdminDashboardData());
     setOpen(false);
-    setEmpData({ name: '', email: '', department_id: user.department_id, subject_id: null });
+    setEmpData({ name: '', email: '', department_id: user.department_id || +id, subject_id: null });
   };
 
   return (
@@ -77,7 +79,7 @@ export default function EmpAddDialog({ open, setOpen, title }) {
           onChange={(e) => setEmpData({ ...empData, email: e.target.value })}
           fullWidth
         />
-        {user.department_id === 4 && (
+        {(user.department_id === 4 || +id === 4) && (
           <FormControl fullWidth required style={{ marginTop: '10px' }}>
             <InputLabel id="subject-select-label">subject</InputLabel>
             <Select

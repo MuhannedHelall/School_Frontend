@@ -20,13 +20,26 @@ export const getStudents = createAsyncThunk('student/getStudents', async () => {
   return response;
 });
 
+export const getStudentsInClass = createAsyncThunk('student/getStudentsInClass', async (id) => {
+  const response = await authAPI(`studentsInClass/${id}`);
+  return response;
+});
+
+export const getStudentsWithNoGrades = createAsyncThunk(
+  'student/getStudentsWithNoGrades',
+  async (id) => {
+    const response = await authAPI(`studentsWithNoGrades/${id}`);
+    return response;
+  }
+);
+
 export const getStudent = createAsyncThunk('student/getStudent', async (id) => {
   const response = await authAPI(`student/${id}`);
   return response;
 });
 
 export const updateStudent = createAsyncThunk('student/updateStudent', async (student) => {
-  const response = await authAPI(`student/${student.id}`, 'PUT', student);
+  const response = await authAPI(`student/${student.student_id}`, 'PUT', student);
   return response;
 });
 
@@ -74,6 +87,36 @@ const studentSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(getStudents.rejected, (state, action) => {
+        state.loading = false;
+        state.data = [];
+        state.error = action.error.message || 'Something went wrong';
+        state.success = '';
+      });
+
+    builder
+      .addCase(getStudentsInClass.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getStudentsInClass.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(getStudentsInClass.rejected, (state, action) => {
+        state.loading = false;
+        state.data = [];
+        state.error = action.error.message || 'Something went wrong';
+        state.success = '';
+      });
+
+    builder
+      .addCase(getStudentsWithNoGrades.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getStudentsWithNoGrades.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(getStudentsWithNoGrades.rejected, (state, action) => {
         state.loading = false;
         state.data = [];
         state.error = action.error.message || 'Something went wrong';

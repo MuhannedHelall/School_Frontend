@@ -18,8 +18,8 @@ export default function AppView() {
   const { data, error, loading } = useSelector((state) => state.dashboard);
 
   useEffect(() => {
-    if (Object.keys(data).length < 1) dispatch(getSuperDashboardData());
-  }, [dispatch, data]);
+    dispatch(getSuperDashboardData());
+  }, [dispatch]);
 
   return (
     <Container maxWidth="xl">

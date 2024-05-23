@@ -1,6 +1,7 @@
 const route = {
   login: '/login',
   landing: '/',
+  vark: '/vark-test',
   editProfile: '/editProfile',
   super: {
     index: '/superAdmin',
@@ -12,10 +13,14 @@ const route = {
     index: '/admin',
     emps: '/admin/employees',
     students: '/admin/students',
-    studentsId: '/admin/students/:id',
+    studentsSubjectId: '/admin/students/',
+    studentsId: '/admin/student/',
     subjects: '/admin/subjects',
+    lectures: '/admin/lectures/',
+    lecture: '/admin/lecture/',
     classes: '/admin/classes',
     timetable: '/admin/timetable',
+    teacherTimetable: '/admin/timetable/',
   },
   teacher: {
     index: '/teacher',
@@ -24,11 +29,16 @@ const route = {
     subjectLectures: '/teacher/subjects/',
     subjectGrades: '/teacher/subjects/grade/',
     lecture: '/teacher/lectures/',
-    // classes: '/teacher/classes',
-    // quizes: '/teacher/quizes',
-    // assignments: '/teacher/assignments',
-    // exams: '/teacher/exams',
   },
+  student: {
+    index: '/student',
+    schedule: '/student/schedule',
+    subjects: '/student/subjects',
+    subjectLectures: '/student/subjects/',
+    subjectGrades: '/student/subjects/grade/',
+    lecture: '/student/lectures/',
+  },
+
   notFound: '/notfound',
 };
 

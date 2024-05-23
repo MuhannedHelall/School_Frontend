@@ -59,13 +59,19 @@ export default function Nav({ openNav, onCloseNav }) {
       </Avatar>
 
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{loginInfo.data?.user?.name}</Typography>
+        <Typography variant="subtitle2" textTransform="capitalize">
+          {loginInfo.data?.user?.name}
+        </Typography>
 
         <Typography variant="body2" textTransform="uppercase" sx={{ color: 'text.secondary' }}>
           {loginInfo.data?.role}
         </Typography>
 
-        <Typography variant="caption">{loginInfo.data?.department?.name}</Typography>
+        <Typography variant="caption">
+          {loginInfo.data.role === 'student'
+            ? `${loginInfo.data?.class?.grade}/${loginInfo.data?.class?.class_number}`
+            : loginInfo.data?.department?.name}
+        </Typography>
       </Box>
     </Box>
   );
@@ -136,7 +142,7 @@ Nav.propTypes = {
 function RenderMenu() {
   const user = useSelector((state) => state.auth.data);
   let navMenu = [];
-  switch (user?.role) {
+  switch (user.role) {
     case 'superAdmin':
       navMenu = navConfig.super;
       break;
@@ -147,6 +153,9 @@ function RenderMenu() {
       break;
     case 'teacher':
       navMenu = navConfig.teacher;
+      break;
+    case 'student':
+      navMenu = navConfig.student;
       break;
     default:
       navMenu = [];

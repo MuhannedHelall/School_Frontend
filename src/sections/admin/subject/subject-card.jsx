@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -13,6 +14,7 @@ import Typography from '@mui/material/Typography';
 
 import { fShortenNumber } from 'src/utils/format-number';
 
+import route from 'src/routes';
 import { getSubjects, deleteSubject } from 'src/api/subjectSlice';
 
 import Iconify from 'src/components/iconify';
@@ -22,6 +24,7 @@ import SvgColor from 'src/components/svg-color';
 
 export default function SubjectCard({ item, onUpdate }) {
   const { id, name, numOfTeachers, mainAdmin } = item;
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const colors = [
     'red',
@@ -106,7 +109,9 @@ export default function SubjectCard({ item, onUpdate }) {
               display: '-webkit-box',
               WebkitBoxOrient: 'vertical',
               textTransform: 'capitalize',
+              cursor: 'pointer',
             }}
+            onClick={() => navigate(`${route.admin.lectures}${id}`)}
           >
             {name}
           </Link>

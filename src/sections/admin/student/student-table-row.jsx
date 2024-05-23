@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-// import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import { Box } from '@mui/material';
 import Stack from '@mui/material/Stack';
@@ -21,22 +21,30 @@ import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
 
 // import { getClasses } from 'src/api/classSlice';
-import { getStudents, deleteStudent, updateStudent } from 'src/api/studentSlice';
+import route from 'src/routes';
+import {
+  getStudents,
+  deleteStudent,
+  updateStudent,
+  getStudentsInClass,
+} from 'src/api/studentSlice';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 export default function StudentTableRow({ user, selected, handleClick }) {
+  const { subject_id } = useParams();
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
-  const { id, name, email, avatarUrl, status } = user;
+  const navigate = useNavigate();
+  const { id, student_id, name, email, avatarUrl, status } = user;
   const classes = useSelector((state) => state.class.data);
 
   const [open, setOpen] = useState(null);
   const [edit, setEdit] = useState(false);
-  const [empData, setEmpData] = useState({
+  const [studentData, setStudentData] = useState({
     id,
+    student_id,
     name,
     email,
     status,
@@ -63,30 +71,32 @@ export default function StudentTableRow({ user, selected, handleClick }) {
       success: 'Student is deleted !',
       error: 'An Error Occured !',
     });
-    dispatch(getStudents());
-    // dispatch(getClasses());
-    setEmpData({ ...empData, status: false });
+
+    if (subject_id) dispatch(getStudentsInClass(subject_id));
+    else dispatch(getStudents());
+
+    setStudentData({ ...studentData, status: false });
     handleCloseMenu();
   };
 
   const saveEditedRecord = () => {
     if (
-      empData.avatarUrl === avatarUrl &&
-      empData.name === name &&
-      empData.email === email &&
-      empData.class_id === user.class.id &&
-      empData.status === status
+      studentData.avatarUrl === avatarUrl &&
+      studentData.name === name &&
+      studentData.email === email &&
+      studentData.class_id === user.class.id &&
+      studentData.status === status
     ) {
       setEdit(false);
       return;
     }
-    toast.promise(dispatch(updateStudent(empData)), {
+    toast.promise(dispatch(updateStudent(studentData)), {
       pending: 'Student is being updated ...',
       success: 'Student is Updated !',
       error: 'An Error Occured !',
     });
-    dispatch(getStudents());
-    // dispatch(getClasses());
+    if (subject_id) dispatch(getStudentsInClass(subject_id));
+    else dispatch(getStudents());
     setEdit(false);
   };
 
@@ -107,30 +117,25 @@ export default function StudentTableRow({ user, selected, handleClick }) {
         </TableCell>
 
         <TableCell component="th" scope="row" padding="none">
-          <Stack
-            // onClick={() => navigate(`${id}`)}
-            direction="row"
-            alignItems="center"
-            spacing={2}
-          >
+          <Stack direction="row" alignItems="center" spacing={2}>
             <Avatar alt={name} src={avatarUrl || `/assets/images/avatars/avatar_${id % 25}.jpg`} />
             {edit ? (
               <Box display="flex" gap="10px">
                 <TextField
                   label="Name"
                   size="small"
-                  value={empData.name}
-                  onChange={(e) => setEmpData({ ...empData, name: e.target.value })}
+                  value={studentData.name}
+                  onChange={(e) => setStudentData({ ...studentData, name: e.target.value })}
                 />
                 <TextField
                   label="Email"
                   size="small"
-                  value={empData.email}
-                  onChange={(e) => setEmpData({ ...empData, email: e.target.value })}
+                  value={studentData.email}
+                  onChange={(e) => setStudentData({ ...studentData, email: e.target.value })}
                 />
               </Box>
             ) : (
-              <Box>
+              <Box onClick={() => navigate(`${route.admin.studentsId + id}`)}>
                 <Typography variant="subtitle2" noWrap>
                   {name}
                 </Typography>
@@ -150,8 +155,8 @@ export default function StudentTableRow({ user, selected, handleClick }) {
                 labelId="class-edit-select-label"
                 id="class-edit-select"
                 label="Class *"
-                value={empData.class_id}
-                onChange={(e) => setEmpData({ ...empData, class_id: e.target.value })}
+                value={studentData.class_id}
+                onChange={(e) => setStudentData({ ...studentData, class_id: e.target.value })}
               >
                 {classes?.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
@@ -175,8 +180,8 @@ export default function StudentTableRow({ user, selected, handleClick }) {
                 labelId="status-edit-select-label"
                 id="status-edit-select"
                 label="Status"
-                value={empData.status}
-                onChange={(e) => setEmpData({ ...empData, status: e.target.value })}
+                value={studentData.status}
+                onChange={(e) => setStudentData({ ...studentData, status: e.target.value })}
               >
                 {[
                   { name: 'Active', value: 1 },

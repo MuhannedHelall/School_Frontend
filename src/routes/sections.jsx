@@ -18,10 +18,13 @@ export const AdminsPage = lazy(() => import('src/pages/superAdmin/admin'));
 export const AdminIndex = lazy(() => import('src/pages/admin'));
 export const EmpsPage = lazy(() => import('src/pages/admin/employee'));
 export const SubjectsPage = lazy(() => import('src/pages/admin/subject'));
+export const LecturesPage = lazy(() => import('src/pages/admin/lectures'));
+export const LecturePage = lazy(() => import('src/pages/admin/lecture'));
 export const TimeTablePage = lazy(() => import('src/pages/admin/timetable'));
 export const StudentPage = lazy(() => import('src/pages/admin/showStudent'));
 export const StudentsPage = lazy(() => import('src/pages/admin/student'));
 export const ClassesPage = lazy(() => import('src/pages/admin/class'));
+export const TeacherTablePage = lazy(() => import('src/pages/admin/teacherTimetable'));
 
 // Teacher Pages
 export const TeacherIndex = lazy(() => import('src/pages/teacher/index'));
@@ -29,10 +32,19 @@ export const TeacherSubjects = lazy(() => import('src/pages/teacher/subject'));
 export const TeacherSubjectsLectures = lazy(() => import('src/pages/teacher/subjectLectures'));
 export const TeacherSubjectsGrades = lazy(() => import('src/pages/teacher/subjectGrade'));
 export const TeacherLecturePage = lazy(() => import('src/pages/teacher/LecturePage'));
-export const SchedulePage = lazy(() => import('src/pages/teacher/schedule'));
+export const TeacherSchedulePage = lazy(() => import('src/pages/teacher/schedule'));
+
+// Student Pages
+export const StudentIndex = lazy(() => import('src/pages/student/index'));
+export const StudentSubjects = lazy(() => import('src/pages/student/subject'));
+export const StudentSchedulePage = lazy(() => import('src/pages/student/schedule'));
+// export const StudentGrades = lazy(() => import('src/pages/student/grades'));
+export const StudentSubjectsLectures = lazy(() => import('src/pages/student/subjectLectures'));
+export const StudentLecturePage = lazy(() => import('src/pages/student/LecturePage'));
 
 // Other Pages
 export const LandingPage = lazy(() => import('src/pages/landing'));
+export const VarkPage = lazy(() => import('src/pages/vark'));
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const EditProfilePage = lazy(() => import('src/pages/editProfile'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
@@ -48,6 +60,10 @@ export default function Router() {
     {
       path: route.landing,
       element: <LandingPage />,
+    },
+    {
+      path: route.vark,
+      element: <VarkPage />,
     },
     {
       element: (
@@ -115,18 +131,18 @@ export default function Router() {
               ),
             },
             {
-              path: route.admin.students,
+              path: `${route.admin.lectures}:id`,
               element: (
                 <AdminAuth>
-                  <StudentsPage />
+                  <LecturesPage />
                 </AdminAuth>
               ),
             },
             {
-              path: route.admin.studentsId,
+              path: `${route.admin.lecture}:id`,
               element: (
                 <AdminAuth>
-                  <StudentPage />
+                  <LecturePage />
                 </AdminAuth>
               ),
             },
@@ -139,10 +155,42 @@ export default function Router() {
               ),
             },
             {
+              path: `${route.admin.students}`,
+              element: (
+                <AdminAuth>
+                  <StudentsPage />
+                </AdminAuth>
+              ),
+            },
+            {
+              path: `${route.admin.studentsSubjectId}:subject_id`,
+              element: (
+                <AdminAuth>
+                  <StudentsPage />
+                </AdminAuth>
+              ),
+            },
+            {
+              path: `${route.admin.studentsId}:id`,
+              element: (
+                <AdminAuth>
+                  <StudentPage />
+                </AdminAuth>
+              ),
+            },
+            {
               path: route.admin.timetable,
               element: (
                 <AdminAuth>
                   <TimeTablePage />
+                </AdminAuth>
+              ),
+            },
+            {
+              path: `${route.admin.teacherTimetable}:id`,
+              element: (
+                <AdminAuth>
+                  <TeacherTablePage />
                 </AdminAuth>
               ),
             },
@@ -152,7 +200,7 @@ export default function Router() {
           path: route.teacher.index,
           children: [
             { element: <TeacherIndex />, index: true },
-            { path: route.teacher.schedule, element: <SchedulePage /> },
+            { path: route.teacher.schedule, element: <TeacherSchedulePage /> },
             {
               path: route.teacher.subjects,
               element: <TeacherSubjects />,
@@ -168,6 +216,32 @@ export default function Router() {
             {
               path: `${route.teacher.lecture}:id`,
               element: <TeacherLecturePage />,
+            },
+          ],
+        },
+        {
+          path: route.student.index,
+          children: [
+            { element: <StudentIndex />, index: true },
+            {
+              path: route.student.subjects,
+              element: <StudentSubjects />,
+            },
+            {
+              path: `${route.student.schedule}`,
+              element: <StudentSchedulePage />,
+            },
+            {
+              path: `${route.student.subjectLectures}:id`,
+              element: <StudentSubjectsLectures />,
+            },
+            // {
+            //   path: `${route.student.subjectGrades}:id`,
+            //   element: <StudentGrades />,
+            // },
+            {
+              path: `${route.student.lecture}:id`,
+              element: <StudentLecturePage />,
             },
           ],
         },

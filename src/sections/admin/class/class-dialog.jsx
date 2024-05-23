@@ -56,6 +56,7 @@ export default function ClassDialog({ open, setOpen, updateData, setUpdateData }
           class.
         </DialogContentText>
         <TextField
+          autoFocus
           margin="dense"
           label="Grade"
           type="text"
@@ -68,7 +69,6 @@ export default function ClassDialog({ open, setOpen, updateData, setUpdateData }
           fullWidth
         />
         <TextField
-          autoFocus
           margin="dense"
           label="Class Number"
           type="text"

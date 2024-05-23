@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import { Box } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import Select from '@mui/material/Select';
+// import Select from '@mui/material/Select';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Popover from '@mui/material/Popover';
@@ -14,32 +15,34 @@ import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import TableCell from '@mui/material/TableCell';
-import InputLabel from '@mui/material/InputLabel';
+// import InputLabel from '@mui/material/InputLabel';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import FormControl from '@mui/material/FormControl';
+// import FormControl from '@mui/material/FormControl';
 
-import { getDepartments } from 'src/api/departmentSlice';
-import { getAdmins, deleteAdmin, updateAdmin, resetPassword } from 'src/api/adminSlice';
+import { getGrades, deleteGrade, updateGrade } from 'src/api/gradeSlice';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 export default function GradeTableRow({ user, selected, handleClick }) {
+  const { id } = useParams();
   const dispatch = useDispatch();
-  const { id, name, email, avatarUrl, department, status } = user;
-  const departments = useSelector((state) => state.department.data);
+
+  const { grades, student, subject, classroom } = user;
 
   const [open, setOpen] = useState(null);
   const [edit, setEdit] = useState(false);
   const [studentData, setStudentData] = useState({
-    id,
-    name,
-    email,
-    status,
-    avatarUrl,
-    department_id: department.id,
+    id: grades.id,
+    student_id: student.student_id,
+    subject_id: subject.id,
+    midterm: grades.midterm,
+    final: grades.final,
+    attendance: grades.attendance,
+    behavior: grades.behavior,
+    total: grades.total,
   });
 
   const handleOpenMenu = (event) => {
@@ -56,45 +59,23 @@ export default function GradeTableRow({ user, selected, handleClick }) {
   };
 
   const handleDeleteRecord = () => {
-    toast.promise(dispatch(deleteAdmin(user)), {
-      pending: 'Admin is being deleted ...',
-      success: 'Admin is deleted !',
+    toast.promise(dispatch(deleteGrade(grades)), {
+      pending: 'Student Grade is being deleted ...',
+      success: 'Student Grade is deleted !',
       error: 'An Error Occured !',
     });
-    dispatch(getAdmins());
-    dispatch(getDepartments());
-    setStudentData({ ...studentData, status: false });
+    dispatch(getGrades(id));
     handleCloseMenu();
   };
 
   const saveEditedRecord = () => {
-    if (
-      studentData.avatarUrl === avatarUrl &&
-      studentData.name === name &&
-      studentData.email === email &&
-      studentData.department_id === department.id &&
-      studentData.status === status
-    ) {
-      setEdit(false);
-      return;
-    }
-    toast.promise(dispatch(updateAdmin(studentData)), {
-      pending: 'Admin is being updated ...',
-      success: 'Admin is updated !',
+    toast.promise(dispatch(updateGrade(studentData)), {
+      pending: 'Student Grade is being updated ...',
+      success: 'Student Grade is updated !',
       error: 'An Error Occured !',
     });
-    dispatch(getAdmins());
-    dispatch(getDepartments());
+    dispatch(getGrades(id));
     setEdit(false);
-  };
-
-  const reset = () => {
-    toast.promise(dispatch(resetPassword(id)), {
-      pending: 'Password is being reset ...',
-      success: 'Password is reset successfully !',
-      error: 'An Error Occured !',
-    });
-    handleCloseMenu();
   };
 
   return (
@@ -106,92 +87,102 @@ export default function GradeTableRow({ user, selected, handleClick }) {
 
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl || `/assets/images/avatars/avatar_${id % 25}.jpg`} />
-            {edit ? (
-              <Box display="flex" gap="10px">
-                <TextField
-                  label="Name"
-                  size="small"
-                  value={studentData.name}
-                  onChange={(e) => setStudentData({ ...studentData, name: e.target.value })}
-                />
-                <TextField
-                  label="Email"
-                  size="small"
-                  value={studentData.email}
-                  onChange={(e) => setStudentData({ ...studentData, email: e.target.value })}
-                />
-              </Box>
-            ) : (
-              <Box>
-                <Typography variant="subtitle2" noWrap>
-                  {name}
-                </Typography>
-                <Typography variant="caption" noWrap>
-                  {email}
-                </Typography>
-              </Box>
-            )}
+            <Avatar
+              alt={student.name}
+              src={student?.avatarUrl || `/assets/images/avatars/avatar_${student.id % 25}.jpg`}
+            />
+            <Box>
+              <Typography variant="subtitle2" noWrap>
+                {student.name}
+              </Typography>
+              <Typography variant="caption" noWrap>
+                {student.email}
+              </Typography>
+            </Box>
           </Stack>
         </TableCell>
 
         <TableCell>
-          {edit ? (
-            <FormControl size="small" fullWidth>
-              <InputLabel id="department-edit-select-label">Department</InputLabel>
-              <Select
-                labelId="department-edit-select-label"
-                id="department-edit-select"
-                label="Department"
-                value={studentData.department_id}
-                onChange={(e) => setStudentData({ ...studentData, department_id: e.target.value })}
-              >
-                {departments?.map((dept) => (
-                  <MenuItem key={dept.id} value={dept.id}>
-                    {dept.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          {classroom ? (
+            <Label color="success">{`${classroom.grade}/${classroom.class_number}`}</Label>
           ) : (
-            department.name || <Typography color="red">Not Found</Typography>
+            <Label color="">Not Found</Label>
           )}
         </TableCell>
 
         <TableCell>
-          {edit && !status ? (
-            <FormControl size="small" fullWidth>
-              <InputLabel id="status-edit-select-label">Status</InputLabel>
-              <Select
-                labelId="status-edit-select-label"
-                id="status-edit-select"
-                label="Status"
-                value={studentData.status}
-                onChange={(e) => setStudentData({ ...studentData, status: e.target.value })}
-              >
-                {[
-                  { name: 'Active', value: 1 },
-                  { name: 'Banned', value: 0 },
-                ].map((statusData) => (
-                  <MenuItem key={statusData.name} value={statusData.value}>
-                    {statusData.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          {edit ? (
+            <TextField
+              label="Midterm"
+              size="small"
+              type="number"
+              value={studentData.midterm}
+              onChange={(e) => setStudentData({ ...studentData, midterm: e.target.value })}
+            />
           ) : (
-            <Label color={status ? 'success' : 'error'}>{status ? 'Active' : 'Banned'}</Label>
+            grades.midterm || <Typography color="red">Not Found</Typography>
           )}
         </TableCell>
 
-        <TableCell align="center">
+        <TableCell>
+          {edit ? (
+            <TextField
+              label="Final"
+              size="small"
+              type="number"
+              value={studentData.final}
+              onChange={(e) => setStudentData({ ...studentData, final: e.target.value })}
+            />
+          ) : (
+            grades.final || <Typography color="red">Not Found</Typography>
+          )}
+        </TableCell>
+
+        <TableCell>
+          {edit ? (
+            <TextField
+              label="Behavior"
+              size="small"
+              type="number"
+              value={studentData.behavior}
+              onChange={(e) => setStudentData({ ...studentData, behavior: e.target.value })}
+            />
+          ) : (
+            grades.behavior || <Typography color="red">Not Found</Typography>
+          )}
+        </TableCell>
+
+        <TableCell>
+          {edit ? (
+            <TextField
+              label="Attendance"
+              size="small"
+              type="number"
+              value={studentData.attendance}
+              onChange={(e) => setStudentData({ ...studentData, attendance: e.target.value })}
+            />
+          ) : (
+            grades.attendance || <Typography color="red">Not Found</Typography>
+          )}
+        </TableCell>
+
+        <TableCell>
+          {edit ? (
+            <TextField
+              label="Total"
+              size="small"
+              type="number"
+              value={studentData.total}
+              onChange={(e) => setStudentData({ ...studentData, total: e.target.value })}
+            />
+          ) : (
+            grades.total || <Typography color="red">Not Found</Typography>
+          )}
+        </TableCell>
+
+        <TableCell>
           {edit ? (
             <Box>
-              <Tooltip title="Reset Password">
-                <IconButton onClick={reset}>
-                  <Iconify icon="solar:lock-linear" />
-                </IconButton>
-              </Tooltip>
               <Tooltip title="Discard">
                 <IconButton onClick={() => setEdit(false)}>
                   <Iconify icon="bi:x" />

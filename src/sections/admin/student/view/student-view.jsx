@@ -1,9 +1,10 @@
 import { toast } from 'react-toastify';
 import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getClasses } from 'src/api/classSlice';
-import { uploadFile, getStudents, downloadFile } from 'src/api/studentSlice';
+import { uploadFile, getStudents, downloadFile, getStudentsInClass } from 'src/api/studentSlice';
 
 import { TableView } from 'src/sections/table/view';
 
@@ -21,12 +22,14 @@ const Title = 'Students';
 
 // ------------------------------------------------------------------------
 function StudentView() {
+  const { subject_id } = useParams();
   const dispatch = useDispatch();
   const students = useSelector((state) => state.student);
   const classes = useSelector((state) => state.class);
 
   useEffect(() => {
-    if (students.data.length < 1) dispatch(getStudents());
+    if (subject_id) dispatch(getStudentsInClass(subject_id));
+    else dispatch(getStudents());
     if (classes.data.length < 1) dispatch(getClasses());
   }, [dispatch]); // eslint-disable-line
 
@@ -39,7 +42,11 @@ function StudentView() {
       pending: 'File is being uploaded ...',
       success: {
         render({ data }) {
-          dispatch(getStudents());
+          if (subject_id) {
+            dispatch(getStudentsInClass(subject_id));
+          } else {
+            dispatch(getStudents());
+          }
           // setOpenUploadDialog(false);
           return data.payload[1];
         },

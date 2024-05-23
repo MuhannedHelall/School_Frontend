@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -13,16 +14,18 @@ import Typography from '@mui/material/Typography';
 
 // import { fShortenNumber } from 'src/utils/format-number';
 
+import route from 'src/routes';
 import { getClasses, deleteClass } from 'src/api/classSlice';
 
 import Iconify from 'src/components/iconify';
-import SvgColor from 'src/components/svg-color';
+// import SvgColor from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
 
-export default function ClassCard({ item, onUpdate }) {
+export default function ClassCard({ item, onUpdate, onAttach, onDetach }) {
   const { id, class_number = 'Not Found', grade = 0 } = item;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const colors = [
     'red',
     'yellow',
@@ -49,35 +52,6 @@ export default function ClassCard({ item, onUpdate }) {
     <Grid xs={12} sm={6} md={4}>
       <Card>
         <Box sx={{ position: 'relative', pt: '20px' }}>
-          <SvgColor
-            color="paper"
-            src="/assets/icons/shape-avatar.svg"
-            sx={{
-              position: 'absolute',
-              bottom: -15,
-              width: 80,
-              height: 36,
-              zIndex: 9,
-              color: 'background.paper',
-            }}
-          />
-
-          {/* <Avatar
-            alt={class_number}
-            src={
-              mainAdmin.avatarUrl ||
-              (mainAdmin.id && `/assets/images/avatars/avatar_${mainAdmin.id % 25}.jpg`)
-            }
-            sx={{
-              position: 'absolute',
-              zIndex: 9,
-              width: 32,
-              height: 32,
-              left: (theme) => theme.spacing(3),
-              bottom: (theme) => theme.spacing(-2),
-            }}
-          /> */}
-
           <Box
             component="div"
             sx={{
@@ -91,14 +65,15 @@ export default function ClassCard({ item, onUpdate }) {
         </Box>
 
         <Box sx={{ p: (theme) => theme.spacing(4, 3, 3, 3) }}>
-          <Typography variant="caption" component="div" sx={{ mb: 1, color: 'text.disabled' }}>
+          {/* <Typography variant="caption" component="div" sx={{ mb: 1, color: 'text.disabled' }}>
             {grade || 'Not Assigned'}
-          </Typography>
+          </Typography> */}
 
           <Link
             color="inherit"
             variant="h6"
             underline="hover"
+            onClick={() => navigate(route.admin.studentsSubjectId + id)}
             sx={{
               height: 30,
               overflow: 'hidden',
@@ -106,6 +81,11 @@ export default function ClassCard({ item, onUpdate }) {
               display: '-webkit-box',
               WebkitBoxOrient: 'vertical',
               textTransform: 'capitalize',
+              ...{
+                '&:hover': {
+                  cursor: 'pointer',
+                },
+              },
             }}
           >
             {`${grade}/${class_number}`}
@@ -120,14 +100,38 @@ export default function ClassCard({ item, onUpdate }) {
                 color: 'text.disabled',
               }}
             >
-              {/* {numOfTeachers > 0 && (
-                <Tooltip title="Teachers">
-                  <Stack direction="row">
-                    <Iconify width={16} icon="eos-icons:admin" sx={{ mr: 0.5 }} />
-                    <Typography variant="caption">{fShortenNumber(numOfTeachers)}</Typography>
-                  </Stack>
-                </Tooltip>
-              )} */}
+              <Stack
+                direction="row"
+                sx={{
+                  cursor: 'pointer',
+                  transition: '200ms',
+                  ...{
+                    '&:hover': {
+                      color: 'black',
+                    },
+                  },
+                }}
+                onClick={() => onAttach(item)}
+              >
+                <Iconify width={16} icon="teenyicons:attach-solid" sx={{ mr: 0.5 }} />
+                <Typography variant="caption">Attach</Typography>
+              </Stack>
+              <Stack
+                direction="row"
+                sx={{
+                  cursor: 'pointer',
+                  transition: '200ms',
+                  ...{
+                    '&:hover': {
+                      color: 'red',
+                    },
+                  },
+                }}
+                onClick={() => onDetach(item)}
+              >
+                <Iconify width={16} icon="gala:remove" sx={{ mr: 0.5 }} />
+                <Typography variant="caption">detach</Typography>
+              </Stack>
             </Stack>
             <Stack
               direction="row"
@@ -181,4 +185,6 @@ export default function ClassCard({ item, onUpdate }) {
 ClassCard.propTypes = {
   item: PropTypes.object.isRequired,
   onUpdate: PropTypes.func,
+  onAttach: PropTypes.func,
+  onDetach: PropTypes.func,
 };

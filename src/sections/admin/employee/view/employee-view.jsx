@@ -1,5 +1,6 @@
 import { toast } from 'react-toastify';
 import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getSubjects } from 'src/api/subjectSlice';
@@ -35,24 +36,24 @@ let headLabel = Labels.employee;
 
 // ------------------------------------------------------------------------
 function EmployeeView() {
+  const { id } = useParams();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.data);
   const emps = useSelector((state) => state.employee);
   const subs = useSelector((state) => state.subject);
 
-  if (user?.department_id === 4) {
-    Title = 'Teachers';
-    headLabel = Labels.teacher;
-  } else if (user?.department_id === 5) {
-    Title = 'Students';
-    headLabel = Labels.student;
-  }
-
   useEffect(() => {
-    if (emps.data.length < 1) dispatch(getEmployees(user.department_id));
+    if (user?.department_id === 4 || +id === 4) {
+      Title = 'Teachers';
+      headLabel = Labels.teacher;
+    } else if (user?.department_id === 5 || +id === 5) {
+      Title = 'Students';
+      headLabel = Labels.student;
+    }
+    dispatch(getEmployees(user.department_id || +id));
     if (subs.data.length < 1) dispatch(getSubjects());
     return () => {
-      Title = 'Employoees';
+      Title = 'Employees';
       headLabel = Labels.employee;
     };
   }, [dispatch]); // eslint-disable-line

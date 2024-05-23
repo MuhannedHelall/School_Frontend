@@ -11,4 +11,3 @@ Auth.propTypes = {
 };
 
 export default Auth;
-

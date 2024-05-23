@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Select from '@mui/material/Select';
@@ -15,77 +16,140 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 
-import { addAdmin, getAdmins } from 'src/api/adminSlice';
-import { getDepartments } from 'src/api/departmentSlice';
+import { addGrade, getGrades } from 'src/api/gradeSlice';
 
 import Iconify from 'src/components/iconify';
 
 export default function GradeAddDialog({ open, setOpen }) {
+  const { id } = useParams();
   const dispatch = useDispatch();
-  const departments = useSelector((state) => state.department.data);
-  const [studentGrades, setStudentGrades] = useState({ name: '', email: '', department_id: '1' });
+
+  const students = useSelector((state) => state.student.data);
+  const grades = useSelector((state) => state.grade.data);
+  const [studentGrades, setStudentGrades] = useState({
+    student_id: null,
+    subject_id: +id,
+    midterm: null,
+    final: null,
+    attendance: null,
+    behavior: null,
+    total: null,
+  });
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleAdd = () => {
-    toast.promise(dispatch(addAdmin(studentGrades)), {
-      pending: 'Admin is being added ...',
-      success: 'Admin is added !',
+    toast.promise(dispatch(addGrade(studentGrades)), {
+      pending: 'Student Grade is being added ...',
+      success: 'Student Grade is added !',
       error: 'An Error Occured !',
     });
-    dispatch(getDepartments());
-    dispatch(getAdmins());
+    dispatch(getGrades(+id));
     setOpen(false);
-    setStudentGrades({ name: '', email: '', department_id: '1' });
+    setStudentGrades({
+      student_id: null,
+      subject_id: +id,
+      midterm: null,
+      final: null,
+      attendance: null,
+      behavior: null,
+      total: null,
+    });
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-        <Iconify icon="eva:plus-fill" />
-        Add New Admin
+        {grades[0]?.grades?.final ? (
+          <>
+            <Iconify icon="eva:eye-fill" />
+            View your grades
+          </>
+        ) : (
+          <>
+            <Iconify icon="eva:plus-fill" />
+            Add New Grade
+          </>
+        )}
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>Please fill up the form to add a new admin.</DialogContentText>
+        {grades[0]?.grades?.final ? (
+          ''
+        ) : (
+          <>
+            <DialogContentText>
+              Please fill up the form to add a new student grade.
+            </DialogContentText>
+            <FormControl fullWidth required style={{ marginTop: '10px' }}>
+              <InputLabel id="student-select-label">Student</InputLabel>
+              <Select
+                labelId="student-select-label"
+                id="student-select"
+                label="Student *"
+                value={studentGrades.student_id}
+                onChange={(e) => setStudentGrades({ ...studentGrades, student_id: e.target.value })}
+              >
+                {students.map((student) => (
+                  <MenuItem key={student.id} value={student.id}>
+                    {student.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </>
+        )}
+
         <TextField
-          autoFocus
           margin="dense"
-          label="Name"
-          type="text"
-          value={studentGrades.name}
-          onChange={(e) => setStudentGrades({ ...studentGrades, name: e.target.value })}
+          label="Midterm *"
+          type="number"
+          value={grades[0]?.grades?.midterm || studentGrades.midterm}
+          onChange={(e) => setStudentGrades({ ...studentGrades, midterm: e.target.value })}
           fullWidth
+          disabled={grades[0]?.grades?.midterm}
         />
         <TextField
           margin="dense"
-          label="Email Address"
-          type="email"
-          value={studentGrades.email}
-          onChange={(e) => setStudentGrades({ ...studentGrades, email: e.target.value })}
+          label="Final *"
+          type="number"
+          value={grades[0]?.grades?.final || studentGrades.final}
+          onChange={(e) => setStudentGrades({ ...studentGrades, final: e.target.value })}
           fullWidth
+          disabled={grades[0]?.grades?.final}
         />
-        <FormControl fullWidth required style={{ marginTop: '10px' }}>
-          <InputLabel id="department-select-label">Department</InputLabel>
-          <Select
-            labelId="department-select-label"
-            id="department-select"
-            label="Department *"
-            value={studentGrades.department_id}
-            onChange={(e) => setStudentGrades({ ...studentGrades, department_id: e.target.value })}
-          >
-            {departments.map((dept) => (
-              <MenuItem key={dept.id} value={dept.id}>
-                {dept.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <TextField
+          margin="dense"
+          label="Attendance *"
+          type="number"
+          value={grades[0]?.grades?.attendance || studentGrades.attendance}
+          onChange={(e) => setStudentGrades({ ...studentGrades, attendance: e.target.value })}
+          fullWidth
+          disabled={grades[0]?.grades?.attendance}
+        />
+        <TextField
+          margin="dense"
+          label="Behavior *"
+          type="number"
+          value={grades[0]?.grades?.behavior || studentGrades.behavior}
+          onChange={(e) => setStudentGrades({ ...studentGrades, behavior: e.target.value })}
+          fullWidth
+          disabled={grades[0]?.grades?.behavior}
+        />
+        <TextField
+          margin="dense"
+          label="Total *"
+          type="number"
+          value={grades[0]?.grades?.total || studentGrades.total}
+          onChange={(e) => setStudentGrades({ ...studentGrades, total: e.target.value })}
+          fullWidth
+          disabled={grades[0]?.grades?.total}
+        />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleAdd}>Add</Button>
+        <Button onClick={handleClose}>Close</Button>
+        {grades[0]?.grades?.total ? '' : <Button onClick={handleAdd}>Add</Button>}
       </DialogActions>
     </Dialog>
   );

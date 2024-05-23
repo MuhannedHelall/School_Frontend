@@ -8,6 +8,8 @@ export function goHome(role) {
       return route.admin.index;
     case 'teacher':
       return route.teacher.index;
+    case 'student':
+      return route.student.index;
     default:
       return route.login;
   }
