@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { uploadFile, getClasses, downloadFile } from 'src/api/classSlice';
@@ -15,6 +16,7 @@ import AttachDialog from '../attach-dialog';
 export default function ClassView() {
   const dispatch = useDispatch();
   const classes = useSelector((state) => state.class);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (classes.data.length < 1) dispatch(getClasses());
@@ -22,14 +24,14 @@ export default function ClassView() {
 
   const handleFileUpload = (file) => {
     toast.promise(dispatch(uploadFile(file)), {
-      pending: 'File is being uploaded ...',
+      pending: t('fileBeingUploaded'),
       success: {
         render({ data }) {
           dispatch(getClasses());
           return data.payload[1];
         },
       },
-      error: 'An error occured !',
+      error: t('errorOccured'),
     });
   };
 
@@ -39,7 +41,7 @@ export default function ClassView() {
 
   return (
     <CardView
-      title="Classes"
+      title={t('classes')}
       items={classes}
       onUpload={handleFileUpload}
       onDownload={handleFileDownload}

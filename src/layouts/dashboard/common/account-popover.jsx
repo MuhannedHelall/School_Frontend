@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Box from '@mui/material/Box';
@@ -26,20 +27,36 @@ export default function AccountPopover() {
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(null);
+  const { t } = useTranslation();
   const user = useSelector((state) => state.auth);
+  const lang = useSelector((state) => state.language.value);
 
-  const MENU_OPTIONS = [
-    {
-      label: 'Home',
-      icon: 'eva:home-fill',
-      action: () => handleHome(),
-    },
-    {
-      label: 'Edit Profile',
-      icon: 'eva:settings-2-fill',
-      action: () => navigate(route.editProfile),
-    },
-  ];
+  const MENU_OPTIONS = {
+    en: [
+      {
+        label: 'Home',
+        icon: 'eva:home-fill',
+        action: () => handleHome(),
+      },
+      {
+        label: 'Edit Profile',
+        icon: 'eva:settings-2-fill',
+        action: () => navigate(route.editProfile),
+      },
+    ],
+    ar: [
+      {
+        label: 'الصفحة الرئيسية',
+        icon: 'eva:home-fill',
+        action: () => handleHome(),
+      },
+      {
+        label: 'تعديل الملف',
+        icon: 'eva:settings-2-fill',
+        action: () => navigate(route.editProfile),
+      },
+    ],
+  };
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -134,11 +151,17 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        {MENU_OPTIONS.map((option) => (
-          <MenuItem key={option.label} onClick={option.action}>
-            {option.label}
-          </MenuItem>
-        ))}
+        {lang === 'ar'
+          ? MENU_OPTIONS.ar.map((option) => (
+              <MenuItem key={option.label} onClick={option.action}>
+                {option.label}
+              </MenuItem>
+            ))
+          : MENU_OPTIONS.en.map((option) => (
+              <MenuItem key={option.label} onClick={option.action}>
+                {option.label}
+              </MenuItem>
+            ))}
 
         <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
 
@@ -148,7 +171,7 @@ export default function AccountPopover() {
           onClick={handleLogout}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
         >
-          Logout
+          {t('logout')}
         </MenuItem>
       </Popover>
     </>

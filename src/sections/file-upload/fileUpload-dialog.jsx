@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
+import { useTranslation } from 'react-i18next';
 import React, { useState, useCallback } from 'react';
 
 import Dialog from '@mui/material/Dialog';
@@ -8,6 +9,7 @@ import { Box, Paper, Button, Typography, IconButton } from '@mui/material';
 
 export default function FileUploadDialog({ open, setOpen, onUpload, onDownload }) {
   const [dragOver, setDragOver] = useState(false);
+  const { t } = useTranslation();
 
   const handleDragOver = useCallback((event) => {
     event.preventDefault();
@@ -68,7 +70,7 @@ export default function FileUploadDialog({ open, setOpen, onUpload, onDownload }
               <IconButton color="primary" aria-label="upload picture" component="span">
                 <Icon icon="ep:upload-filled" style={{ fontSize: 60 }} />
               </IconButton>
-              <Typography>Drag and drop your file here or click to select the file.</Typography>
+              <Typography>{t('dragFile')}</Typography>
             </Box>
             <input
               style={{ display: 'none' }}
@@ -80,7 +82,7 @@ export default function FileUploadDialog({ open, setOpen, onUpload, onDownload }
         </Paper>
         <Box textAlign="center" mt={2}>
           <Button variant="contained" onClick={onDownload}>
-            Download Sample File
+            {t('downloadFile')}
           </Button>
         </Box>
       </DialogContent>

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
@@ -17,6 +18,7 @@ import Iconify from 'src/components/iconify';
 
 export default function ClassDialog({ open, setOpen, updateData, setUpdateData }) {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const [classData, setClassData] = useState({ class_number: '', grade: '' });
 
   const handleClose = () => {
@@ -25,9 +27,9 @@ export default function ClassDialog({ open, setOpen, updateData, setUpdateData }
 
   const handleAdd = () => {
     toast.promise(dispatch(addClass(classData)), {
-      pending: 'Class is being added ...',
-      success: 'Class added successfully !',
-      error: 'An Error Occured !',
+      pending: t('classBeingAdded'),
+      success: t('classAdded'),
+      error: t('errorOccured'),
     });
     setOpen(false);
     setClassData({ class_number: '', grade: '' });
@@ -36,9 +38,9 @@ export default function ClassDialog({ open, setOpen, updateData, setUpdateData }
 
   const handleUpdate = () => {
     toast.promise(dispatch(updateClass(updateData)), {
-      pending: 'Class is being updated ...',
-      success: 'Class updated successfully !',
-      error: 'An Error Occured !',
+      pending: t('classBeingUpdated'),
+      success: t('classUpdated'),
+      error: t('errorOccured'),
     });
     dispatch(getClasses());
     setOpen(false);
@@ -48,17 +50,16 @@ export default function ClassDialog({ open, setOpen, updateData, setUpdateData }
     <Dialog open={open} onClose={handleClose} fullWidth>
       <DialogTitle style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
         <Iconify icon={`${updateData?.id ? 'bi:pencil' : 'eva:plus-fill'}`} />
-        {updateData?.id ? 'Update Current' : 'Add a new'} Class
+        {updateData?.id ? t('updateClass') : t('addClass')}
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Please fill up the form to {updateData?.id ? 'update the current ' : 'add a new '}
-          class.
+          {updateData?.id ? t('fillUpdateClass') : t('fillAddClass')}
         </DialogContentText>
         <TextField
           autoFocus
           margin="dense"
-          label="Grade"
+          label={t('grade')}
           type="text"
           value={updateData?.grade ? updateData.grade : classData.grade}
           onChange={
@@ -70,7 +71,7 @@ export default function ClassDialog({ open, setOpen, updateData, setUpdateData }
         />
         <TextField
           margin="dense"
-          label="Class Number"
+          label={t('classNumber')}
           type="text"
           value={updateData?.class_number ? updateData.class_number : classData.class_number}
           onChange={
@@ -82,9 +83,9 @@ export default function ClassDialog({ open, setOpen, updateData, setUpdateData }
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose}>{t('discard')}</Button>
         <Button onClick={updateData?.id ? handleUpdate : handleAdd}>
-          {updateData?.id ? 'Update' : 'Add'}
+          {updateData?.id ? t('edit') : t('save')}
         </Button>
       </DialogActions>
     </Dialog>

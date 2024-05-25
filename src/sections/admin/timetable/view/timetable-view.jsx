@@ -1,10 +1,12 @@
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
+import { Typography } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Container from '@mui/material/Container';
 import InputLabel from '@mui/material/InputLabel';
@@ -23,6 +25,7 @@ function TimeTableView() {
   //   };
   const dispatch = useDispatch();
   const scheduleData = useSelector((state) => state.time);
+  const { t } = useTranslation();
   const [period, setPeriod] = useState({
     teacher_id: null,
     subject_id: null,
@@ -52,7 +55,7 @@ function TimeTableView() {
 
   return (
     <Container>
-      <h1>Timetable View</h1>
+      <Typography variant="h3">{t('createSchedule')}</Typography>
       {/* <button type="button" onClick={() => setOpen(true)}>
         Click me
       </button>
@@ -63,11 +66,11 @@ function TimeTableView() {
       ) : (
         <>
           <FormControl fullWidth required style={{ marginTop: '10px' }}>
-            <InputLabel id="teacher-select-label">Teacher</InputLabel>
+            <InputLabel id="teacher-select-label">{t('teacher')}</InputLabel>
             <Select
               labelId="teacher-select-label"
               id="teacher-select"
-              label="teacher *"
+              label={`${t('teacher')}*`}
               value={period.teacher_id}
               onChange={(e) => setPeriod({ ...period, teacher_id: e.target.value })}
             >
@@ -81,11 +84,11 @@ function TimeTableView() {
           </FormControl>
 
           <FormControl fullWidth required style={{ marginTop: '10px' }}>
-            <InputLabel id="subject-select-label">Subject</InputLabel>
+            <InputLabel id="subject-select-label">{t('subject')}</InputLabel>
             <Select
               labelId="subject-select-label"
               id="subject-select"
-              label="subject *"
+              label={`${t('subject')}*`}
               value={period.subject_id}
               onChange={(e) => setPeriod({ ...period, subject_id: e.target.value })}
               disabled={!period.teacher_id}
@@ -102,11 +105,11 @@ function TimeTableView() {
           </FormControl>
 
           <FormControl fullWidth required style={{ marginTop: '10px' }}>
-            <InputLabel id="class-select-label">Class</InputLabel>
+            <InputLabel id="class-select-label">{t('class')}</InputLabel>
             <Select
               labelId="class-select-label"
               id="class-select"
-              label="class *"
+              label={`${t('class')}*`}
               value={period.class_id}
               onChange={(e) => setPeriod({ ...period, class_id: e.target.value })}
             >
@@ -120,11 +123,11 @@ function TimeTableView() {
           </FormControl>
 
           <FormControl fullWidth required style={{ marginTop: '10px' }}>
-            <InputLabel id="period-select-label">Period</InputLabel>
+            <InputLabel id="period-select-label">{t('period')}</InputLabel>
             <Select
               labelId="period-select-label"
               id="period-select"
-              label="period *"
+              label={`${t('period')}*`}
               value={period.period}
               onChange={(e) => setPeriod({ ...period, period: e.target.value })}
             >
@@ -138,11 +141,11 @@ function TimeTableView() {
           </FormControl>
 
           <FormControl fullWidth required style={{ marginTop: '10px' }}>
-            <InputLabel id="day-select-label">Day</InputLabel>
+            <InputLabel id="day-select-label">{t('day')}</InputLabel>
             <Select
               labelId="day-select-label"
               id="day-select"
-              label="day *"
+              label={`${t('day')}*`}
               value={period.day}
               onChange={(e) => setPeriod({ ...period, day: e.target.value })}
             >
@@ -157,7 +160,7 @@ function TimeTableView() {
 
           <Box>
             <Button variant="outlined" className="mt-3" onClick={handleAdd}>
-              Add
+              {t('save')}
             </Button>
           </Box>
         </>

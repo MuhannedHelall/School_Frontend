@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
@@ -31,6 +32,7 @@ export default function LanguagePopover() {
   const dispatch = useDispatch();
   const LANG = useSelector((state) => state.language);
   const [open, setOpen] = useState(null);
+  const { i18n } = useTranslation();
 
   const lang = LANGUAGES.filter((lan) => lan.value !== LANG.value);
   // const lang = LANGS;
@@ -46,6 +48,7 @@ export default function LanguagePopover() {
   const handleLang = (val) => {
     handleClose();
     dispatch(changeLanguage(val));
+    i18n.changeLanguage(val.value);
   };
 
   return (

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Container from '@mui/material/Container';
@@ -38,6 +39,7 @@ export default function AppView() {
   const dispatch = useDispatch();
   const { data, error, loading } = useSelector((state) => state.dashboard);
   const user = useSelector((state) => state.auth.data);
+  const { t } = useTranslation();
 
   useEffect(() => {
     dispatch(getAdminDashboardData());
@@ -46,7 +48,7 @@ export default function AppView() {
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Hi, Welcome back 👋
+        {t('greeting')}
       </Typography>
 
       {error &&
@@ -62,12 +64,7 @@ export default function AppView() {
           theme: 'colored',
         })}
 
-      {loading ? (
-        // <h1 style={{ textAlign: 'center', marginTop: '30vh' }}>Loading ...</h1>
-        <Loader />
-      ) : (
-        <ShowDashboard data={data} dept_id={user.department_id} />
-      )}
+      {loading ? <Loader /> : <ShowDashboard data={data} dept_id={user.department_id} />}
     </Container>
   );
 }

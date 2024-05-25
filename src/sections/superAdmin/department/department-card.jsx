@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -46,14 +47,15 @@ export default function DepartmentCard({ item, onUpdate }) {
     'aqua',
     'orange',
   ];
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleDelete = () => {
     toast.promise(dispatch(deleteDepartment(item)), {
-      pending: 'Department is being deleted ...',
-      success: 'Department is deleted !',
-      error: 'An error occured !',
+      pending: t('departmentBeingDeleted'),
+      success: t('departmentDeleted'),
+      error: t('errorOccured'),
     });
     dispatch(getDepartments());
   };
@@ -105,7 +107,7 @@ export default function DepartmentCard({ item, onUpdate }) {
 
         <Box sx={{ p: (theme) => theme.spacing(4, 3, 3, 3) }}>
           <Typography variant="caption" component="div" sx={{ mb: 1, color: 'text.disabled' }}>
-            {mainAdmin.name || 'Not Assigned'}
+            {mainAdmin.name || t('notAssigned')}
           </Typography>
 
           <Link
@@ -136,8 +138,8 @@ export default function DepartmentCard({ item, onUpdate }) {
               }}
             >
               {[
-                { data: numOfAdmins, icon: 'eos-icons:admin', title: 'Admins' },
-                { data: numOfEmps, icon: 'ep:user', title: 'Employees' },
+                { data: numOfAdmins, icon: 'eos-icons:admin', title: t('admins') },
+                { data: numOfEmps, icon: 'ep:user', title: t('employees') },
               ].map(
                 (info, _index) =>
                   info.data > 0 && (
@@ -173,7 +175,7 @@ export default function DepartmentCard({ item, onUpdate }) {
                 onClick={() => onUpdate(item)}
               >
                 <Iconify width={16} icon="mdi:pencil-outline" sx={{ mr: 0.5 }} />
-                <Typography variant="caption">update</Typography>
+                <Typography variant="caption">{t('edit')}</Typography>
               </Stack>
               <Stack
                 direction="row"
@@ -189,7 +191,7 @@ export default function DepartmentCard({ item, onUpdate }) {
                 onClick={handleDelete}
               >
                 <Iconify width={16} icon="bi:x" sx={{ mr: 0.5 }} />
-                <Typography variant="caption">delete</Typography>
+                <Typography variant="caption">{t('delete')}</Typography>
               </Stack>
             </Stack>
           </Box>

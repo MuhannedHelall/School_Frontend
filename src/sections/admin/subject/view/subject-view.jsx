@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 
 // import { uploadFile, downloadFile, getDepartments } from 'src/api/departmentSlice';
@@ -15,6 +16,7 @@ import SubjectDialog from '../subject-dialog';
 export default function SubjectView() {
   const dispatch = useDispatch();
   const subjects = useSelector((state) => state.subject);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (subjects.data.length < 1) dispatch(getSubjects());
@@ -22,14 +24,14 @@ export default function SubjectView() {
 
   const handleFileUpload = (file) => {
     toast.promise(dispatch(uploadFile(file)), {
-      pending: 'File is being uploaded ...',
+      pending: t('fileBeingUploaded'),
       success: {
         render({ data }) {
           dispatch(getSubjects());
           return data.payload[1];
         },
       },
-      error: 'An error occured !',
+      error: t('errorOccured'),
     });
   };
 
@@ -39,7 +41,7 @@ export default function SubjectView() {
 
   return (
     <CardView
-      title="Subjects"
+      title={t('subjects')}
       items={subjects}
       onUpload={handleFileUpload}
       onDownload={handleFileDownload}

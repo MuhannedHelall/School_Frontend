@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -26,6 +27,7 @@ export default function SubjectCard({ item, onUpdate }) {
   const { id, name, numOfTeachers, mainAdmin } = item;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const colors = [
     'red',
     'yellow',
@@ -41,9 +43,9 @@ export default function SubjectCard({ item, onUpdate }) {
 
   const handleDelete = () => {
     toast.promise(dispatch(deleteSubject(item)), {
-      pending: 'Subject is being deleted ...',
-      success: 'Subject is deleted !',
-      error: 'An error occured !',
+      pending: t('subjectBeingDeleted'),
+      success: t('subjectDeleted'),
+      error: t('errorOccured'),
     });
     dispatch(getSubjects());
   };
@@ -95,7 +97,7 @@ export default function SubjectCard({ item, onUpdate }) {
 
         <Box sx={{ p: (theme) => theme.spacing(4, 3, 3, 3) }}>
           <Typography variant="caption" component="div" sx={{ mb: 1, color: 'text.disabled' }}>
-            {mainAdmin.name || 'Not Assigned'}
+            {mainAdmin.name || t('notAssigned')}
           </Typography>
 
           <Link
@@ -126,7 +128,7 @@ export default function SubjectCard({ item, onUpdate }) {
               }}
             >
               {numOfTeachers > 0 && (
-                <Tooltip title="Teachers">
+                <Tooltip title={t('teachers')}>
                   <Stack direction="row">
                     <Iconify width={16} icon="eos-icons:admin" sx={{ mr: 0.5 }} />
                     <Typography variant="caption">{fShortenNumber(numOfTeachers)}</Typography>
@@ -157,7 +159,7 @@ export default function SubjectCard({ item, onUpdate }) {
                 onClick={() => onUpdate(item)}
               >
                 <Iconify width={16} icon="mdi:pencil-outline" sx={{ mr: 0.5 }} />
-                <Typography variant="caption">update</Typography>
+                <Typography variant="caption">{t('edit')}</Typography>
               </Stack>
               <Stack
                 direction="row"
@@ -173,7 +175,7 @@ export default function SubjectCard({ item, onUpdate }) {
                 onClick={handleDelete}
               >
                 <Iconify width={16} icon="bi:x" sx={{ mr: 0.5 }} />
-                <Typography variant="caption">delete</Typography>
+                <Typography variant="caption">{t('delete')}</Typography>
               </Stack>
             </Stack>
           </Box>

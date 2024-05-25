@@ -1,6 +1,7 @@
 // import { toast } from 'react-toastify';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -33,6 +34,7 @@ export default function CardView({
   const [openUpload, setOpenUpload] = useState(false);
   const [updateData, setUpdateData] = useState(null);
   const [secondDialogData, setSecondDialogData] = useState(null);
+  const { t } = useTranslation();
 
   const handleOpenUpdate = (item) => {
     setUpdateData({ ...updateData, ...item });
@@ -63,27 +65,27 @@ export default function CardView({
             setOpenDialog(true);
           }}
         >
-          New {title.slice(0, title.length - 1)}
+          {t('new')}
         </Button>
       </Stack>
 
       <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
         <CardSearch items={items.data} />
-        <Tooltip title="Upload file">
+        <Tooltip title={t('uploadFile')}>
           <IconButton component="label" onClick={() => setOpenUpload(true)}>
             <Iconify icon="solar:upload-outline" />
           </IconButton>
         </Tooltip>
       </Stack>
 
-      {/* {items.error && <h1 style={{ textAlign: 'center' }}>{items.error}</h1>} */}
       {items.loading ? (
-        // <h1 style={{ textAlign: 'center', marginTop: '150px' }}>Loading ...</h1>
         <Loader />
       ) : (
         <div>
           {items.data.length < 1 ? (
-            <h1 style={{ textAlign: 'center', marginTop: '150px' }}>No {title} to show ...</h1>
+            <h1 style={{ textAlign: 'center', marginTop: '150px' }}>
+              {t('no')} {title} {t('toShow')} ...
+            </h1>
           ) : (
             <Grid container spacing={3}>
               {items.data.map((item) => (

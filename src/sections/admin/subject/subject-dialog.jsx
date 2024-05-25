@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
@@ -18,6 +19,7 @@ import Iconify from 'src/components/iconify';
 export default function SubjectDialog({ open, setOpen, updateData, setUpdateData }) {
   const dispatch = useDispatch();
   const [subData, setSubData] = useState({ name: '' });
+  const { t } = useTranslation();
 
   const handleClose = () => {
     setOpen(false);
@@ -25,9 +27,9 @@ export default function SubjectDialog({ open, setOpen, updateData, setUpdateData
 
   const handleAdd = () => {
     toast.promise(dispatch(addSubject(subData)), {
-      pending: 'Subject is being added ...',
-      success: 'Subject added successfully !',
-      error: 'An Error Occured !',
+      pending: t('subjectBeingAdded'),
+      success: t('subjectAdded'),
+      error: t('errorOccured'),
     });
     setOpen(false);
     setSubData({ name: '' });
@@ -36,9 +38,9 @@ export default function SubjectDialog({ open, setOpen, updateData, setUpdateData
 
   const handleUpdate = () => {
     toast.promise(dispatch(updateSubject(updateData)), {
-      pending: 'Subject is being updated ...',
-      success: 'Subject updated successfully !',
-      error: 'An Error Occured !',
+      pending: t('subjectBeingUpdated'),
+      success: t('subjectUpdated'),
+      error: t('errorOccured'),
     });
     dispatch(getSubjects());
     setOpen(false);
@@ -48,12 +50,11 @@ export default function SubjectDialog({ open, setOpen, updateData, setUpdateData
     <Dialog open={open} onClose={handleClose} fullWidth>
       <DialogTitle style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
         <Iconify icon={`${updateData?.id ? 'bi:pencil' : 'eva:plus-fill'}`} />
-        {updateData?.id ? 'Update Current' : 'Add a new'} Subject
+        {updateData?.id ? t('updateSubject') : t('addSubject')}
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Please fill up the form to {updateData?.id ? 'update the current ' : 'add a new '}
-          subject.
+          {updateData?.id ? t('fillUpdateSubject') : t('fillAddSubject')}
         </DialogContentText>
         <TextField
           autoFocus
@@ -70,9 +71,9 @@ export default function SubjectDialog({ open, setOpen, updateData, setUpdateData
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose}>{t('discard')}</Button>
         <Button onClick={updateData?.id ? handleUpdate : handleAdd}>
-          {updateData?.id ? 'Update' : 'Add'}
+          {updateData?.id ? t('edit') : t('save')}
         </Button>
       </DialogActions>
     </Dialog>

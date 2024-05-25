@@ -141,21 +141,32 @@ Nav.propTypes = {
 
 function RenderMenu() {
   const user = useSelector((state) => state.auth.data);
+  const lang = useSelector((state) => state.language.value);
   let navMenu = [];
   switch (user.role) {
     case 'superAdmin':
-      navMenu = navConfig.super;
+      if (lang === 'ar') navMenu = navConfig.super.ar;
+      else navMenu = navConfig.super.en;
       break;
     case 'admin':
-      if (user.department.id === 4) navMenu = navConfig.admin.teacher;
-      else if (user.department.id === 5) navMenu = navConfig.admin.student;
-      else navMenu = navConfig.admin.employee;
+      if (user.department.id === 4) {
+        if (lang === 'ar') navMenu = navConfig.admin.teacher.ar;
+        else navMenu = navConfig.admin.teacher.en;
+      } else if (user.department.id === 5) {
+        if (lang === 'ar') navMenu = navConfig.admin.student.ar;
+        else navMenu = navConfig.admin.student.en;
+      } else {
+        if (lang !== 'ar') navMenu = navConfig.admin.employee.en;
+        navMenu = navConfig.admin.employee.ar;
+      }
       break;
     case 'teacher':
-      navMenu = navConfig.teacher;
+      if (lang === 'ar') navMenu = navConfig.teacher.ar;
+      else navMenu = navConfig.teacher.en;
       break;
     case 'student':
-      navMenu = navConfig.student;
+      if (lang === 'ar') navMenu = navConfig.student.ar;
+      else navMenu = navConfig.student.en;
       break;
     default:
       navMenu = [];

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Container from '@mui/material/Container';
@@ -15,6 +16,7 @@ import AppWidgetSummary from '../app-widget-summary';
 
 export default function AppView() {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { data, error, loading } = useSelector((state) => state.dashboard);
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export default function AppView() {
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Hi, Welcome back 👋
+        {t('greeting')}
       </Typography>
 
       {error &&
@@ -47,7 +49,7 @@ export default function AppView() {
         <Grid container spacing={3} padding={10}>
           <Grid xs={12} sm={6}>
             <AppWidgetSummary
-              title="Admins"
+              title={t('admins')}
               total={data.numOfAdmins}
               color="success"
               icon={<img alt="icon" src="/assets/icons/glass/admins.png" />}
@@ -57,7 +59,7 @@ export default function AppView() {
 
           <Grid xs={12} sm={6}>
             <AppWidgetSummary
-              title="Employees"
+              title={t('employees')}
               total={data.numOfEmployees}
               color="info"
               icon={<img alt="icon" src="/assets/icons/glass/employee.png" />}
@@ -67,7 +69,7 @@ export default function AppView() {
 
           <Grid xs={12} sm={6}>
             <AppWidgetSummary
-              title="Students"
+              title={t('students')}
               total={data.numOfStudents}
               color="warning"
               icon={<img alt="icon" src="/assets/icons/glass/students.png" />}
@@ -77,7 +79,7 @@ export default function AppView() {
 
           <Grid xs={12} sm={6}>
             <AppWidgetSummary
-              title="Departments"
+              title={t('departments')}
               total={data.numOfDepartments}
               color="error"
               icon={<img alt="icon" src="/assets/icons/glass/departments.png" />}

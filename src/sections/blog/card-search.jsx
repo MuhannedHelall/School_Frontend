@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -13,6 +14,7 @@ CardSearch.propTypes = {
 };
 
 export default function CardSearch({ items }) {
+  const { t } = useTranslation();
   return (
     <Autocomplete
       sx={{ width: 280 }}
@@ -29,12 +31,12 @@ export default function CardSearch({ items }) {
         },
       }}
       options={items}
-      getOptionLabel={(item) => item.title}
+      getOptionLabel={(item) => item.name}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       renderInput={(params) => (
         <TextField
           {...params}
-          placeholder="Search item..."
+          placeholder={`${t('search')} ...`}
           InputProps={{
             ...params.InputProps,
             startAdornment: (

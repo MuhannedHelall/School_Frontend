@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Select from '@mui/material/Select';
@@ -27,6 +28,7 @@ export default function EmpAddDialog({ open, setOpen, title }) {
   const dispatch = useDispatch();
   const subjects = useSelector((state) => state.subject.data);
   const user = useSelector((state) => state.auth.data);
+  const { t } = useTranslation();
 
   const [empData, setEmpData] = useState({
     name: '',
@@ -65,7 +67,7 @@ export default function EmpAddDialog({ open, setOpen, title }) {
         <TextField
           autoFocus
           margin="dense"
-          label="Name"
+          label={t('name')}
           type="text"
           value={empData.name}
           onChange={(e) => setEmpData({ ...empData, name: e.target.value })}
@@ -73,7 +75,7 @@ export default function EmpAddDialog({ open, setOpen, title }) {
         />
         <TextField
           margin="dense"
-          label="Email Address"
+          label={t('email')}
           type="email"
           value={empData.email}
           onChange={(e) => setEmpData({ ...empData, email: e.target.value })}
@@ -81,11 +83,11 @@ export default function EmpAddDialog({ open, setOpen, title }) {
         />
         {(user.department_id === 4 || +id === 4) && (
           <FormControl fullWidth required style={{ marginTop: '10px' }}>
-            <InputLabel id="subject-select-label">subject</InputLabel>
+            <InputLabel id="subject-select-label">{t('subject')}</InputLabel>
             <Select
               labelId="subject-select-label"
               id="subject-select"
-              label="Subject *"
+              label={`${t('subject')}*`}
               value={empData.subject_id}
               onChange={(e) => setEmpData({ ...empData, subject_id: e.target.value })}
             >
@@ -99,8 +101,8 @@ export default function EmpAddDialog({ open, setOpen, title }) {
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleAdd}>Add</Button>
+        <Button onClick={handleClose}>{t('discard')}</Button>
+        <Button onClick={handleAdd}>{t('save')}</Button>
       </DialogActions>
     </Dialog>
   );

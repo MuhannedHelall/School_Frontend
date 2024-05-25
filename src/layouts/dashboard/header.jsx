@@ -74,3 +74,4 @@ export default function Header({ onOpenNav }) {
 Header.propTypes = {
   onOpenNav: PropTypes.func,
 };
+

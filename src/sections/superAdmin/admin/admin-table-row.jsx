@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Box } from '@mui/material';
@@ -30,6 +31,7 @@ export default function AdminTableRow({ user, selected, handleClick }) {
   const dispatch = useDispatch();
   const { id, name, email, avatarUrl, department, status } = user;
   const departments = useSelector((state) => state.department.data);
+  const { t } = useTranslation();
 
   const [open, setOpen] = useState(null);
   const [edit, setEdit] = useState(false);
@@ -57,9 +59,9 @@ export default function AdminTableRow({ user, selected, handleClick }) {
 
   const handleDeleteRecord = () => {
     toast.promise(dispatch(deleteAdmin(user)), {
-      pending: 'Admin is being deleted ...',
-      success: 'Admin is deleted !',
-      error: 'An Error Occured !',
+      pending: t('adminBeingDeleted'),
+      success: t('adminDeleted'),
+      error: t('errorOccured'),
     });
     dispatch(getAdmins());
     dispatch(getDepartments());
@@ -79,9 +81,9 @@ export default function AdminTableRow({ user, selected, handleClick }) {
       return;
     }
     toast.promise(dispatch(updateAdmin(adminData)), {
-      pending: 'Admin is being updated ...',
-      success: 'Admin is updated !',
-      error: 'An Error Occured !',
+      pending: t('adminBeingUpdated'),
+      success: t('adminUpdated'),
+      error: t('errorOccured'),
     });
     dispatch(getAdmins());
     dispatch(getDepartments());
@@ -90,9 +92,9 @@ export default function AdminTableRow({ user, selected, handleClick }) {
 
   const reset = () => {
     toast.promise(dispatch(resetPassword(id)), {
-      pending: 'Password is being reset ...',
-      success: 'Password is reset successfully !',
-      error: 'An Error Occured !',
+      pending: t('passwordBeingReset'),
+      success: t('passwordReset'),
+      error: t('errorOccured'),
     });
     handleCloseMenu();
   };
@@ -106,20 +108,17 @@ export default function AdminTableRow({ user, selected, handleClick }) {
 
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar
-              alt={name}
-              src={avatarUrl || `/assets/images/avatars/avatar_${id % 25}.jpg`}
-            />
+            <Avatar alt={name} src={avatarUrl || `/assets/images/avatars/avatar_${id % 25}.jpg`} />
             {edit ? (
               <Box display="flex" gap="10px">
                 <TextField
-                  label="Name"
+                  label={t('name')}
                   size="small"
                   value={adminData.name}
                   onChange={(e) => setAdminData({ ...adminData, name: e.target.value })}
                 />
                 <TextField
-                  label="Email"
+                  label={t('email')}
                   size="small"
                   value={adminData.email}
                   onChange={(e) => setAdminData({ ...adminData, email: e.target.value })}
@@ -141,11 +140,11 @@ export default function AdminTableRow({ user, selected, handleClick }) {
         <TableCell>
           {edit ? (
             <FormControl size="small" fullWidth>
-              <InputLabel id="department-edit-select-label">Department</InputLabel>
+              <InputLabel id="department-edit-select-label">{t('departments')}</InputLabel>
               <Select
                 labelId="department-edit-select-label"
                 id="department-edit-select"
-                label="Department"
+                label={t('departments')}
                 value={adminData.department_id}
                 onChange={(e) => setAdminData({ ...adminData, department_id: e.target.value })}
               >
@@ -157,14 +156,14 @@ export default function AdminTableRow({ user, selected, handleClick }) {
               </Select>
             </FormControl>
           ) : (
-            department.name || <Typography color="red">Not Found</Typography>
+            department.name || <Typography color="red">{t('notFound')}</Typography>
           )}
         </TableCell>
 
         <TableCell>
           {edit && !status ? (
             <FormControl size="small" fullWidth>
-              <InputLabel id="status-edit-select-label">Status</InputLabel>
+              <InputLabel id="status-edit-select-label">{t('status')}</InputLabel>
               <Select
                 labelId="status-edit-select-label"
                 id="status-edit-select"
@@ -183,24 +182,24 @@ export default function AdminTableRow({ user, selected, handleClick }) {
               </Select>
             </FormControl>
           ) : (
-            <Label color={status ? 'success' : 'error'}>{status ? 'Active' : 'Banned'}</Label>
+            <Label color={status ? 'success' : 'error'}>{status ? t('active') : t('banned')}</Label>
           )}
         </TableCell>
 
         <TableCell align="center">
           {edit ? (
             <Box>
-              <Tooltip title="Reset Password">
+              <Tooltip title={t('resetPassword')}>
                 <IconButton onClick={reset}>
                   <Iconify icon="solar:lock-linear" />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Discard">
+              <Tooltip title={t('discard')}>
                 <IconButton onClick={() => setEdit(false)}>
                   <Iconify icon="bi:x" />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Save">
+              <Tooltip title={t('save')}>
                 <IconButton onClick={saveEditedRecord}>
                   <Iconify icon="mingcute:check-fill" />
                 </IconButton>
@@ -226,12 +225,12 @@ export default function AdminTableRow({ user, selected, handleClick }) {
       >
         <MenuItem onClick={handleEditRecord}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
-          Edit
+          {t('edit')}
         </MenuItem>
 
         <MenuItem onClick={handleDeleteRecord} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Delete
+          {t('delete')}
         </MenuItem>
       </Popover>
     </>

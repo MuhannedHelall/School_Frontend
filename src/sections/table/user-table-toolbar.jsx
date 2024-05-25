@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 import Tooltip from '@mui/material/Tooltip';
 import Toolbar from '@mui/material/Toolbar';
@@ -19,6 +20,7 @@ export default function UserTableToolbar({
   onFilterName,
   onOpenUpload,
 }) {
+  const { t } = useTranslation();
   return (
     <Toolbar
       sx={{
@@ -41,7 +43,7 @@ export default function UserTableToolbar({
           <OutlinedInput
             value={filterName}
             onChange={onFilterName}
-            placeholder={`Search ${title.slice(0, title.length - 1)} ...`}
+            placeholder={`${t('search')} ...`}
             startAdornment={
               <InputAdornment position="start">
                 <Iconify
@@ -55,13 +57,14 @@ export default function UserTableToolbar({
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <Iconify icon="eva:trash-2-fill" />
-          </IconButton>
-        </Tooltip>
+        <br />
       ) : (
-        <Tooltip title="Upload file">
+        // <Tooltip title="Delete">
+        //   <IconButton>
+        //     <Iconify icon="eva:trash-2-fill" />
+        //   </IconButton>
+        // </Tooltip>
+        <Tooltip title={t('uploadFile')}>
           <IconButton component="label" onClick={onOpenUpload}>
             <Iconify icon="solar:upload-outline" />
           </IconButton>

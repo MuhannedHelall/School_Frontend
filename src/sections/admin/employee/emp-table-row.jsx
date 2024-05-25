@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -38,6 +39,7 @@ export default function EmpTableRow({ user, selected, handleClick }) {
   const { id: userId, teacher_id, name, email, avatarUrl, subject, status } = user;
   const subjects = useSelector((state) => state.subject.data);
   const logedUser = useSelector((state) => state.auth.data);
+  const { t } = useTranslation();
 
   const [open, setOpen] = useState(null);
   const [edit, setEdit] = useState(false);
@@ -65,9 +67,9 @@ export default function EmpTableRow({ user, selected, handleClick }) {
 
   const handleDeleteRecord = () => {
     toast.promise(dispatch(deleteEmployee(user)), {
-      pending: 'Employee is being deleted ...',
-      success: 'Employee is deleted !',
-      error: 'An Error Occured !',
+      pending: t('EmployeeBeingDeleted'),
+      success: t('EmployeeDeleted'),
+      error: t('errorOccured'),
     });
     dispatch(getEmployees(logedUser.department_id || +id));
     // dispatch(getSubjects());
@@ -88,9 +90,9 @@ export default function EmpTableRow({ user, selected, handleClick }) {
       return;
     }
     toast.promise(dispatch(updateEmployee(empData)), {
-      pending: 'Employee is being updated ...',
-      success: 'Employee is updated !',
-      error: 'An Error Occured !',
+      pending: t('EmployeeBeingUpdated'),
+      success: t('EmployeeUpdated'),
+      error: t('errorOccured'),
     });
     dispatch(getEmployees(logedUser.department_id || +id));
     setEdit(false);
@@ -123,13 +125,13 @@ export default function EmpTableRow({ user, selected, handleClick }) {
             {edit ? (
               <Box display="flex" gap="10px">
                 <TextField
-                  label="Name"
+                  label={t('name')}
                   size="small"
                   value={empData.name}
                   onChange={(e) => setEmpData({ ...empData, name: e.target.value })}
                 />
                 <TextField
-                  label="Email"
+                  label={t('email')}
                   size="small"
                   value={empData.email}
                   onChange={(e) => setEmpData({ ...empData, email: e.target.value })}
@@ -155,7 +157,7 @@ export default function EmpTableRow({ user, selected, handleClick }) {
           <TableCell sx={{ textTransform: 'capitalize' }}>
             {edit ? (
               <FormControl size="small" sx={{ m: 1, width: 300 }}>
-                <InputLabel id="demo-multiple-chip-label">Subject</InputLabel>
+                <InputLabel id="demo-multiple-chip-label">{t('subject')}</InputLabel>
                 <Select
                   labelId="demo-multiple-chip-label"
                   id="demo-multiple-chip"
@@ -181,7 +183,7 @@ export default function EmpTableRow({ user, selected, handleClick }) {
             ) : (
               subject[0]?.name || (
                 <Typography variant="caption" className="btn btn-danger">
-                  Not Found
+                  {t('notFound')}
                 </Typography>
               )
             )}
@@ -191,11 +193,11 @@ export default function EmpTableRow({ user, selected, handleClick }) {
         <TableCell>
           {edit && !status ? (
             <FormControl size="small" fullWidth>
-              <InputLabel id="status-edit-select-label">Status</InputLabel>
+              <InputLabel id="status-edit-select-label">{t('status')}</InputLabel>
               <Select
                 labelId="status-edit-select-label"
                 id="status-edit-select"
-                label="Status"
+                label={t('status')}
                 value={empData.status}
                 onChange={(e) => setEmpData({ ...empData, status: e.target.value })}
               >
@@ -210,24 +212,24 @@ export default function EmpTableRow({ user, selected, handleClick }) {
               </Select>
             </FormControl>
           ) : (
-            <Label color={status ? 'success' : 'error'}>{status ? 'Active' : 'Banned'}</Label>
+            <Label color={status ? 'success' : 'error'}>{status ? t('active') : t('banned')}</Label>
           )}
         </TableCell>
 
         <TableCell align="center">
           {edit ? (
             <Box>
-              <Tooltip title="Reset Password">
+              <Tooltip title={t('resetPassword')}>
                 <IconButton onClick={reset}>
                   <Iconify icon="solar:lock-linear" />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Discard">
+              <Tooltip title={t('discard')}>
                 <IconButton onClick={() => setEdit(false)}>
                   <Iconify icon="bi:x" />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Save">
+              <Tooltip title={t('save')}>
                 <IconButton onClick={saveEditedRecord}>
                   <Iconify icon="mingcute:check-fill" />
                 </IconButton>
@@ -253,12 +255,12 @@ export default function EmpTableRow({ user, selected, handleClick }) {
       >
         <MenuItem onClick={handleEditRecord}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
-          Edit
+          {t('edit')}
         </MenuItem>
 
         <MenuItem onClick={handleDeleteRecord} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Delete
+          {t('delete')}
         </MenuItem>
       </Popover>
     </>

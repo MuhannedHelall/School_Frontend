@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import TableRow from '@mui/material/TableRow';
@@ -20,6 +21,8 @@ export default function UserTableHead({
   onRequestSort,
   onSelectAllClick,
 }) {
+  const lang = useSelector((state) => state.language.value);
+
   const onSort = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -48,7 +51,7 @@ export default function UserTableHead({
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={onSort(headCell.id)}
             >
-              {headCell.label}
+              {lang === 'ar' ? headCell.label.ar : headCell.label.en}
               {orderBy === headCell.id ? (
                 <Box sx={{ ...visuallyHidden }}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}

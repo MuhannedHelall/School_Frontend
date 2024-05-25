@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -43,6 +44,7 @@ export default function TableView({
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openAdd, setOpenAdd] = useState(false);
   const [openUpload, setOpenUpload] = useState(false);
+  const { t } = useTranslation();
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -112,7 +114,7 @@ export default function TableView({
           startIcon={<Iconify icon="eva:plus-fill" />}
           onClick={() => setOpenAdd(true)}
         >
-          New {title.slice(0, title.length - 1)}
+          {t('new')}
         </Button>
       </Stack>
 
@@ -127,14 +129,13 @@ export default function TableView({
         />
 
         {items.loading ? (
-          //   <Typography variant="h3" textAlign="center" my="100px">
-          //     Loading ...
-          //   </Typography>
           <Loader />
         ) : (
           <Scrollbar>
             {dataFiltered.length < 1 ? (
-              <h1 style={{ textAlign: 'center' }}>No {title.toLowerCase()} to show !</h1>
+              <h1 style={{ textAlign: 'center' }}>
+                {t('no')} {title.toLowerCase()} {t('toShow')} !
+              </h1>
             ) : (
               <TableContainer sx={{ overflow: 'unset' }}>
                 <Table sx={{ minWidth: 800 }}>

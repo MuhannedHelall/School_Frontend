@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import React, { useState } from 'react';
@@ -25,9 +26,9 @@ export default function DepartmentDialog({ open, setOpen, updateData, setUpdateD
 
   const handleAdd = () => {
     toast.promise(dispatch(addDepartment(deptData)), {
-      pending: 'Department is being added ...',
-      success: 'Department added successfully !',
-      error: 'An Error Occured !',
+      pending: t('departmentBeingAdded'),
+      success: t('departmentAdded'),
+      error: t('errorOccured'),
     });
     setOpen(false);
     setDeptData({ name: '' });
@@ -36,9 +37,9 @@ export default function DepartmentDialog({ open, setOpen, updateData, setUpdateD
 
   const handleUpdate = () => {
     toast.promise(dispatch(updateDepartment(updateData)), {
-      pending: 'Department is being updated ...',
-      success: 'Department updated successfully !',
-      error: 'An Error Occured !',
+      pending: t('departmentBeingUpdated'),
+      success: t('departmentUpdated'),
+      error: t('errorOccured'),
     });
     dispatch(getDepartments());
     setOpen(false);
@@ -48,17 +49,16 @@ export default function DepartmentDialog({ open, setOpen, updateData, setUpdateD
     <Dialog open={open} onClose={handleClose} fullWidth>
       <DialogTitle style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
         <Iconify icon={`${updateData?.id ? 'bi:pencil' : 'eva:plus-fill'}`} />
-        {updateData?.id ? 'Update Current' : 'Add a new'} Department
+        {updateData?.id ? t('upateDepartment') : t('AddDepartment')}
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Please fill up the form to {updateData?.id ? 'update the current ' : 'add a new '}
-          department.
+          {updateData?.id ? t('fillUpdateDepartment') : t('fillAddDepartment')}
         </DialogContentText>
         <TextField
           autoFocus
           margin="dense"
-          label="Name"
+          label={t('name')}
           type="text"
           value={updateData?.name ? updateData.name : deptData.name}
           onChange={
@@ -70,9 +70,9 @@ export default function DepartmentDialog({ open, setOpen, updateData, setUpdateD
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose}>{t('discard')}</Button>
         <Button onClick={updateData?.id ? handleUpdate : handleAdd}>
-          {updateData?.id ? 'Update' : 'Add'}
+          {updateData?.id ? t('edit') : t('save')}
         </Button>
       </DialogActions>
     </Dialog>

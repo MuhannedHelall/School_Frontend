@@ -1,5 +1,6 @@
 import { toast } from 'react-toastify';
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getDepartments } from 'src/api/departmentSlice';
@@ -11,12 +12,12 @@ import UserTableRow from '../admin-table-row';
 import UserAddDialog from '../admin-add-dialog';
 
 // ----------------------------------------------------------------------
-const Title = 'Admins';
+const Title = { en: 'Admins', ar: 'المديرين' };
 const Labels = [
-  { id: 'name', label: 'Name' },
-  { id: 'department', label: 'Department' },
-  { id: 'status', label: 'Status' },
-  { id: 'action', label: 'Action', align: 'center' },
+  { id: 'name', label: { en: 'Name', ar: 'الاسم' } },
+  { id: 'department', label: { en: 'Department', ar: 'القسم' } },
+  { id: 'status', label: { en: 'Status', ar: 'الحالة' } },
+  { id: 'action', label: { en: 'Action', ar: 'التصرف' }, align: 'center' },
 ];
 // ----------------------------------------------------------------------
 
@@ -24,6 +25,7 @@ function AdminView() {
   const dispatch = useDispatch();
   const admins = useSelector((state) => state.admin);
   const departments = useSelector((state) => state.department.data);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (admins.data.length < 1) dispatch(getAdmins());
@@ -36,7 +38,7 @@ function AdminView() {
 
   const handleUpload = (file) => {
     toast.promise(dispatch(uploadFile(file)), {
-      pending: 'File is being uploaded ...',
+      pending: t('fileBeingUploaded'),
       success: {
         render({ data }) {
           dispatch(getAdmins());
@@ -44,7 +46,7 @@ function AdminView() {
           return data.payload[1];
         },
       },
-      error: 'An error occured !',
+      error: t('errorOccured'),
     });
   };
 

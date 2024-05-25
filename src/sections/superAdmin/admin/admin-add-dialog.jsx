@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Select from '@mui/material/Select';
@@ -22,6 +23,7 @@ import Iconify from 'src/components/iconify';
 
 export default function AdminAddDialog({ open, setOpen }) {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const departments = useSelector((state) => state.department.data);
   const [adminData, setAdminData] = useState({ name: '', email: '', department_id: '1' });
 
@@ -31,9 +33,9 @@ export default function AdminAddDialog({ open, setOpen }) {
 
   const handleAdd = () => {
     toast.promise(dispatch(addAdmin(adminData)), {
-      pending: 'Admin is being added ...',
-      success: 'Admin is added !',
-      error: 'An Error Occured !',
+      pending: t('adminBeingAdded'),
+      success: t('adminAdded'),
+      error: t('errorOccured'),
     });
     dispatch(getDepartments());
     dispatch(getAdmins());
@@ -45,14 +47,14 @@ export default function AdminAddDialog({ open, setOpen }) {
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
         <Iconify icon="eva:plus-fill" />
-        Add New Admin
+        {t('addAdmin')}
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>Please fill up the form to add a new admin.</DialogContentText>
+        <DialogContentText>{t('fillTheForm')}</DialogContentText>
         <TextField
           autoFocus
           margin="dense"
-          label="Name"
+          label={t('name')}
           type="text"
           value={adminData.name}
           onChange={(e) => setAdminData({ ...adminData, name: e.target.value })}
@@ -60,14 +62,14 @@ export default function AdminAddDialog({ open, setOpen }) {
         />
         <TextField
           margin="dense"
-          label="Email Address"
+          label={t('email')}
           type="email"
           value={adminData.email}
           onChange={(e) => setAdminData({ ...adminData, email: e.target.value })}
           fullWidth
         />
         <FormControl fullWidth required style={{ marginTop: '10px' }}>
-          <InputLabel id="department-select-label">Department</InputLabel>
+          <InputLabel id="department-select-label">{t('departments')}</InputLabel>
           <Select
             labelId="department-select-label"
             id="department-select"

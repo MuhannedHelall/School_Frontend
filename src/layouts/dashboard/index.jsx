@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 
@@ -12,10 +12,11 @@ import Header from './header';
 
 export default function DashboardLayout({ children }) {
   const [openNav, setOpenNav] = useState(false);
-  const lang = useSelector((state) => state.language);
+  //   const lang = useSelector((state) => state.language);
 
   return (
-    <Box sx={{ direction: lang.direction }}>
+    // <Box sx={{ direction: lang.direction }}>
+    <Box sx={{ direction: 'ltr' }}>
       <Header onOpenNav={() => setOpenNav(true)} />
 
       <Box
@@ -29,7 +30,6 @@ export default function DashboardLayout({ children }) {
 
         <Main>{children}</Main>
       </Box>
-      
     </Box>
   );
 }

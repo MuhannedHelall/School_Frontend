@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -23,7 +24,8 @@ import Iconify from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 export default function ClassCard({ item, onUpdate, onAttach, onDetach }) {
-  const { id, class_number = 'Not Found', grade = 0 } = item;
+  const { id, class_number, grade } = item;
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const colors = [
@@ -41,9 +43,9 @@ export default function ClassCard({ item, onUpdate, onAttach, onDetach }) {
 
   const handleDelete = () => {
     toast.promise(dispatch(deleteClass(item)), {
-      pending: 'Subject is being deleted ...',
-      success: 'Subject is deleted !',
-      error: 'An error occured !',
+      pending: t('classBeingDeleted'),
+      success: t('classDeleted'),
+      error: t('errorOccured'),
     });
     dispatch(getClasses());
   };
@@ -65,10 +67,6 @@ export default function ClassCard({ item, onUpdate, onAttach, onDetach }) {
         </Box>
 
         <Box sx={{ p: (theme) => theme.spacing(4, 3, 3, 3) }}>
-          {/* <Typography variant="caption" component="div" sx={{ mb: 1, color: 'text.disabled' }}>
-            {grade || 'Not Assigned'}
-          </Typography> */}
-
           <Link
             color="inherit"
             variant="h6"
@@ -114,7 +112,7 @@ export default function ClassCard({ item, onUpdate, onAttach, onDetach }) {
                 onClick={() => onAttach(item)}
               >
                 <Iconify width={16} icon="teenyicons:attach-solid" sx={{ mr: 0.5 }} />
-                <Typography variant="caption">Attach</Typography>
+                <Typography variant="caption">{t('attach')}</Typography>
               </Stack>
               <Stack
                 direction="row"
@@ -130,7 +128,7 @@ export default function ClassCard({ item, onUpdate, onAttach, onDetach }) {
                 onClick={() => onDetach(item)}
               >
                 <Iconify width={16} icon="gala:remove" sx={{ mr: 0.5 }} />
-                <Typography variant="caption">detach</Typography>
+                <Typography variant="caption">{t('detach')}</Typography>
               </Stack>
             </Stack>
             <Stack
@@ -156,7 +154,7 @@ export default function ClassCard({ item, onUpdate, onAttach, onDetach }) {
                 onClick={() => onUpdate(item)}
               >
                 <Iconify width={16} icon="mdi:pencil-outline" sx={{ mr: 0.5 }} />
-                <Typography variant="caption">update</Typography>
+                <Typography variant="caption">{t('edit')}</Typography>
               </Stack>
               <Stack
                 direction="row"
@@ -172,7 +170,7 @@ export default function ClassCard({ item, onUpdate, onAttach, onDetach }) {
                 onClick={handleDelete}
               >
                 <Iconify width={16} icon="bi:x" sx={{ mr: 0.5 }} />
-                <Typography variant="caption">delete</Typography>
+                <Typography variant="caption">{t('delete')}</Typography>
               </Stack>
             </Stack>
           </Box>
