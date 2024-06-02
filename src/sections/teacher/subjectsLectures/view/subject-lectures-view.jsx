@@ -68,17 +68,19 @@ function SubjectLecturesView() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Link to={routeBackToSubjects(role)}>go back</Link>
 
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="eva:plus-fill" />}
-          onClick={() => {
-            setUpdateData(null);
-            setOpenDialog(true);
-          }}
-        >
-          New Lecture
-        </Button>
+        {role === 'student' || (
+          <Button
+            variant="contained"
+            color="inherit"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+            onClick={() => {
+              setUpdateData(null);
+              setOpenDialog(true);
+            }}
+          >
+            New Lecture
+          </Button>
+        )}
       </Stack>
 
       <Stack mb={2} direction="row" alignItems="center" justifyContent="space-between">

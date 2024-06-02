@@ -60,7 +60,7 @@ export default function SubjectsView() {
           ) : (
             <Grid container spacing={3}>
               {subjects.data.map((item) => (
-                <Grid key={item.subject?.id} xs={12} sm={6} md={4}>
+                <Grid key={item?.id} xs={12} sm={6} md={4}>
                   <Card>
                     <Box sx={{ position: 'relative', pt: '20px' }}>
                       <SvgColor
@@ -99,7 +99,7 @@ export default function SubjectsView() {
                           top: 0,
                           width: 1,
                           height: 1,
-                          backgroundColor: colors[(item.subject.id - 1) % colors.length],
+                          backgroundColor: colors[(item.id - 1) % colors.length],
                         }}
                       />
                     </Box>
@@ -126,7 +126,7 @@ export default function SubjectsView() {
                           textTransform: 'capitalize',
                         }}
                       >
-                        {item.subject?.name}
+                        {item?.name}
                       </Link>
                       <Stack
                         direction="row"
@@ -148,7 +148,7 @@ export default function SubjectsView() {
                             },
                           }}
                           onClick={() =>
-                            navigate(`${route.student.subjectLectures}${item.subject?.id}`)
+                            navigate(`${route.student.subjectLectures}${item?.id}`)
                           }
                         >
                           <Typography variant="caption">lectures</Typography>
@@ -170,7 +170,7 @@ export default function SubjectsView() {
                             toast.promise(
                               dispatch(
                                 getGrade({
-                                  subject_id: item.subject.id,
+                                  subject_id: item.id,
                                   student_id: user.user.student_id,
                                 })
                               ),

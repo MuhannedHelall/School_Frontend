@@ -12,7 +12,8 @@ import UserTableRow from '../admin-table-row';
 import UserAddDialog from '../admin-add-dialog';
 
 // ----------------------------------------------------------------------
-const Title = { en: 'Admins', ar: 'المديرين' };
+// const Title = { en: 'Admins', ar: 'المديرين' };
+const Title = 'Admins';
 const Labels = [
   { id: 'name', label: { en: 'Name', ar: 'الاسم' } },
   { id: 'department', label: { en: 'Department', ar: 'القسم' } },

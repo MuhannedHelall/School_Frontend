@@ -42,6 +42,10 @@ export const StudentSchedulePage = lazy(() => import('src/pages/student/schedule
 export const StudentSubjectsLectures = lazy(() => import('src/pages/student/subjectLectures'));
 export const StudentLecturePage = lazy(() => import('src/pages/student/LecturePage'));
 
+// Parent Pages
+export const ParentIndex = lazy(() => import('src/pages/parent/index'));
+export const ParentKidsPage = lazy(() => import('src/pages/parent/kids'));
+
 // Other Pages
 export const LandingPage = lazy(() => import('src/pages/landing'));
 export const VarkPage = lazy(() => import('src/pages/vark'));
@@ -243,6 +247,13 @@ export default function Router() {
               path: `${route.student.lecture}:id`,
               element: <StudentLecturePage />,
             },
+          ],
+        },
+        {
+          path: route.parent.index,
+          children: [
+            { element: <ParentIndex />, index: true },
+            { path: route.parent.kids, element: <ParentKidsPage /> },
           ],
         },
       ],

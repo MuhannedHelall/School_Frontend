@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { authAPI } from './APIs';
+import { authAPI, fileAPI } from './APIs';
 
 const USER = JSON.parse(localStorage.getItem('user'));
 
@@ -28,6 +28,11 @@ export const editProfile = createAsyncThunk('auth/editProfile', async (userData)
 
 export const changePassword = createAsyncThunk('auth/changePassword', async (userData) => {
   const response = await authAPI(`setPassword/${userData.id}`, 'POST', userData);
+  return response;
+});
+
+export const uploadAvatar = createAsyncThunk('auth/uploadAvatar', async (userData) => {
+  const response = await fileAPI(`uploadAvatar/${userData.id}`, 'POST', userData.form);
   return response;
 });
 
@@ -92,6 +97,22 @@ const authSlice = createSlice({
         state.message = 'Password Changed Successfully';
       })
       .addCase(changePassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+      });
+
+    builder
+      .addCase(uploadAvatar.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(uploadAvatar.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.message = 'Avatar Changed Successfully !';
+        state.data.user.avatar_url = action.payload.image;
+        localStorage.setItem('user', JSON.stringify(state.data));
+      })
+      .addCase(uploadAvatar.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
       });

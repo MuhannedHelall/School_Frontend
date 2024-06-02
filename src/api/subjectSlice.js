@@ -55,7 +55,10 @@ export const attachSubject = createAsyncThunk('subject/attachSubject', async (da
 });
 
 export const detachSubject = createAsyncThunk('subject/detachSubject', async (data) => {
-  const response = await authAPI(`grade/detach/${data.grade}`, 'POST', data);
+  const response = await authAPI(
+    `timetable/removeSubjectFromClass/${data.class_id}/${data.subject_id}`,
+    'DELETE'
+  );
   return response;
 });
 

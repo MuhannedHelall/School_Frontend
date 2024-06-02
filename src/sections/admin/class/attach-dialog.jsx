@@ -28,33 +28,34 @@ import Iconify from 'src/components/iconify';
 import { Loader } from 'src/sections/loader';
 
 export default function AttachDialog({ open, setOpen, data }) {
+  console.log(data);
   const id = data?.id || 0;
   const dispatch = useDispatch();
   const subjects = useSelector((state) => state.subject);
-  const [classData, setClassData] = useState({ grade: '', subject_id: '' });
+  const [classData, setClassData] = useState({ class_id: '', subject_id: '' });
 
   const handleClose = () => {
     setOpen({ ...open, state: false });
   };
 
   const handleAdd = () => {
-    toast.promise(dispatch(attachSubject({ ...classData, grade: data.grade })), {
+    toast.promise(dispatch(attachSubject({ ...classData, class_id: data.grade })), {
       pending: 'Subject is being attached ...',
       success: 'Subject is attached successfully !',
       error: 'An Error Occured !',
     });
     setOpen({ state: false, delete: false });
-    setClassData({ grade: '', subject_id: '' });
+    setClassData({ class_id: '', subject_id: '' });
   };
 
   const handleDelete = (sub_id) => {
-    toast.promise(dispatch(detachSubject({ grade: data.grade, subject_id: sub_id })), {
+    toast.promise(dispatch(detachSubject({ class_id: data.id, subject_id: sub_id })), {
       pending: 'Subject is being detached ...',
       success: 'Subject is detached successfully !',
       error: 'An Error Occured !',
     });
     setOpen(false);
-    setClassData({ grade: '', subject_id: '' });
+    setClassData({ class_id: '', subject_id: '' });
   };
 
   useEffect(() => {
@@ -80,7 +81,7 @@ export default function AttachDialog({ open, setOpen, data }) {
                     <DialogContentText mb={2}>Please select subjects to detach.</DialogContentText>
                     {subjects.data.map((subject) => (
                       <Box key={subject.id} display="flex" justifyContent="space-between">
-                        <h5>{subject.subject?.name}</h5>
+                        <h5>{subject?.name}</h5>
                         <Iconify
                           icon="gala:remove"
                           style={{ cursor: 'pointer' }}

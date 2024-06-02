@@ -12,7 +12,7 @@ import Header from './header';
 
 export default function DashboardLayout({ children }) {
   const [openNav, setOpenNav] = useState(false);
-  //   const lang = useSelector((state) => state.language);
+//   const lang = useSelector((state) => state.language);
 
   return (
     // <Box sx={{ direction: lang.direction }}>

@@ -5,8 +5,9 @@ import en from '../i18n/en/translation.json';
 import ar from '../i18n/ar/translation.json';
 
 i18n.use(initReactI18next).init({
-  debug: true,
+  debug: false,
   fallbackLng: 'en',
+  lng: JSON.parse(localStorage.getItem('lang'))?.value,
   interpolation: {
     escapeValue: false,
   },

@@ -38,7 +38,10 @@ const route = {
     subjectGrades: '/student/subjects/grade/',
     lecture: '/student/lectures/',
   },
-
+  parent: {
+    index: '/parent',
+    kids: '/parent/kids',
+  },
   notFound: '/notfound',
 };
 

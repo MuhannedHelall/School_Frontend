@@ -15,7 +15,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
-import Logo from 'src/components/logo';
+// import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
 
 import { NAV } from './config-layout';
@@ -51,7 +51,9 @@ export default function Nav({ openNav, onCloseNav }) {
       <Avatar
         src={
           loginInfo.data?.user?.avatar_url ||
-          `/assets/images/avatars/avatar_${loginInfo.data?.user_id || 1 % 25}.jpg`
+          `/assets/images/avatars/avatar_${
+            loginInfo.data?.user?.id || loginInfo.data.user_id % 25
+          }.jpg`
         }
         alt={loginInfo.data?.user?.name}
       >
@@ -87,7 +89,10 @@ export default function Nav({ openNav, onCloseNav }) {
         },
       }}
     >
-      <Logo sx={{ mt: 3, ml: 4 }} />
+      {/* <Logo sx={{ mt: 3, ml: 4 }} /> */}
+      <Typography variant="h4" className="mt-4 text-center">
+        Schovators
+      </Typography>
 
       {renderAccount}
 

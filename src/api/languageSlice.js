@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
+const initialState = JSON.parse(localStorage.getItem('lang')) || {
   value: 'en',
   label: 'English',
   icon: '/assets/icons/ic_flag_en.svg',
@@ -16,6 +16,7 @@ const languageSlice = createSlice({
       state.label = action.payload.label;
       state.icon = action.payload.icon;
       state.direction = action.payload.direction;
+      localStorage.setItem('lang', JSON.stringify(state));
     },
   },
 });

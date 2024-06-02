@@ -134,7 +134,7 @@ export default function TableView({
           <Scrollbar>
             {dataFiltered.length < 1 ? (
               <h1 style={{ textAlign: 'center' }}>
-                {t('no')} {title.toLowerCase()} {t('toShow')} !
+                {t('no')} {title} {t('toShow')} !
               </h1>
             ) : (
               <TableContainer sx={{ overflow: 'unset' }}>

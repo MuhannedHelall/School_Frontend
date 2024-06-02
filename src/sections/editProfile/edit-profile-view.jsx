@@ -2,20 +2,33 @@ import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { styled } from '@mui/material/styles';
 import { Box, Badge, Avatar } from '@mui/material';
 
-import { editProfile, changePassword } from 'src/api/authSlice';
+import { editProfile, uploadAvatar, changePassword } from 'src/api/authSlice';
 
 import Iconify from 'src/components/iconify';
 
 import './css/edit.css';
 
 // ----------------------------------------------------------------------
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 export default function EditProfileView() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.data);
   const [selected, setSelected] = useState(1);
+  //   const [image, setImage] = useState(null);
   const [userData, setUserData] = useState({
     id: user?.user?.id,
     name: user?.user?.name || '',
@@ -50,6 +63,16 @@ export default function EditProfileView() {
     }
   };
 
+  const handleChange = (e) => {
+    const form = new FormData();
+    form.append('image', e.target.files[0]);
+    toast.promise(dispatch(uploadAvatar({ id: user.user?.id, form })), {
+      pending: `Avatar is being uploaded ...`,
+      success: `Avatar is uploaded !`,
+      error: `An Error Occured !`,
+    });
+  };
+
   return (
     <div className="container">
       <div className="row flex-lg-nowrap">
@@ -69,7 +92,7 @@ export default function EditProfileView() {
                           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                           badgeContent={
                             <Box
-                              onClick={() => console.log('clicked')}
+                              component="label"
                               sx={{
                                 background: '#00CCFF',
                                 color: '#fff',
@@ -85,6 +108,7 @@ export default function EditProfileView() {
                                 },
                               }}
                             >
+                              <VisuallyHiddenInput type="file" onChange={handleChange} />
                               <Iconify icon="bx:pencil" />
                             </Box>
                           }
@@ -92,7 +116,10 @@ export default function EditProfileView() {
                           <Avatar
                             alt={user.name}
                             /* eslint-disable no-unsafe-optional-chaining */
-                            src={`/assets/images/avatars/avatar_${user?.user?.id % 25}.jpg`}
+                            src={
+                              user.user?.avatar_url ||
+                              `/assets/images/avatars/avatar_${user?.user?.id % 25}.jpg`
+                            }
                             /* eslint-enable no-unsafe-optional-chaining */
                             sx={{ width: 140, height: 140, border: '2px solid #87CEEB' }}
                           />

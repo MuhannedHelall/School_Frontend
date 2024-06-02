@@ -14,7 +14,7 @@ import {
 
 import { Loader } from 'src/sections/loader';
 
-function ScheduleView({ title, data }) {
+function ScheduleView({ title, data = {} }) {
   const daysOfWeek = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
   const timesOfDay = [
     { period: 1, start: '08:00 AM', end: '09:30 AM' },
@@ -61,7 +61,7 @@ function ScheduleView({ title, data }) {
   return (
     <>
       <Typography variant="h3">{title} Schedule</Typography>
-      {data.loading ? (
+      {data?.loading ? (
         <Loader sx="mt-5 pt-5" />
       ) : (
         <TableContainer component={Paper} sx={styles.tableContainer}>
@@ -81,9 +81,13 @@ function ScheduleView({ title, data }) {
                 <TableRow key={day}>
                   <TableCell sx={styles.timeCell}>{day}</TableCell>
                   {timesOfDay.map((time) => {
-                    const scheduleItem =
-                      data?.data?.find((item) => item.day === day && item.period === time.period) ||
-                      {};
+                    let scheduleItem = {};
+                    if (Array.isArray(data.data)) {
+                      scheduleItem =
+                        data?.data?.find(
+                          (item) => item.day === day && item.period === time.period
+                        ) || {};
+                    }
                     return (
                       <TableCell
                         key={`${day}-${time.period}`}

@@ -210,7 +210,7 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">Sign in to Eduplat !</Typography>
+          <Typography variant="h4">Sign in to Schovators !</Typography>
 
           {/* <FormControl> */}
           {/* <FormLabel id="login-method">Login Method:</FormLabel> */}
