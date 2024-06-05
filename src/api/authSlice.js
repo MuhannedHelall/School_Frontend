@@ -36,6 +36,16 @@ export const uploadAvatar = createAsyncThunk('auth/uploadAvatar', async (userDat
   return response;
 });
 
+export const trainModel = createAsyncThunk('auth/trainModel', async () => {
+  const response = await authAPI(`trainUsersWithAvatars`);
+  return response;
+});
+
+export const detect = createAsyncThunk('auth/detect', async (data) => {
+  const response = await fileAPI('loginUsingFaceRecogintion', 'POST', data);
+  return response;
+});
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -113,6 +123,37 @@ const authSlice = createSlice({
         localStorage.setItem('user', JSON.stringify(state.data));
       })
       .addCase(uploadAvatar.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+      });
+
+    builder
+      .addCase(trainModel.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(trainModel.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.message = action.payload;
+      })
+      .addCase(trainModel.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+      });
+
+    builder
+      .addCase(detect.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(detect.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload.user;
+        state.error = null;
+        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('role', action.payload.user.role);
+        localStorage.setItem('user', JSON.stringify(action.payload.user));
+      })
+      .addCase(detect.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
       });

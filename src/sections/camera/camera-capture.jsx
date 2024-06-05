@@ -1,13 +1,28 @@
 import Webcam from 'react-webcam';
 import React, { useRef } from 'react';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+
+import { detect } from 'src/api/authSlice';
 
 const CameraCapture = () => {
+  const dispatch = useDispatch();
   const webcamRef = useRef(null);
 
   const capture = () => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    // Do something with the image, like sending it to a server or processing it.
-    console.log(imageSrc);
+    const canvas = webcamRef.current.getCanvas();
+    if (canvas) {
+      canvas.toBlob((blob) => {
+        const imageFile = new File([blob], 'captured.jpg', { type: 'image/jpeg' });
+        const formData = new FormData();
+        formData.append('image', imageFile);
+        toast.promise(dispatch(detect(formData)), {
+          pending: 'Processing your picture ...',
+          success: 'Loged in successfullly !',
+          error: 'an error has occured !',
+        });
+      }, 'image/jpeg');
+    }
   };
 
   return (
@@ -22,7 +37,7 @@ const CameraCapture = () => {
         />
       </div>
       <button type="button" onClick={capture} className="btn btn-dark">
-        Capture Photo
+        Scan Photo
       </button>
     </div>
   );

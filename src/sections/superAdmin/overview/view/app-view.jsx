@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { Box, Button } from '@mui/material';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
 import route from 'src/routes';
+import { trainModel } from 'src/api/authSlice';
 import { getSuperDashboardData } from 'src/api/dashboardSlice';
 
 import { Loader } from 'src/sections/loader';
@@ -111,6 +113,20 @@ export default function AppView() {
           </Grid>
         </Grid>
       )}
+      <Box className="d-flex justify-content-center">
+        <Button
+          variant="outlined"
+          onClick={() =>
+            toast.promise(dispatch(trainModel()), {
+              pending: 'Getting your pictures prepared ...',
+              success: 'Training is successful !',
+              error: 'An error has occured !',
+            })
+          }
+        >
+          Train Model
+        </Button>
+      </Box>
     </Container>
   );
 }
