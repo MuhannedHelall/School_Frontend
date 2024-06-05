@@ -26,14 +26,15 @@ export default function GradeAddDialog({ open, setOpen }) {
 
   const students = useSelector((state) => state.student.data);
   const grades = useSelector((state) => state.grade.data);
+  const user = useSelector((state) => state.auth.data);
   const [studentGrades, setStudentGrades] = useState({
     student_id: null,
     subject_id: +id,
-    midterm: null,
-    final: null,
-    attendance: null,
-    behavior: null,
-    total: null,
+    midterm: 0,
+    final: 0,
+    attendance: 0,
+    behavior: 0,
+    total: 0,
   });
 
   const handleClose = () => {
@@ -62,7 +63,7 @@ export default function GradeAddDialog({ open, setOpen }) {
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-        {grades[0]?.grades?.final ? (
+        {user.role === 'student' ? (
           <>
             <Iconify icon="eva:eye-fill" />
             View your grades
@@ -75,9 +76,7 @@ export default function GradeAddDialog({ open, setOpen }) {
         )}
       </DialogTitle>
       <DialogContent>
-        {grades[0]?.grades?.final ? (
-          ''
-        ) : (
+        {user.role !== 'student' && (
           <>
             <DialogContentText>
               Please fill up the form to add a new student grade.
@@ -92,7 +91,7 @@ export default function GradeAddDialog({ open, setOpen }) {
                 onChange={(e) => setStudentGrades({ ...studentGrades, student_id: e.target.value })}
               >
                 {students.map((student) => (
-                  <MenuItem key={student.id} value={student.id}>
+                  <MenuItem key={student.id} value={student.student_id}>
                     {student.name}
                   </MenuItem>
                 ))}
@@ -105,46 +104,46 @@ export default function GradeAddDialog({ open, setOpen }) {
           margin="dense"
           label="Midterm *"
           type="number"
-          value={grades[0]?.grades?.midterm || studentGrades.midterm}
+          value={user.role === 'student' ? grades[0]?.grades?.midterm : studentGrades.midterm}
           onChange={(e) => setStudentGrades({ ...studentGrades, midterm: e.target.value })}
           fullWidth
-          disabled={grades[0]?.grades?.midterm}
+          disabled={user.role === 'student'}
         />
         <TextField
           margin="dense"
           label="Final *"
           type="number"
-          value={grades[0]?.grades?.final || studentGrades.final}
+          value={user.role === 'student' ? grades[0]?.grades?.final : studentGrades.final}
           onChange={(e) => setStudentGrades({ ...studentGrades, final: e.target.value })}
           fullWidth
-          disabled={grades[0]?.grades?.final}
+          disabled={user.role === 'student'}
         />
         <TextField
           margin="dense"
           label="Attendance *"
           type="number"
-          value={grades[0]?.grades?.attendance || studentGrades.attendance}
+          value={user.role === 'student' ? grades[0]?.grades?.attendance : studentGrades.attendance}
           onChange={(e) => setStudentGrades({ ...studentGrades, attendance: e.target.value })}
           fullWidth
-          disabled={grades[0]?.grades?.attendance}
+          disabled={user.role === 'student'}
         />
         <TextField
           margin="dense"
           label="Behavior *"
           type="number"
-          value={grades[0]?.grades?.behavior || studentGrades.behavior}
+          value={user.role === 'student' ? grades[0]?.grades?.behavior : studentGrades.behavior}
           onChange={(e) => setStudentGrades({ ...studentGrades, behavior: e.target.value })}
           fullWidth
-          disabled={grades[0]?.grades?.behavior}
+          disabled={user.role === 'student'}
         />
         <TextField
           margin="dense"
           label="Total *"
           type="number"
-          value={grades[0]?.grades?.total || studentGrades.total}
+          value={user.role === 'student' ? grades[0]?.grades?.total : studentGrades.total}
           onChange={(e) => setStudentGrades({ ...studentGrades, total: e.target.value })}
           fullWidth
-          disabled={grades[0]?.grades?.total}
+          disabled={user.role === 'student'}
         />
       </DialogContent>
       <DialogActions>

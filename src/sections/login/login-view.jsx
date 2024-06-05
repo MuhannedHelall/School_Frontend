@@ -28,7 +28,7 @@ import { goHome } from 'src/utils/utilies';
 import { login } from 'src/api/authSlice';
 import { bgGradient } from 'src/theme/css';
 
-import Logo from 'src/components/logo';
+// import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
 
 import { CameraCapture } from '../camera';
@@ -81,7 +81,7 @@ export default function LoginView() {
     if (validateForm()) {
       const res = await dispatch(login(loginData));
       if (res.meta.requestStatus === 'fulfilled') {
-        navigate(goHome(res.payload.user.role));
+        navigate(goHome(res.payload.user.role, res.payload.user.user.isFirstTimeLogin));
       } else if (res.meta.requestStatus === 'rejected') {
         toast.error(error);
       }
@@ -194,13 +194,13 @@ export default function LoginView() {
         height: 1,
       }}
     >
-      <Logo
+      {/* <Logo
         sx={{
           position: 'fixed',
           top: { xs: 16, md: 24 },
           left: { xs: 16, md: 24 },
         }}
-      />
+      /> */}
 
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
         <Card

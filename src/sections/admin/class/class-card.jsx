@@ -98,7 +98,7 @@ export default function ClassCard({ item, onUpdate, onAttach, onDetach }) {
                 color: 'text.disabled',
               }}
             >
-              <Stack
+              {/* <Stack
                 direction="row"
                 sx={{
                   cursor: 'pointer',
@@ -113,7 +113,7 @@ export default function ClassCard({ item, onUpdate, onAttach, onDetach }) {
               >
                 <Iconify width={16} icon="teenyicons:attach-solid" sx={{ mr: 0.5 }} />
                 <Typography variant="caption">{t('attach')}</Typography>
-              </Stack>
+              </Stack> */}
               <Stack
                 direction="row"
                 sx={{

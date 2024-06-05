@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
+import route from 'src/routes';
 import { getStudentDashboardData } from 'src/api/dashboardSlice';
 
 import { Loader } from 'src/sections/loader';
@@ -14,6 +16,7 @@ import AppWidgetSummary from 'src/sections/superAdmin/overview/app-widget-summar
 export default function AppView() {
   //   const data = {};
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loading, data } = useSelector((state) => state.dashboard);
 
   useEffect(() => {
@@ -31,21 +34,35 @@ export default function AppView() {
         <Grid container spacing={3} padding={10}>
           <Grid xs={12} sm={6}>
             <AppWidgetSummary
-              title="Lectures Today"
-              total={data?.todaysLectures || 0}
-              color="info"
-              icon={<img alt="icon" src="/assets/icons/glass/departments2.png" />}
-              sx={{ display: 'flex', justifyContent: 'center' }}
+              title="Subjects"
+              total={data?.numberOfSubjects || 0}
+              color="warning"
+              icon={<img alt="icon" src="/assets/icons/glass/students.png" />}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: '0.4s',
+                ...{ '&:hover': { background: '#eee' } },
+              }}
+              onClick={() => navigate(route.student.subjects)}
             />
           </Grid>
 
           <Grid xs={12} sm={6}>
             <AppWidgetSummary
-              title="Subjects"
-              total={data?.numberOfSubjects || 0}
-              color="warning"
-              icon={<img alt="icon" src="/assets/icons/glass/students.png" />}
-              sx={{ display: 'flex', justifyContent: 'center' }}
+              title="Lectures Today"
+              total={data?.todaysLectures || 0}
+              color="info"
+              icon={<img alt="icon" src="/assets/icons/glass/departments2.png" />}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: '0.4s',
+                ...{ '&:hover': { background: '#eee' } },
+              }}
+              onClick={() => navigate(route.student.schedule)}
             />
           </Grid>
         </Grid>

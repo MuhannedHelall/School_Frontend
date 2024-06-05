@@ -25,6 +25,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 
 // import { getSubjects } from 'src/api/subjectSlice';
 import route from 'src/routes';
+import { resetPassword } from 'src/api/adminSlice';
 import { getAdminDashboardData } from 'src/api/dashboardSlice';
 import { getEmployees, deleteEmployee, updateEmployee } from 'src/api/employeeSlice';
 
@@ -36,7 +37,7 @@ export default function EmpTableRow({ user, selected, handleClick }) {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { id: userId, teacher_id, name, email, avatarUrl, subject, status } = user;
+  const { id: userId, emp_id, teacher_id, name, email, avatarUrl, subject, status } = user;
   const subjects = useSelector((state) => state.subject.data);
   const logedUser = useSelector((state) => state.auth.data);
   const { t } = useTranslation();
@@ -101,13 +102,18 @@ export default function EmpTableRow({ user, selected, handleClick }) {
   };
 
   const reset = () => {
-    // toast.promise(dispatch(resetPassword(id)), {
-    //   pending: 'Password is being reset ...',
-    //   success: 'Password is reset successfully !',
-    //   error: 'An Error Occured !',
-    // });
-    handleCloseMenu();
+    toast.promise(dispatch(resetPassword(userId)), {
+      pending: 'Password is being reset ...',
+      success: 'Password is reset successfully !',
+      error: 'An Error Occured !',
+    });
+    setEdit(false);
   };
+
+  const getSchedule = () =>
+    teacher_id
+      ? navigate(route.admin.teacherTimetable + teacher_id)
+      : navigate(`${route.profile}${emp_id}`);
 
   return (
     <>
@@ -138,10 +144,7 @@ export default function EmpTableRow({ user, selected, handleClick }) {
                 />
               </Box>
             ) : (
-              <Box
-                sx={{ cursor: 'pointer' }}
-                onClick={() => navigate(route.admin.teacherTimetable + teacher_id)}
-              >
+              <Box sx={{ cursor: 'pointer' }} onClick={getSchedule}>
                 <Typography variant="subtitle2" noWrap>
                   {name}
                 </Typography>

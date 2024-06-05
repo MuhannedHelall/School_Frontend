@@ -3,30 +3,30 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { getStudent } from 'src/api/studentSlice';
+import { getUser } from 'src/api/adminSlice';
 
 import { Loader } from 'src/sections/loader';
 import { ProfileView } from 'src/sections/profile/view';
 
 // -----------------------------------------------------------------------
 
-function StudentPage() {
-  const { id } = useParams();
+function ProfilePage() {
   const dispatch = useDispatch();
-  const { loading, show } = useSelector((state) => state.student);
+  const { id } = useParams();
+  const user = useSelector((state) => state.admin);
 
   useEffect(() => {
-    dispatch(getStudent(id));
+    dispatch(getUser(id));
   }, [dispatch, id]);
 
   return (
     <>
       <Helmet>
-        <title>Student | {show?.name || ''}</title>
+        <title>Profile | {user?.show?.name || id}</title>
       </Helmet>
-      {loading ? <Loader /> : <ProfileView user={show} />}
+      {user.loading ? <Loader /> : <ProfileView user={user.show} />}
     </>
   );
 }
 
-export default StudentPage;
+export default ProfilePage;

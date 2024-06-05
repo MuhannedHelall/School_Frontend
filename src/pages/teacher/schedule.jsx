@@ -13,8 +13,8 @@ function SchedulePage() {
   const user = useSelector((state) => state.auth.data);
 
   useEffect(() => {
-    dispatch(getTeacherTable(user.id));
-  }, [dispatch, user.id]);
+    dispatch(getTeacherTable(user?.id));
+  }, [dispatch, user?.id]);
 
   return (
     <>

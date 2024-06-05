@@ -1,5 +1,6 @@
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
@@ -7,6 +8,9 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
+import route from 'src/routes';
+import { getClasses } from 'src/api/classSlice';
+import { getVarkResultsForTeacher } from 'src/api/varkSlice';
 import { getTeacherDashboardData } from 'src/api/dashboardSlice';
 
 import { Loader } from 'src/sections/loader';
@@ -17,25 +21,48 @@ import AppWidgetSummary from 'src/sections/superAdmin/overview/app-widget-summar
 
 export default function AppView() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [selected, setSelected] = useState(0);
   const { data, error, loading } = useSelector((state) => state.dashboard);
-  const classes = [
-    { class_id: 1, grade: '1', class_number: '1' },
-    { class_id: 2, grade: '1', class_number: '2' },
-    { class_id: 3, grade: '1', class_number: '3' },
-  ];
-  const results = [
-    { class_id: 1, Visual: 5, Auditory: 7, Read_Write: 8, Kinesthetic: 12 },
-    { class_id: 2, Visual: 15, Auditory: 2, Read_Write: 4, Kinesthetic: 8 },
-    { class_id: 3, Visual: 7, Auditory: 6, Read_Write: 11, Kinesthetic: 2 },
-  ];
-  const keys = Object.keys(results[selected]);
-  const values = Object.values(results[selected]);
-  const index = values.indexOf(Math.max(...values));
+  const teacher = useSelector((state) => state.auth.data);
+  const classes = useSelector((state) => state.class) || {};
+  const vark = useSelector((state) => state.vark) || {};
 
+  let keys = [];
+  let values = [];
+  let indexOfMaxLabel = null;
+  //   removing the id from the object to dispose the id value
+  if (vark.data.length) {
+    keys = Object.keys(vark.data[selected]).splice(1, 5);
+    values = Object.values(vark.data[selected]).splice(1, 5);
+    indexOfMaxLabel = values.indexOf(Math.max(...values)) || null;
+  }
+
+  const getLabel = (labelInitial) => {
+    switch (labelInitial) {
+      case 'v':
+        return 'Visual';
+      case 'a':
+        return 'Auditory';
+      case 'r':
+        return 'Read & Write';
+      case 'k':
+        return 'Kinesthetic';
+      default:
+        return 'Undefined';
+    }
+  };
+
+  useEffect(() => {
+    if (vark.data.length <= 0) dispatch(getVarkResultsForTeacher(teacher.id));
+  }, [dispatch, vark.data, teacher.id]);
   useEffect(() => {
     if (Object.keys(data).length < 1) dispatch(getTeacherDashboardData());
   }, [dispatch, data]);
+  useEffect(() => {
+    if (classes.data?.length < 1) dispatch(getClasses());
+  }, [dispatch, classes.data]);
 
   return (
     <Container maxWidth="xl">
@@ -59,8 +86,7 @@ export default function AppView() {
       {loading ? (
         <Loader />
       ) : (
-        // <h1 style={{ textAlign: 'center', marginTop: '30vh' }}>Loading ...</h1>
-        <Box>
+        <>
           <Grid container spacing={3} paddingY={5}>
             <Grid xs={12} sm={6}>
               <AppWidgetSummary
@@ -68,7 +94,14 @@ export default function AppView() {
                 total={data.numOfPeriodsToday}
                 color="info"
                 icon={<img alt="icon" src="/assets/icons/glass/employee.png" />}
-                sx={{ display: 'flex', justifyContent: 'center' }}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: '0.4s',
+                  ...{ '&:hover': { background: '#eee' } },
+                }}
+                onClick={() => navigate(route.teacher.schedule)}
               />
             </Grid>
 
@@ -78,99 +111,113 @@ export default function AppView() {
                 total={data.numOfSubjects}
                 color="warning"
                 icon={<img alt="icon" src="/assets/icons/glass/students.png" />}
-                sx={{ display: 'flex', justifyContent: 'center' }}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: '0.4s',
+                  ...{ '&:hover': { background: '#eee' } },
+                }}
+                onClick={() => navigate(route.teacher.subjects)}
               />
             </Grid>
           </Grid>
 
-          <Typography variant="h3">VARK Results</Typography>
+          {classes.loading ? (
+            <Loader />
+          ) : (
+            <>
+              <Typography variant="h3">VARK Results</Typography>
 
-          <Grid container spacing={2} paddingY={5}>
-            <Grid container xs={12} sm={10} spacing={2}>
-              <Grid xs={12} md={6}>
-                <AppWidgetSummary
-                  title="Visual"
-                  total={results[selected].Visual}
-                  color="info"
-                  icon={<img alt="icon" src="/assets/icons/glass/visual.png" />}
-                  sx={{ display: 'flex', justifyContent: 'center' }}
-                />
-              </Grid>
-              <Grid xs={12} md={6}>
-                <AppWidgetSummary
-                  title="Auditory"
-                  total={results[selected].Auditory}
-                  color="info"
-                  icon={<img alt="icon" src="/assets/icons/glass/auditory.png" />}
-                  sx={{ display: 'flex', justifyContent: 'center' }}
-                />
-              </Grid>
-              <Grid xs={12} md={6}>
-                <AppWidgetSummary
-                  title="Read & Write"
-                  total={results[selected].Read_Write}
-                  color="info"
-                  icon={<img alt="icon" src="/assets/icons/glass/read_write.png" />}
-                  sx={{ display: 'flex', justifyContent: 'center' }}
-                />
-              </Grid>
-              <Grid xs={12} md={6}>
-                <AppWidgetSummary
-                  title="Kinesthetic"
-                  total={results[selected].Kinesthetic}
-                  color="info"
-                  icon={<img alt="icon" src="/assets/icons/glass/kinesthetic.png" />}
-                  sx={{ display: 'flex', justifyContent: 'center' }}
-                />
-              </Grid>
-            </Grid>
+              <Grid container spacing={2} paddingY={5}>
+                <Grid container xs={12} sm={10} spacing={2}>
+                  <Grid xs={12} md={6}>
+                    <AppWidgetSummary
+                      title="Visual"
+                      total={vark.data[selected]?.v}
+                      color="info"
+                      icon={<img alt="icon" src="/assets/icons/glass/visual.png" />}
+                      sx={{ display: 'flex', justifyContent: 'center' }}
+                    />
+                  </Grid>
+                  <Grid xs={12} md={6}>
+                    <AppWidgetSummary
+                      title="Auditory"
+                      total={vark.data[selected]?.a}
+                      color="info"
+                      icon={<img alt="icon" src="/assets/icons/glass/auditory.png" />}
+                      sx={{ display: 'flex', justifyContent: 'center' }}
+                    />
+                  </Grid>
+                  <Grid xs={12} md={6}>
+                    <AppWidgetSummary
+                      title="Read & Write"
+                      total={vark.data[selected]?.r}
+                      color="info"
+                      icon={<img alt="icon" src="/assets/icons/glass/read_write.png" />}
+                      sx={{ display: 'flex', justifyContent: 'center' }}
+                    />
+                  </Grid>
+                  <Grid xs={12} md={6}>
+                    <AppWidgetSummary
+                      title="Kinesthetic"
+                      total={vark.data[selected]?.k}
+                      color="info"
+                      icon={<img alt="icon" src="/assets/icons/glass/kinesthetic.png" />}
+                      sx={{ display: 'flex', justifyContent: 'center' }}
+                    />
+                  </Grid>
+                </Grid>
 
-            <Grid
-              xs={12}
-              sm={2}
-              className="d-flex flex-column justify-content-center align-items-center"
-            >
-              {classes.map((item, i) => (
-                <Box
-                  key={item.class_id}
-                  className="rounded-3 p-5 p-md-0"
-                  sx={{
-                    ...{
-                      width: '100%',
-                      height: '100%',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: selected === i ? '#eee' : 'white',
-                      border: '1px solid #eee',
-                      '&:hover': {
-                        cursor: 'pointer',
-                        transition: '0.5s',
-                        backgroundColor: '#eee',
-                      },
-                    },
-                  }}
-                  onClick={() => setSelected(i)}
+                <Grid
+                  xs={12}
+                  sm={2}
+                  className="d-flex flex-column justify-content-center align-items-center"
                 >
-                  <Typography variant="subtitle1">{`${item.grade}/${item.class_number}`}</Typography>
-                </Box>
-              ))}
-            </Grid>
-          </Grid>
+                  {classes.data?.map((item, i) => (
+                    <Box
+                      key={item.id}
+                      className="rounded-3 p-5 p-md-0"
+                      sx={{
+                        ...{
+                          width: '100%',
+                          height: '100%',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          backgroundColor: selected === i ? '#eee' : 'white',
+                          border: '1px solid #eee',
+                          '&:hover': {
+                            cursor: 'pointer',
+                            transition: '0.5s',
+                            backgroundColor: '#eee',
+                          },
+                        },
+                      }}
+                      onClick={() => setSelected(i)}
+                    >
+                      <Typography variant="subtitle1">{`${item.grade}/${item.class_number}`}</Typography>
+                    </Box>
+                  ))}
+                </Grid>
+              </Grid>
 
-          <Typography variant="subtitle1" textAlign="center">
-            Most of students in{' '}
-            <Typography variant="span" fontWeight="bolder">
-              {`${classes[selected].grade}/${classes[selected].class_number}`}
-            </Typography>{' '}
-            are{' '}
-            <Typography variant="span" fontWeight="bolder">
-              {keys[index]}
-            </Typography>{' '}
-            learners.
-          </Typography>
-        </Box>
+              <Typography variant="subtitle1" textAlign="center">
+                Most of students in{' '}
+                <Typography variant="span" fontWeight="bolder">
+                  {`${classes.data[selected]?.grade}/${classes.data[selected]?.class_number}`}
+                </Typography>{' '}
+                are{' '}
+                <Typography variant="span" fontWeight="bolder">
+                  {getLabel(keys[indexOfMaxLabel])}
+                </Typography>{' '}
+                learners.
+              </Typography>
+            </>
+          )}
+        </>
       )}
+
       <DifyChatbot />
     </Container>
   );

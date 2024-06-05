@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import authSlice from './authSlice';
+import varkSlice from './varkSlice';
 import timeSlice from './timeSlice';
 import adminSlice from './adminSlice';
 import classSlice from './classSlice';
@@ -16,6 +17,7 @@ import departmentSlice from './departmentSlice';
 const store = configureStore({
   reducer: {
     auth: authSlice,
+    vark: varkSlice,
     time: timeSlice,
     admin: adminSlice,
     class: classSlice,

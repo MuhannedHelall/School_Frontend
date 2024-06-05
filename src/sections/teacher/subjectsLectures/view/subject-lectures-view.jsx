@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import { Box, Stack, Button, Tooltip, Container, Typography, IconButton } from '@mui/material';
 
@@ -8,6 +8,7 @@ import route from 'src/routes';
 import { getLectures } from 'src/api/lecturesSlice';
 
 import Iconify from 'src/components/iconify';
+import { BackButton } from 'src/components/back-button';
 
 import { Loader } from 'src/sections/loader';
 import FileUploadDialog from 'src/sections/file-upload/fileUpload-dialog';
@@ -66,9 +67,9 @@ function SubjectLecturesView() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Link to={routeBackToSubjects(role)}>go back</Link>
+        <BackButton to={routeBackToSubjects(role)} color="inherit" />
 
-        {role === 'student' || (
+        {role !== 'student' && (
           <Button
             variant="contained"
             color="inherit"

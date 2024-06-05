@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -7,6 +8,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
+import route from 'src/routes';
 import { getSuperDashboardData } from 'src/api/dashboardSlice';
 
 import { Loader } from 'src/sections/loader';
@@ -16,6 +18,7 @@ import AppWidgetSummary from '../app-widget-summary';
 
 export default function AppView() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { data, error, loading } = useSelector((state) => state.dashboard);
 
@@ -43,7 +46,6 @@ export default function AppView() {
         })}
 
       {loading ? (
-        // <h1 style={{ textAlign: 'center', marginTop: '30vh' }}>Loading ...</h1>
         <Loader />
       ) : (
         <Grid container spacing={3} padding={10}>
@@ -53,7 +55,14 @@ export default function AppView() {
               total={data.numOfAdmins}
               color="success"
               icon={<img alt="icon" src="/assets/icons/glass/admins.png" />}
-              sx={{ display: 'flex', justifyContent: 'center' }}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: '0.4s',
+                ...{ '&:hover': { background: '#eee' } },
+              }}
+              onClick={() => navigate(route.super.admins)}
             />
           </Grid>
 
@@ -73,7 +82,14 @@ export default function AppView() {
               total={data.numOfStudents}
               color="warning"
               icon={<img alt="icon" src="/assets/icons/glass/students.png" />}
-              sx={{ display: 'flex', justifyContent: 'center' }}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: '0.4s',
+                ...{ '&:hover': { background: '#eee' } },
+              }}
+              onClick={() => navigate(route.super.deptsId + 5)}
             />
           </Grid>
 
@@ -83,7 +99,14 @@ export default function AppView() {
               total={data.numOfDepartments}
               color="error"
               icon={<img alt="icon" src="/assets/icons/glass/departments.png" />}
-              sx={{ display: 'flex', justifyContent: 'center' }}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: '0.4s',
+                ...{ '&:hover': { background: '#eee' } },
+              }}
+              onClick={() => navigate(route.super.depts)}
             />
           </Grid>
         </Grid>

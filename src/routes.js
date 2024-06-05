@@ -3,6 +3,7 @@ const route = {
   landing: '/',
   vark: '/vark-test',
   editProfile: '/editProfile',
+  profile: '/profile/',
   super: {
     index: '/superAdmin',
     admins: '/superAdmin/admins',

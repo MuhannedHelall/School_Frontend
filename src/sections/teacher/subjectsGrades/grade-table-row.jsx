@@ -106,7 +106,7 @@ export default function GradeTableRow({ user, selected, handleClick }) {
           {classroom ? (
             <Label color="success">{`${classroom.grade}/${classroom.class_number}`}</Label>
           ) : (
-            <Label color="">Not Found</Label>
+            <Label color="error">Not Found</Label>
           )}
         </TableCell>
 
@@ -120,7 +120,7 @@ export default function GradeTableRow({ user, selected, handleClick }) {
               onChange={(e) => setStudentData({ ...studentData, midterm: e.target.value })}
             />
           ) : (
-            grades.midterm || <Typography color="red">Not Found</Typography>
+            grades.midterm || <Label color="error">Not Found</Label>
           )}
         </TableCell>
 
@@ -134,7 +134,7 @@ export default function GradeTableRow({ user, selected, handleClick }) {
               onChange={(e) => setStudentData({ ...studentData, final: e.target.value })}
             />
           ) : (
-            grades.final || <Typography color="red">Not Found</Typography>
+            grades.final || <Label color="error">Not Found</Label>
           )}
         </TableCell>
 
@@ -148,7 +148,7 @@ export default function GradeTableRow({ user, selected, handleClick }) {
               onChange={(e) => setStudentData({ ...studentData, behavior: e.target.value })}
             />
           ) : (
-            grades.behavior || <Typography color="red">Not Found</Typography>
+            grades.behavior || <Label color="error">Not Found</Label>
           )}
         </TableCell>
 
@@ -162,7 +162,7 @@ export default function GradeTableRow({ user, selected, handleClick }) {
               onChange={(e) => setStudentData({ ...studentData, attendance: e.target.value })}
             />
           ) : (
-            grades.attendance || <Typography color="red">Not Found</Typography>
+            grades.attendance || <Label color="error">Not Found</Label>
           )}
         </TableCell>
 
@@ -176,7 +176,7 @@ export default function GradeTableRow({ user, selected, handleClick }) {
               onChange={(e) => setStudentData({ ...studentData, total: e.target.value })}
             />
           ) : (
-            grades.total || <Typography color="red">Not Found</Typography>
+            grades.total || <Label color="error">Not Found</Label>
           )}
         </TableCell>
 

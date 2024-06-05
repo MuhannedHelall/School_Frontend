@@ -28,11 +28,6 @@ function AdminView() {
   const departments = useSelector((state) => state.department.data);
   const { t } = useTranslation();
 
-  useEffect(() => {
-    if (admins.data.length < 1) dispatch(getAdmins());
-    if (departments.length < 1) dispatch(getDepartments());
-  }, [dispatch]); // eslint-disable-line
-
   const handleDownload = () => {
     dispatch(downloadFile());
   };
@@ -50,6 +45,11 @@ function AdminView() {
       error: t('errorOccured'),
     });
   };
+
+  useEffect(() => {
+    if (admins.data.length < 1) dispatch(getAdmins());
+    if (departments.length < 1) dispatch(getDepartments());
+  }, [dispatch]); // eslint-disable-line
 
   return (
     <TableView

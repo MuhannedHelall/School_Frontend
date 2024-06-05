@@ -161,8 +161,9 @@ function RenderMenu() {
         if (lang === 'ar') navMenu = navConfig.admin.student.ar;
         else navMenu = navConfig.admin.student.en;
       } else {
-        if (lang !== 'ar') navMenu = navConfig.admin.employee.en;
-        navMenu = navConfig.admin.employee.ar;
+        /* eslint-disable-next-line no-lonely-if */
+        if (lang === 'ar') navMenu = navConfig.admin.employee.ar;
+        else navMenu = navConfig.admin.employee.en;
       }
       break;
     case 'teacher':

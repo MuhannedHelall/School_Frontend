@@ -5,6 +5,7 @@ import { authAPI, fileAPI, downloadAPI } from './APIs';
 const initialState = {
   loading: false,
   data: [],
+  show: {},
   error: '',
   success: '',
 };
@@ -21,6 +22,11 @@ export const getAdmins = createAsyncThunk('admin/getAdmins', async () => {
 
 export const getAdmin = createAsyncThunk('admin/getAdmin', async (id) => {
   const response = await authAPI(`admin/${id}`);
+  return response;
+});
+
+export const getUser = createAsyncThunk('admin/getUser', async (id) => {
+  const response = await authAPI(`user/show/${id}`);
   return response;
 });
 
@@ -90,11 +96,27 @@ const adminSlice = createSlice({
       })
       .addCase(getAdmin.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
+        state.show = action.payload;
         state.error = '';
         state.success = '';
       })
       .addCase(getAdmin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Something went wrong';
+        state.success = '';
+      });
+
+    builder
+      .addCase(getUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.show = action.payload;
+        state.error = '';
+        state.success = '';
+      })
+      .addCase(getUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
         state.success = '';

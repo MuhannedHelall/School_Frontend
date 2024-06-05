@@ -28,7 +28,6 @@ import Iconify from 'src/components/iconify';
 import { Loader } from 'src/sections/loader';
 
 export default function AttachDialog({ open, setOpen, data }) {
-  console.log(data);
   const id = data?.id || 0;
   const dispatch = useDispatch();
   const subjects = useSelector((state) => state.subject);

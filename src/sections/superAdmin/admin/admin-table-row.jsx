@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -20,6 +21,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
 
+import route from 'src/routes';
 import { getDepartments } from 'src/api/departmentSlice';
 import { getAdmins, deleteAdmin, updateAdmin, resetPassword } from 'src/api/adminSlice';
 
@@ -29,6 +31,7 @@ import Iconify from 'src/components/iconify';
 
 export default function AdminTableRow({ user, selected, handleClick }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id, name, email, avatarUrl, department, status } = user;
   const departments = useSelector((state) => state.department.data);
   const { t } = useTranslation();
@@ -125,7 +128,7 @@ export default function AdminTableRow({ user, selected, handleClick }) {
                 />
               </Box>
             ) : (
-              <Box>
+              <Box sx={{ cursor: 'pointer' }} onClick={() => navigate(`${route.profile + id}`)}>
                 <Typography variant="subtitle2" noWrap>
                   {name}
                 </Typography>

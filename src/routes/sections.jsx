@@ -42,14 +42,11 @@ export const StudentSchedulePage = lazy(() => import('src/pages/student/schedule
 export const StudentSubjectsLectures = lazy(() => import('src/pages/student/subjectLectures'));
 export const StudentLecturePage = lazy(() => import('src/pages/student/LecturePage'));
 
-// Parent Pages
-export const ParentIndex = lazy(() => import('src/pages/parent/index'));
-export const ParentKidsPage = lazy(() => import('src/pages/parent/kids'));
-
 // Other Pages
 export const LandingPage = lazy(() => import('src/pages/landing'));
 export const VarkPage = lazy(() => import('src/pages/vark'));
 export const LoginPage = lazy(() => import('src/pages/login'));
+export const ProfilePage = lazy(() => import('src/pages/profile'));
 export const EditProfilePage = lazy(() => import('src/pages/editProfile'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
@@ -83,6 +80,10 @@ export default function Router() {
         {
           path: route.editProfile,
           element: <EditProfilePage />,
+        },
+        {
+          path: `${route.profile}:id`,
+          element: <ProfilePage />,
         },
         {
           path: route.super.index,
@@ -247,13 +248,6 @@ export default function Router() {
               path: `${route.student.lecture}:id`,
               element: <StudentLecturePage />,
             },
-          ],
-        },
-        {
-          path: route.parent.index,
-          children: [
-            { element: <ParentIndex />, index: true },
-            { path: route.parent.kids, element: <ParentKidsPage /> },
           ],
         },
       ],

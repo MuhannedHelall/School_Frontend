@@ -147,9 +147,7 @@ export default function SubjectsView() {
                               },
                             },
                           }}
-                          onClick={() =>
-                            navigate(`${route.student.subjectLectures}${item?.id}`)
-                          }
+                          onClick={() => navigate(`${route.student.subjectLectures}${item?.id}`)}
                         >
                           <Typography variant="caption">lectures</Typography>
                           <Iconify width={16} icon="mdi:lecture" sx={{ ml: 0.5 }} />

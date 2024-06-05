@@ -4,7 +4,8 @@ import { Navigate } from 'react-router-dom';
 import route from 'src/routes';
 
 const AdminAuth = ({ children }) => {
-  if (localStorage.getItem('role') === 'admin') return children;
+  if (localStorage.getItem('role') === 'admin' || localStorage.getItem('role') === 'superAdmin')
+    return children;
   return <Navigate to={route.landing} />;
 };
 

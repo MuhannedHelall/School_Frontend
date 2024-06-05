@@ -13,10 +13,10 @@ import StudentTableRow from '../student-table-row';
 
 // -----------------------------------------------------------------------
 const Labels = [
-  { id: 'name', label: 'Name' },
-  { id: 'class', label: 'class' },
-  { id: 'status', label: 'Status' },
-  { id: 'action', label: 'Action', align: 'center' },
+  { id: 'name', label: { en: 'Name', ar: 'الاسام' } },
+  { id: 'class', label: { en: 'class', ar: 'الفصل' } },
+  { id: 'status', label: { en: 'Status', ar: 'الحالة' } },
+  { id: 'action', label: { en: 'Action', ar: 'التصرف' }, align: 'center' },
 ];
 const Title = 'Students';
 
@@ -47,7 +47,6 @@ function StudentView() {
           } else {
             dispatch(getStudents());
           }
-          // setOpenUploadDialog(false);
           return data.payload[1];
         },
       },

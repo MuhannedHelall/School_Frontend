@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -22,6 +23,7 @@ import FormControl from '@mui/material/FormControl';
 
 // import { getClasses } from 'src/api/classSlice';
 import route from 'src/routes';
+import { resetPassword } from 'src/api/adminSlice';
 import {
   getStudents,
   deleteStudent,
@@ -39,6 +41,7 @@ export default function StudentTableRow({ user, selected, handleClick }) {
   const navigate = useNavigate();
   const { id, student_id, name, email, avatarUrl, status } = user;
   const classes = useSelector((state) => state.class.data);
+  const { t } = useTranslation();
 
   const [open, setOpen] = useState(null);
   const [edit, setEdit] = useState(false);
@@ -101,17 +104,17 @@ export default function StudentTableRow({ user, selected, handleClick }) {
   };
 
   const reset = () => {
-    // toast.promise(dispatch(resetPassword(id)), {
-    //   pending: 'Password is being reset ...',
-    //   success: 'Password is reset successfully !',
-    //   error: 'An Error Occured !',
-    // });
+    toast.promise(dispatch(resetPassword(id)), {
+      pending: 'Password is being reset ...',
+      success: 'Password is reset successfully !',
+      error: 'An Error Occured !',
+    });
     handleCloseMenu();
   };
 
   return (
     <>
-      <TableRow hover tabIndex={-1} role="checkbox" selected={selected} sx={{ cursor: 'pointer' }}>
+      <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
         <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
@@ -135,7 +138,10 @@ export default function StudentTableRow({ user, selected, handleClick }) {
                 />
               </Box>
             ) : (
-              <Box onClick={() => navigate(`${route.admin.studentsId + id}`)}>
+              <Box
+                sx={{ cursor: 'pointer' }}
+                onClick={() => navigate(`${route.admin.studentsId + id}`)}
+              >
                 <Typography variant="subtitle2" noWrap>
                   {name}
                 </Typography>
@@ -167,7 +173,7 @@ export default function StudentTableRow({ user, selected, handleClick }) {
             </FormControl>
           ) : (
             `${user.class?.grade} / ${user.class?.class_number}` || (
-              <Typography color="red">Not Found</Typography>
+              <Typography color="red">{t('notFound')}</Typography>
             )
           )}
         </TableCell>
@@ -175,7 +181,7 @@ export default function StudentTableRow({ user, selected, handleClick }) {
         <TableCell>
           {edit && !status ? (
             <FormControl size="small" fullWidth>
-              <InputLabel id="status-edit-select-label">Status</InputLabel>
+              <InputLabel id="status-edit-select-label">{t('status')}</InputLabel>
               <Select
                 labelId="status-edit-select-label"
                 id="status-edit-select"
@@ -184,8 +190,8 @@ export default function StudentTableRow({ user, selected, handleClick }) {
                 onChange={(e) => setStudentData({ ...studentData, status: e.target.value })}
               >
                 {[
-                  { name: 'Active', value: 1 },
-                  { name: 'Banned', value: 0 },
+                  { name: t('active'), value: 1 },
+                  { name: t('banned'), value: 0 },
                 ].map((statusData) => (
                   <MenuItem key={statusData.name} value={statusData.value}>
                     {statusData.name}
@@ -194,24 +200,24 @@ export default function StudentTableRow({ user, selected, handleClick }) {
               </Select>
             </FormControl>
           ) : (
-            <Label color={status ? 'success' : 'error'}>{status ? 'Active' : 'Banned'}</Label>
+            <Label color={status ? 'success' : 'error'}>{status ? t('active') : t('banned')}</Label>
           )}
         </TableCell>
 
         <TableCell align="center">
           {edit ? (
             <Box>
-              <Tooltip title="Reset Password">
+              <Tooltip title={t('resetPassword')}>
                 <IconButton onClick={reset}>
                   <Iconify icon="solar:lock-linear" />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Discard">
+              <Tooltip title={t('discard')}>
                 <IconButton onClick={() => setEdit(false)}>
                   <Iconify icon="bi:x" />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Save">
+              <Tooltip title={t('save')}>
                 <IconButton onClick={saveEditedRecord}>
                   <Iconify icon="mingcute:check-fill" />
                 </IconButton>
@@ -237,12 +243,12 @@ export default function StudentTableRow({ user, selected, handleClick }) {
       >
         <MenuItem onClick={handleEditRecord}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
-          Edit
+          {t('edit')}
         </MenuItem>
 
         <MenuItem onClick={handleDeleteRecord} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Delete
+          {t('delete')}
         </MenuItem>
       </Popover>
     </>

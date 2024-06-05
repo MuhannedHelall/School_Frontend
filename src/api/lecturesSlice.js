@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { authAPI } from './APIs';
+import { authAPI, fileAPI } from './APIs';
 //  fileAPI, downloadAPI
 
 const initialState = {
   loading: false,
   data: [],
+  show: {},
   error: '',
   success: '',
 };
@@ -18,7 +19,7 @@ export const addLecture = createAsyncThunk('lectures/addLecture', async (lecture
 export const addLectureWithVideo = createAsyncThunk(
   'lectures/addLectureWithVideo',
   async (lecture) => {
-    const response = await authAPI('video/uploadLecture', 'POST', lecture);
+    const response = await fileAPI('video/uploadLecture', 'POST', lecture);
     return response;
   }
 );
@@ -109,7 +110,7 @@ const lecturesSlice = createSlice({
       })
       .addCase(getLecture.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
+        state.show = action.payload;
         state.error = '';
         state.success = '';
       })

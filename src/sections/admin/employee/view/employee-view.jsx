@@ -67,12 +67,12 @@ function EmployeeView() {
   };
 
   const handleUpload = (file) => {
-    const DTO = { file, id: user.department_id };
+    const DTO = { file, id: user.department_id || id };
     toast.promise(dispatch(uploadFile(DTO)), {
       pending: t('fileBeingUploaded'),
       success: {
         render({ data }) {
-          dispatch(getEmployees(user.department_id));
+          dispatch(getEmployees(user.department_id || id));
           return data.payload[1];
         },
       },
