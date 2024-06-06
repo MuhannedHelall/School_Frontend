@@ -6,6 +6,7 @@ import timeSlice from './timeSlice';
 import adminSlice from './adminSlice';
 import classSlice from './classSlice';
 import gradeSlice from './gradeSlice';
+import tutionSlice from './tutionSlice';
 import studentSlice from './studentSlice';
 import subjectSlice from './subjectSlice';
 import lecturesSlice from './lecturesSlice';
@@ -22,6 +23,7 @@ const store = configureStore({
     admin: adminSlice,
     class: classSlice,
     grade: gradeSlice,
+    tution: tutionSlice,
     student: studentSlice,
     subject: subjectSlice,
     lectures: lecturesSlice,

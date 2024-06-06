@@ -108,6 +108,11 @@ const navConfig = {
           path: route.admin.students,
           icon: icon('ic_user'),
         },
+        {
+          title: 'Tution Fees',
+          path: route.admin.tution,
+          icon: icon('ic_blog'),
+        },
       ],
       ar: [
         {
@@ -124,6 +129,11 @@ const navConfig = {
           title: 'الطلاب',
           path: route.admin.students,
           icon: icon('ic_user'),
+        },
+        {
+          title: 'المصاريف الدراسية',
+          path: route.admin.tution,
+          icon: icon('ic_blog'),
         },
       ],
     },

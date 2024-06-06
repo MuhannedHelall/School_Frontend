@@ -24,6 +24,7 @@ export const TimeTablePage = lazy(() => import('src/pages/admin/timetable'));
 export const StudentPage = lazy(() => import('src/pages/admin/showStudent'));
 export const StudentsPage = lazy(() => import('src/pages/admin/student'));
 export const ClassesPage = lazy(() => import('src/pages/admin/class'));
+export const TutionPage = lazy(() => import('src/pages/admin/tution'));
 export const TeacherTablePage = lazy(() => import('src/pages/admin/teacherTimetable'));
 
 // Teacher Pages
@@ -156,6 +157,14 @@ export default function Router() {
               element: (
                 <AdminAuth>
                   <ClassesPage />
+                </AdminAuth>
+              ),
+            },
+            {
+              path: route.admin.tution,
+              element: (
+                <AdminAuth>
+                  <TutionPage />
                 </AdminAuth>
               ),
             },

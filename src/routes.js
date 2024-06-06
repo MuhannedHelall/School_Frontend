@@ -20,6 +20,7 @@ const route = {
     lectures: '/admin/lectures/',
     lecture: '/admin/lecture/',
     classes: '/admin/classes',
+    tution: '/admin/tution',
     timetable: '/admin/timetable',
     teacherTimetable: '/admin/timetable/',
   },

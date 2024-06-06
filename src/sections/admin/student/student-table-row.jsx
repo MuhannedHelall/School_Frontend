@@ -21,9 +21,9 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
 
-// import { getClasses } from 'src/api/classSlice';
 import route from 'src/routes';
 import { resetPassword } from 'src/api/adminSlice';
+import { createPaymentCodeForStudent } from 'src/api/tutionSlice';
 import {
   getStudents,
   deleteStudent,
@@ -44,7 +44,8 @@ export default function StudentTableRow({ user, selected, handleClick }) {
   const { t } = useTranslation();
 
   const [open, setOpen] = useState(null);
-  const [edit, setEdit] = useState(false);
+  const [edit, setEdit] = useState(0);
+  const [amount, setAmount] = useState(null);
   const [studentData, setStudentData] = useState({
     id,
     student_id,
@@ -63,8 +64,13 @@ export default function StudentTableRow({ user, selected, handleClick }) {
     setOpen(null);
   };
 
+  const handleFeeForStudent = () => {
+    setEdit(2);
+    handleCloseMenu();
+  };
+
   const handleEditRecord = () => {
-    setEdit(true);
+    setEdit(1);
     handleCloseMenu();
   };
 
@@ -90,7 +96,7 @@ export default function StudentTableRow({ user, selected, handleClick }) {
       studentData.class_id === user.class.id &&
       studentData.status === status
     ) {
-      setEdit(false);
+      setEdit(0);
       return;
     }
     toast.promise(dispatch(updateStudent(studentData)), {
@@ -100,7 +106,17 @@ export default function StudentTableRow({ user, selected, handleClick }) {
     });
     if (subject_id) dispatch(getStudentsInClass(subject_id));
     else dispatch(getStudents());
-    setEdit(false);
+    setEdit(0);
+  };
+
+  const createCodeForStudent = () => {
+    if (amount > 0)
+      toast.promise(dispatch(createPaymentCodeForStudent({ id, amount })), {
+        pending: 'Code is being generated ...',
+        success: 'Code has been generated !',
+        error: t('anErrorOccured'),
+      });
+    setEdit(0);
   };
 
   const reset = () => {
@@ -109,7 +125,7 @@ export default function StudentTableRow({ user, selected, handleClick }) {
       success: 'Password is reset successfully !',
       error: 'An Error Occured !',
     });
-    handleCloseMenu();
+    setEdit(0);
   };
 
   return (
@@ -122,7 +138,7 @@ export default function StudentTableRow({ user, selected, handleClick }) {
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
             <Avatar alt={name} src={avatarUrl || `/assets/images/avatars/avatar_${id % 25}.jpg`} />
-            {edit ? (
+            {edit === 1 ? (
               <Box display="flex" gap="10px">
                 <TextField
                   label="Name"
@@ -154,9 +170,9 @@ export default function StudentTableRow({ user, selected, handleClick }) {
         </TableCell>
 
         <TableCell>
-          {edit ? (
+          {edit === 1 ? (
             <FormControl size="small" fullWidth>
-              <InputLabel id="class-edit-select-label">Class</InputLabel>
+              <InputLabel id="class-edit-select-label">{t('classes')}</InputLabel>
               <Select
                 labelId="class-edit-select-label"
                 id="class-edit-select"
@@ -179,7 +195,7 @@ export default function StudentTableRow({ user, selected, handleClick }) {
         </TableCell>
 
         <TableCell>
-          {edit && !status ? (
+          {edit === 1 && !status ? (
             <FormControl size="small" fullWidth>
               <InputLabel id="status-edit-select-label">{t('status')}</InputLabel>
               <Select
@@ -200,25 +216,41 @@ export default function StudentTableRow({ user, selected, handleClick }) {
               </Select>
             </FormControl>
           ) : (
-            <Label color={status ? 'success' : 'error'}>{status ? t('active') : t('banned')}</Label>
+            <>
+              {edit === 2 ? (
+                <TextField
+                  label="Amount"
+                  size="small"
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                />
+              ) : (
+                <Label color={status ? 'success' : 'error'}>
+                  {status ? t('active') : t('banned')}
+                </Label>
+              )}
+            </>
           )}
         </TableCell>
 
         <TableCell align="center">
-          {edit ? (
+          {edit !== 0 ? (
             <Box>
-              <Tooltip title={t('resetPassword')}>
-                <IconButton onClick={reset}>
-                  <Iconify icon="solar:lock-linear" />
-                </IconButton>
-              </Tooltip>
+              {edit === 1 && (
+                <Tooltip title={t('resetPassword')}>
+                  <IconButton onClick={reset}>
+                    <Iconify icon="solar:lock-linear" />
+                  </IconButton>
+                </Tooltip>
+              )}
               <Tooltip title={t('discard')}>
-                <IconButton onClick={() => setEdit(false)}>
+                <IconButton onClick={() => setEdit(0)}>
                   <Iconify icon="bi:x" />
                 </IconButton>
               </Tooltip>
               <Tooltip title={t('save')}>
-                <IconButton onClick={saveEditedRecord}>
+                <IconButton onClick={edit === 1 ? saveEditedRecord : createCodeForStudent}>
                   <Iconify icon="mingcute:check-fill" />
                 </IconButton>
               </Tooltip>
@@ -241,6 +273,11 @@ export default function StudentTableRow({ user, selected, handleClick }) {
           sx: { width: 140 },
         }}
       >
+        <MenuItem onClick={handleFeeForStudent}>
+          <Iconify icon="majesticons:money-plus-line" sx={{ mr: 2 }} />
+          {t('createFee')}
+        </MenuItem>
+
         <MenuItem onClick={handleEditRecord}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           {t('edit')}

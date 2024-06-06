@@ -7,6 +7,7 @@ import { Box, Badge, Avatar } from '@mui/material';
 
 import { editProfile, uploadAvatar, changePassword } from 'src/api/authSlice';
 
+import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 
 import './css/edit.css';
@@ -145,6 +146,17 @@ export default function EditProfileView() {
                           Password
                         </button>
                       </li>
+                      {user.role === 'student' && (
+                        <li className="nav-item">
+                          <button
+                            type="button"
+                            className={`${selected === 3 && 'active'} nav-link`}
+                            onClick={() => setSelected(3)}
+                          >
+                            Tution Fees
+                          </button>
+                        </li>
+                      )}
                     </ul>
                     <div className="tab-content pt-3">
                       <div className="tab-pane active">
@@ -257,88 +269,149 @@ export default function EditProfileView() {
                             </div>
                           </form>
                         ) : (
-                          <form className="form" onSubmit={handleEditPassword}>
-                            <div className="row">
-                              <div className="col-12 col-sm-6 mb-3">
-                                <div className="mb-2">
-                                  <b>Change Password</b>
-                                </div>
+                          <Box>
+                            {selected === 2 ? (
+                              <form className="form" onSubmit={handleEditPassword}>
                                 <div className="row">
-                                  <div className="col">
-                                    <div className="form-group">
-                                      <label className="w-100" htmlFor="curPass">
-                                        Current Password
-                                        <input
-                                          id="curPass"
-                                          className="form-control"
-                                          type="password"
-                                          placeholder="• • • • • • • • • • • • • • • • • • •"
-                                          value={userPassword.current_password}
-                                          onChange={(e) =>
-                                            setUserPassword({
-                                              ...userPassword,
-                                              current_password: e.target.value,
-                                            })
-                                          }
-                                        />
-                                      </label>
+                                  <div className="col-12 col-sm-6 mb-3">
+                                    <div className="mb-2">
+                                      <b>Change Password</b>
+                                    </div>
+                                    <div className="row">
+                                      <div className="col">
+                                        <div className="form-group">
+                                          <label className="w-100" htmlFor="curPass">
+                                            Current Password
+                                            <input
+                                              id="curPass"
+                                              className="form-control"
+                                              type="password"
+                                              placeholder="• • • • • • • • • • • • • • • • • • •"
+                                              value={userPassword.current_password}
+                                              onChange={(e) =>
+                                                setUserPassword({
+                                                  ...userPassword,
+                                                  current_password: e.target.value,
+                                                })
+                                              }
+                                            />
+                                          </label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="row">
+                                      <div className="col">
+                                        <div className="form-group">
+                                          <label className="w-100" htmlFor="newPass">
+                                            New Password
+                                            <input
+                                              id="newPass"
+                                              className="form-control"
+                                              type="password"
+                                              placeholder="• • • • • • • • • • • • • • • • • • •"
+                                              value={userPassword.new_password}
+                                              onChange={(e) =>
+                                                setUserPassword({
+                                                  ...userPassword,
+                                                  new_password: e.target.value,
+                                                })
+                                              }
+                                            />
+                                          </label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="row">
+                                      <div className="col">
+                                        <div className="form-group">
+                                          <label className="w-100" htmlFor="conPass">
+                                            Confirm{' '}
+                                            <span className="d-none d-xl-inline">Password</span>
+                                            <input
+                                              id="conPass"
+                                              className="form-control"
+                                              type="password"
+                                              placeholder="• • • • • • • • • • • • • • • • • • •"
+                                              value={userPassword.confirmed_Password}
+                                              onChange={(e) =>
+                                                setUserPassword({
+                                                  ...userPassword,
+                                                  confirmed_Password: e.target.value,
+                                                })
+                                              }
+                                            />
+                                          </label>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
                                 <div className="row">
-                                  <div className="col">
-                                    <div className="form-group">
-                                      <label className="w-100" htmlFor="newPass">
-                                        New Password
-                                        <input
-                                          id="newPass"
-                                          className="form-control"
-                                          type="password"
-                                          placeholder="• • • • • • • • • • • • • • • • • • •"
-                                          value={userPassword.new_password}
-                                          onChange={(e) =>
-                                            setUserPassword({
-                                              ...userPassword,
-                                              new_password: e.target.value,
-                                            })
-                                          }
-                                        />
-                                      </label>
-                                    </div>
+                                  <div className="col d-flex justify-content-end">
+                                    <button className="btn btn-primary" type="submit">
+                                      Save Changes
+                                    </button>
                                   </div>
                                 </div>
+                              </form>
+                            ) : (
+                              <div className="form">
                                 <div className="row">
-                                  <div className="col">
-                                    <div className="form-group">
-                                      <label className="w-100" htmlFor="conPass">
-                                        Confirm <span className="d-none d-xl-inline">Password</span>
-                                        <input
-                                          id="conPass"
-                                          className="form-control"
-                                          type="password"
-                                          placeholder="• • • • • • • • • • • • • • • • • • •"
-                                          value={userPassword.confirmed_Password}
-                                          onChange={(e) =>
-                                            setUserPassword({
-                                              ...userPassword,
-                                              confirmed_Password: e.target.value,
-                                            })
-                                          }
-                                        />
-                                      </label>
-                                    </div>
+                                  <div className="col-12 col-sm-6 mb-3">
+                                    {user.payments?.map((code) => (
+                                      <div className="form-group" key={code.paymentCode}>
+                                        <label className="w-100 mt-2" htmlFor="amount">
+                                          Amount
+                                          <input
+                                            id="amount"
+                                            className="form-control"
+                                            type="text"
+                                            placeholder="Amount"
+                                            value={code.amount}
+                                            disabled
+                                          />
+                                        </label>
+
+                                        <label className="w-100 mt-2" htmlFor="payment-code">
+                                          Payment <span className="d-none d-xl-inline">Code</span>
+                                          <input
+                                            id="payment-code"
+                                            className="form-control"
+                                            type="text"
+                                            placeholder="Payment Code"
+                                            value={code.paymentCode}
+                                            disabled
+                                          />
+                                        </label>
+
+                                        <div className="form-group mt-2">
+                                          <label htmlFor="paid-fee">
+                                            Paid:
+                                            <Label
+                                              id="paid-fee"
+                                              color={code.isPaid ? 'success' : 'error'}
+                                              className="mx-2"
+                                            >
+                                              {code.isPaid ? 'PAID' : 'NOT PAID'}
+                                            </Label>
+                                          </label>
+                                        </div>
+
+                                        <div className="form-group mt-2">
+                                          <label htmlFor="creation-date">
+                                            Creation Date:
+                                            <Label id="creation-date" className="mx-2">
+                                              {new Date(code.createdAt)?.toLocaleString()}
+                                            </Label>
+                                          </label>
+                                        </div>
+                                      </div>
+                                    ))}
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div className="row">
-                              <div className="col d-flex justify-content-end">
-                                <button className="btn btn-primary" type="submit">
-                                  Save Changes
-                                </button>
-                              </div>
-                            </div>
-                          </form>
+                            )}
+                          </Box>
                         )}
                       </div>
                     </div>
