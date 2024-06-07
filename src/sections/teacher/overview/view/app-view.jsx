@@ -64,8 +64,8 @@ export default function AppView() {
     if (Object.keys(data).length < 1) dispatch(getTeacherDashboardData());
   }, [dispatch, data]);
   useEffect(() => {
-    if (classes.data?.length < 1) dispatch(getTeacherClasses(teacher.id));
-  }, [dispatch, classes.data, teacher.id]);
+    dispatch(getTeacherClasses(teacher.id));
+  }, [dispatch, teacher.id]);
 
   return (
     <Container maxWidth="xl">

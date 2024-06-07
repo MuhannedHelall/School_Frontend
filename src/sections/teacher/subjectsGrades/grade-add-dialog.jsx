@@ -29,6 +29,7 @@ export default function GradeAddDialog({ open, setOpen }) {
   const students = useSelector((state) => state.student.data);
   const grades = useSelector((state) => state.grade.data);
   const user = useSelector((state) => state.auth.data);
+  const { role } = user;
   const [studentGrades, setStudentGrades] = useState({
     student_id: null,
     subject_id: +id,
@@ -148,7 +149,7 @@ export default function GradeAddDialog({ open, setOpen }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>{t('discard')}</Button>
-        {!grades[0]?.grades?.total && <Button onClick={handleAdd}>{t('save')}</Button>}
+        {role !== 'student' && <Button onClick={handleAdd}>{t('save')}</Button>}
       </DialogActions>
     </Dialog>
   );
