@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Paper from '@mui/material/Paper';
@@ -29,6 +30,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 function LectureView() {
   const dispatch = useDispatch();
   const { id } = useParams();
+  const { t } = useTranslation();
   const lecture = useSelector((state) => state.lectures);
   const user = useSelector((state) => state.auth.data);
   const { role } = user;
@@ -65,11 +67,13 @@ function LectureView() {
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '25px' }}>
               <Box width="25%">
-                <Typography variant="caption">{CompeletionPercentage}% Completed</Typography>
+                <Typography variant="caption">
+                  {CompeletionPercentage}% {t('complete')}
+                </Typography>
                 <BorderLinearProgress variant="determinate" value={CompeletionPercentage} />
               </Box>
               <Typography variant="subtitle2">
-                {`${index}/${lecture.data?.length}`} Completed
+                {`${index}/${lecture.data?.length}`} {t('completed')}
               </Typography>
             </Box>
           </Paper>

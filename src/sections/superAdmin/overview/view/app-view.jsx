@@ -124,7 +124,7 @@ export default function AppView() {
             })
           }
         >
-          Train Model
+          {t('trainModel')}
         </Button>
       </Box>
     </Container>

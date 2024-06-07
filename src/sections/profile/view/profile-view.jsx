@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 import { Badge, Avatar } from '@mui/material';
 
 import 'src/sections/editProfile/css/edit.css';
 
 function ProfileView({ user }) {
+  const { t } = useTranslation();
   const { id, avatarUrl, name, email, role, userType, phone, address } = user;
 
   return (
@@ -20,7 +22,7 @@ function ProfileView({ user }) {
                 <div className="card-body">
                   <div className="e-profile">
                     <div className="row">
-                      <h3>Profile</h3>
+                      <h3>{t('profile')}</h3>
                       <div className="photo">
                         <Badge
                           overlap="circular"
@@ -37,7 +39,7 @@ function ProfileView({ user }) {
                     <ul className="nav nav-tabs">
                       <li className="nav-item">
                         <button type="button" className="nav-link active">
-                          Settings
+                          {t('settings')}
                         </button>
                       </li>
                     </ul>
@@ -50,7 +52,7 @@ function ProfileView({ user }) {
                                 <div className="col">
                                   <div className="form-group">
                                     <label htmlFor="fullName" className="w-100">
-                                      Full Name
+                                      {t('fullName')}
                                       <input
                                         id="fullName"
                                         className="form-control"
@@ -64,7 +66,7 @@ function ProfileView({ user }) {
                                 <div className="col">
                                   <div className="form-group">
                                     <label htmlFor="userName" className="w-100">
-                                      User Type
+                                      {t('userType')}
                                       <input
                                         id="userName"
                                         className="form-control"
@@ -82,7 +84,7 @@ function ProfileView({ user }) {
                                 <div className="col">
                                   <div className="form-group">
                                     <label htmlFor="email" className="w-100">
-                                      Email
+                                      {t('email')}
                                       <input
                                         id="email"
                                         className="form-control"
@@ -100,7 +102,7 @@ function ProfileView({ user }) {
                                 <div className="col">
                                   <div className="form-group">
                                     <label className="w-100" htmlFor="phoneNumber">
-                                      Contacts Number
+                                      {t('phone')}
                                       <input
                                         id="phoneNumber"
                                         className="form-control"
@@ -118,7 +120,7 @@ function ProfileView({ user }) {
                                 <div className="col mb-3">
                                   <div className="form-group">
                                     <label className="w-100" htmlFor="address">
-                                      Address
+                                      {t('address')}
                                       <input
                                         id="address"
                                         className="form-control"

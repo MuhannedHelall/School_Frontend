@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
@@ -25,8 +26,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { goHome } from 'src/utils/utilies';
 
-import { login } from 'src/api/authSlice';
 import { bgGradient } from 'src/theme/css';
+import { login, trainModel } from 'src/api/authSlice';
 
 // import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
@@ -40,22 +41,36 @@ export default function LoginView() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const [loginMethod, setLoginMethod] = useState('email');
   const [showPassword, setShowPassword] = useState(false);
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
-  const { data, error, loading } = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.auth);
+  const hasRun = sessionStorage.getItem('hasRun') !== null;
+
+  useEffect(() => {
+    if (!hasRun) {
+      toast.promise(dispatch(trainModel()), {
+        pending: t('modelIsBeingPrepared'),
+        success: t('modelIsPrepared'),
+        error: t('errorOccured'),
+      });
+      sessionStorage.setItem('hasRun', true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
-      navigate(goHome(data.role));
+      navigate(goHome(user.data.role));
     }
-  }, [navigate, data.role]);
+  }, [navigate, user.data.role]);
 
   useEffect(() => {
-    toast.error(error);
-  }, [error]);
+    toast.error(user.error);
+  }, [user.error]);
 
   const validateForm = () => {
     const errs = {};
@@ -83,7 +98,7 @@ export default function LoginView() {
       if (res.meta.requestStatus === 'fulfilled') {
         navigate(goHome(res.payload.user.role, res.payload.user.user.isFirstTimeLogin));
       } else if (res.meta.requestStatus === 'rejected') {
-        toast.error(error);
+        toast.error(user.error);
       }
     }
   };
@@ -95,7 +110,7 @@ export default function LoginView() {
           value={loginData.email}
           onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
           name="email"
-          label="Email address"
+          label={t('email')}
           type="email"
           error={errors.email}
           helperText={errors.email}
@@ -103,7 +118,7 @@ export default function LoginView() {
 
         <TextField
           name="password"
-          label="Password"
+          label={t('password')}
           type={showPassword ? 'text' : 'password'}
           value={loginData.password}
           onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
@@ -134,9 +149,9 @@ export default function LoginView() {
         variant="contained"
         color="inherit"
         onClick={handleLogin}
-        loading={loading}
+        loading={user.loading}
       >
-        Login
+        {t('login')}
       </LoadingButton>
     </Box>
   );
@@ -210,7 +225,7 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">Sign in to Schovators !</Typography>
+          <Typography variant="h4">{t('signInToSchovators!')}</Typography>
 
           {/* <FormControl> */}
           {/* <FormLabel id="login-method">Login Method:</FormLabel> */}
@@ -222,8 +237,8 @@ export default function LoginView() {
             onChange={(e) => setLoginMethod(e.target.value)}
             sx={{ display: 'flex', justifyContent: 'space-evenly' }}
           >
-            <FormControlLabel value="email" control={<Radio />} label="Email" />
-            <FormControlLabel value="camera" control={<Radio />} label="Camera" />
+            <FormControlLabel value="email" control={<Radio />} label={t('email')} />
+            <FormControlLabel value="camera" control={<Radio />} label={t('camera')} />
           </RadioGroup>
           {/* </FormControl> */}
 

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import { Box } from '@mui/material';
 import Stack from '@mui/material/Stack';
@@ -28,6 +29,7 @@ import Iconify from 'src/components/iconify';
 
 export default function GradeTableRow({ user, selected, handleClick }) {
   const { id } = useParams();
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const { grades, student, subject, classroom } = user;
@@ -120,7 +122,7 @@ export default function GradeTableRow({ user, selected, handleClick }) {
               onChange={(e) => setStudentData({ ...studentData, midterm: e.target.value })}
             />
           ) : (
-            grades.midterm || <Label color="error">Not Found</Label>
+            grades.midterm || <Label color="error">{t('notFound')}</Label>
           )}
         </TableCell>
 
@@ -134,7 +136,7 @@ export default function GradeTableRow({ user, selected, handleClick }) {
               onChange={(e) => setStudentData({ ...studentData, final: e.target.value })}
             />
           ) : (
-            grades.final || <Label color="error">Not Found</Label>
+            grades.final || <Label color="error">{t('notFound')}</Label>
           )}
         </TableCell>
 
@@ -148,7 +150,7 @@ export default function GradeTableRow({ user, selected, handleClick }) {
               onChange={(e) => setStudentData({ ...studentData, behavior: e.target.value })}
             />
           ) : (
-            grades.behavior || <Label color="error">Not Found</Label>
+            grades.behavior || <Label color="error">{t('notFound')}</Label>
           )}
         </TableCell>
 
@@ -162,7 +164,7 @@ export default function GradeTableRow({ user, selected, handleClick }) {
               onChange={(e) => setStudentData({ ...studentData, attendance: e.target.value })}
             />
           ) : (
-            grades.attendance || <Label color="error">Not Found</Label>
+            grades.attendance || <Label color="error">{t('notFound')}</Label>
           )}
         </TableCell>
 
@@ -176,19 +178,19 @@ export default function GradeTableRow({ user, selected, handleClick }) {
               onChange={(e) => setStudentData({ ...studentData, total: e.target.value })}
             />
           ) : (
-            grades.total || <Label color="error">Not Found</Label>
+            grades.total || <Label color="error">{t('notFound')}</Label>
           )}
         </TableCell>
 
         <TableCell>
           {edit ? (
             <Box>
-              <Tooltip title="Discard">
+              <Tooltip title={t('discard')}>
                 <IconButton onClick={() => setEdit(false)}>
                   <Iconify icon="bi:x" />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Save">
+              <Tooltip title={t('save')}>
                 <IconButton onClick={saveEditedRecord}>
                   <Iconify icon="mingcute:check-fill" />
                 </IconButton>
@@ -214,12 +216,12 @@ export default function GradeTableRow({ user, selected, handleClick }) {
       >
         <MenuItem onClick={handleEditRecord}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
-          Edit
+          {t('edit')}
         </MenuItem>
 
         <MenuItem onClick={handleDeleteRecord} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Delete
+          {t('delete')}
         </MenuItem>
       </Popover>
     </>

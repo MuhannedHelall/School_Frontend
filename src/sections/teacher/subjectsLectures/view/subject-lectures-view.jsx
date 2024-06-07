@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -34,6 +35,7 @@ function SubjectLecturesView() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const lectures = useSelector((state) => state.lectures);
   const user = useSelector((state) => state.auth.data);
@@ -79,7 +81,7 @@ function SubjectLecturesView() {
               setOpenDialog(true);
             }}
           >
-            New Lecture
+            {t('new')}
           </Button>
         )}
       </Stack>
@@ -108,7 +110,7 @@ function SubjectLecturesView() {
               sx={{ fontWeight: 'medium' }}
               onClick={() => setDropDown((prev) => !prev)}
             >
-              Way to go! Total lectures {lectures.data.length}
+              {t('wayToGo!')} {t('totalLectures')} {lectures.data.length}
               <i className={`fa-solid fa-caret-${dropDown ? 'down' : 'up'} mx-2 cursor-pointer`} />
             </Typography>
           </Box>
@@ -121,7 +123,7 @@ function SubjectLecturesView() {
               <>
                 {lectures.data.length < 1 ? (
                   <h1 style={{ textAlign: 'center', marginTop: '150px' }}>
-                    No lectures to show ...
+                    {t('noLecturesToShow')}
                   </h1>
                 ) : (
                   dropDown &&

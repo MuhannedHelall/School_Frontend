@@ -114,7 +114,7 @@ export default function StudentTableRow({ user, selected, handleClick }) {
       toast.promise(dispatch(createPaymentCodeForStudent({ id, amount })), {
         pending: 'Code is being generated ...',
         success: 'Code has been generated !',
-        error: t('anErrorOccured'),
+        error: t('ErrorOccured'),
       });
     setEdit(0);
   };

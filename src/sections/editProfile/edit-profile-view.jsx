@@ -1,11 +1,12 @@
 import { toast } from 'react-toastify';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { styled } from '@mui/material/styles';
 import { Box, Badge, Avatar } from '@mui/material';
 
-import { editProfile, uploadAvatar, changePassword } from 'src/api/authSlice';
+import { trainModel, editProfile, uploadAvatar, changePassword } from 'src/api/authSlice';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -27,6 +28,7 @@ const VisuallyHiddenInput = styled('input')({
 
 export default function EditProfileView() {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const user = useSelector((state) => state.auth.data);
   const [selected, setSelected] = useState(1);
   //   const [image, setImage] = useState(null);
@@ -69,7 +71,12 @@ export default function EditProfileView() {
     form.append('image', e.target.files[0]);
     toast.promise(dispatch(uploadAvatar({ id: user.user?.id, form })), {
       pending: `Avatar is being uploaded ...`,
-      success: `Avatar is uploaded !`,
+      success: {
+        render() {
+          setTimeout(dispatch(trainModel()), 1000);
+          return `Avatar is uploaded !`;
+        },
+      },
       error: `An Error Occured !`,
     });
   };
@@ -86,7 +93,7 @@ export default function EditProfileView() {
                 <div className="card-body">
                   <div className="e-profile">
                     <div className="row">
-                      <h3>Edit Profile</h3>
+                      <h3>{t('editProfile')}</h3>
                       <div className="photo">
                         <Badge
                           overlap="circular"
@@ -134,7 +141,7 @@ export default function EditProfileView() {
                           className={`${selected === 1 && 'active'} nav-link`}
                           onClick={() => setSelected(1)}
                         >
-                          Settings
+                          {t('settings')}
                         </button>
                       </li>
                       <li className="nav-item">
@@ -143,7 +150,7 @@ export default function EditProfileView() {
                           className={`${selected === 2 && 'active'} nav-link`}
                           onClick={() => setSelected(2)}
                         >
-                          Password
+                          {t('password')}
                         </button>
                       </li>
                       {user.role === 'student' && (
@@ -153,7 +160,7 @@ export default function EditProfileView() {
                             className={`${selected === 3 && 'active'} nav-link`}
                             onClick={() => setSelected(3)}
                           >
-                            Tution Fees
+                            {t('tutionFees')}
                           </button>
                         </li>
                       )}
@@ -168,7 +175,7 @@ export default function EditProfileView() {
                                   <div className="col">
                                     <div className="form-group">
                                       <label htmlFor="fullName" className="w-100">
-                                        Full Name
+                                        {t('fullName')}
                                         <input
                                           id="fullName"
                                           className="form-control"
@@ -184,7 +191,7 @@ export default function EditProfileView() {
                                   <div className="col">
                                     <div className="form-group">
                                       <label htmlFor="userName" className="w-100">
-                                        User Type
+                                        {t('userType')}
                                         <input
                                           id="userName"
                                           className="form-control"
@@ -203,7 +210,7 @@ export default function EditProfileView() {
                                   <div className="col">
                                     <div className="form-group">
                                       <label htmlFor="email" className="w-100">
-                                        Email
+                                        {t('email')}
                                         <input
                                           id="email"
                                           className="form-control"
@@ -223,12 +230,12 @@ export default function EditProfileView() {
                                   <div className="col">
                                     <div className="form-group">
                                       <label className="w-100" htmlFor="phoneNumber">
-                                        Contacts Number
+                                        {t('phone')}
                                         <input
                                           id="phoneNumber"
                                           className="form-control"
                                           type="text"
-                                          placeholder="661-724-7734"
+                                          placeholder="+20 111 379 9438"
                                           value={userData.phone}
                                           onChange={(e) =>
                                             setUserData({ ...userData, phone: e.target.value })
@@ -243,7 +250,7 @@ export default function EditProfileView() {
                                   <div className="col mb-3">
                                     <div className="form-group">
                                       <label className="w-100" htmlFor="address">
-                                        Address
+                                        {t('address')}
                                         <input
                                           id="address"
                                           className="form-control"
@@ -263,7 +270,7 @@ export default function EditProfileView() {
                             <div className="row">
                               <div className="col d-flex justify-content-end">
                                 <button className="btn btn-primary" type="submit">
-                                  Save Changes
+                                  {t('save')}
                                 </button>
                               </div>
                             </div>
@@ -275,13 +282,13 @@ export default function EditProfileView() {
                                 <div className="row">
                                   <div className="col-12 col-sm-6 mb-3">
                                     <div className="mb-2">
-                                      <b>Change Password</b>
+                                      <b>{t('changePassword')}</b>
                                     </div>
                                     <div className="row">
                                       <div className="col">
                                         <div className="form-group">
                                           <label className="w-100" htmlFor="curPass">
-                                            Current Password
+                                            {t('currentPassword')}
                                             <input
                                               id="curPass"
                                               className="form-control"
@@ -303,7 +310,7 @@ export default function EditProfileView() {
                                       <div className="col">
                                         <div className="form-group">
                                           <label className="w-100" htmlFor="newPass">
-                                            New Password
+                                            {t('newPassword')}
                                             <input
                                               id="newPass"
                                               className="form-control"
@@ -325,8 +332,7 @@ export default function EditProfileView() {
                                       <div className="col">
                                         <div className="form-group">
                                           <label className="w-100" htmlFor="conPass">
-                                            Confirm{' '}
-                                            <span className="d-none d-xl-inline">Password</span>
+                                            {t('confirmPassword')}
                                             <input
                                               id="conPass"
                                               className="form-control"
@@ -349,7 +355,7 @@ export default function EditProfileView() {
                                 <div className="row">
                                   <div className="col d-flex justify-content-end">
                                     <button className="btn btn-primary" type="submit">
-                                      Save Changes
+                                      {t('save')}
                                     </button>
                                   </div>
                                 </div>
@@ -361,24 +367,24 @@ export default function EditProfileView() {
                                     {user.payments?.map((code) => (
                                       <div className="form-group" key={code.paymentCode}>
                                         <label className="w-100 mt-2" htmlFor="amount">
-                                          Amount
+                                          {t('amount')}
                                           <input
                                             id="amount"
                                             className="form-control"
                                             type="text"
-                                            placeholder="Amount"
+                                            placeholder={t('amount')}
                                             value={code.amount}
                                             disabled
                                           />
                                         </label>
 
                                         <label className="w-100 mt-2" htmlFor="payment-code">
-                                          Payment <span className="d-none d-xl-inline">Code</span>
+                                          {t('paymentCode')}
                                           <input
                                             id="payment-code"
                                             className="form-control"
                                             type="text"
-                                            placeholder="Payment Code"
+                                            placeholder={t('paymentCode')}
                                             value={code.paymentCode}
                                             disabled
                                           />
@@ -386,20 +392,20 @@ export default function EditProfileView() {
 
                                         <div className="form-group mt-2">
                                           <label htmlFor="paid-fee">
-                                            Paid:
+                                            {t('paidWithColumn')}
                                             <Label
                                               id="paid-fee"
                                               color={code.isPaid ? 'success' : 'error'}
                                               className="mx-2"
                                             >
-                                              {code.isPaid ? 'PAID' : 'NOT PAID'}
+                                              {code.isPaid ? t('PAID') : t('NOTPAID')}
                                             </Label>
                                           </label>
                                         </div>
 
                                         <div className="form-group mt-2">
                                           <label htmlFor="creation-date">
-                                            Creation Date:
+                                            {t('creationDateWithColumn')}
                                             <Label id="creation-date" className="mx-2">
                                               {new Date(code.createdAt)?.toLocaleString()}
                                             </Label>

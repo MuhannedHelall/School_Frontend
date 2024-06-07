@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -19,6 +20,7 @@ import { Loader } from 'src/sections/loader';
 
 export default function SubjectsView() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const user = useSelector((state) => state.auth);
   const colors = [
     'red',
@@ -36,7 +38,7 @@ export default function SubjectsView() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Subjects</Typography>
+        <Typography variant="h4">{t('subjects')}</Typography>
       </Stack>
 
       {user.loading ? (
@@ -44,7 +46,7 @@ export default function SubjectsView() {
       ) : (
         <Box>
           {user.data?.subject?.length < 1 ? (
-            <h1 style={{ textAlign: 'center', marginTop: '150px' }}>No subjects to show ...</h1>
+            <h1 style={{ textAlign: 'center', marginTop: '150px' }}>{t('noSubjectsToShow')}</h1>
           ) : (
             <Grid container spacing={3}>
               {user.data?.subject?.map((item) => (
@@ -138,7 +140,7 @@ export default function SubjectsView() {
                           }}
                           onClick={() => navigate(`${route.teacher.subjectLectures}${item.id}`)}
                         >
-                          <Typography variant="caption">lectures</Typography>
+                          <Typography variant="caption">{t('lectures')}</Typography>
                           <Iconify width={16} icon="mdi:lecture" sx={{ ml: 0.5 }} />
                         </Stack>
                         <Stack
@@ -154,7 +156,7 @@ export default function SubjectsView() {
                           }}
                           onClick={() => navigate(`${route.teacher.subjectGrades}${item.id}`)}
                         >
-                          <Typography variant="caption">grades</Typography>
+                          <Typography variant="caption">{t('subjectGrades')}</Typography>
                           <Iconify
                             width={16}
                             icon="healthicons:i-exam-qualification-outline"

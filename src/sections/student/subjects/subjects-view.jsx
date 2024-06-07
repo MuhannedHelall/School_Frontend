@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
@@ -23,6 +24,7 @@ import { Loader } from 'src/sections/loader';
 import GradeAddDialog from 'src/sections/teacher/subjectsGrades/grade-add-dialog';
 
 export default function SubjectsView() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.data);
@@ -48,7 +50,7 @@ export default function SubjectsView() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Subjects</Typography>
+        <Typography variant="h4">{t('subjects')}</Typography>
       </Stack>
 
       {subjects.loading ? (
@@ -56,7 +58,7 @@ export default function SubjectsView() {
       ) : (
         <Box>
           {subjects.length < 1 ? (
-            <h1 style={{ textAlign: 'center', marginTop: '150px' }}>No subjects to show ...</h1>
+            <h1 style={{ textAlign: 'center', marginTop: '150px' }}>{t('noSubjectsToShow')}</h1>
           ) : (
             <Grid container spacing={3}>
               {subjects.data.map((item) => (
@@ -110,7 +112,7 @@ export default function SubjectsView() {
                         component="div"
                         sx={{ mb: 1, color: 'text.disabled' }}
                       >
-                        {item.teacher?.name || 'Not Assigned'}
+                        {item.teacher?.name || t('notAssigned')}
                       </Typography>
 
                       <Link
@@ -149,7 +151,7 @@ export default function SubjectsView() {
                           }}
                           onClick={() => navigate(`${route.student.subjectLectures}${item?.id}`)}
                         >
-                          <Typography variant="caption">lectures</Typography>
+                          <Typography variant="caption">{t('lectures')}</Typography>
                           <Iconify width={16} icon="mdi:lecture" sx={{ ml: 0.5 }} />
                         </Stack>
                         <Stack
@@ -193,7 +195,7 @@ export default function SubjectsView() {
                             )
                           }
                         >
-                          <Typography variant="caption">grades</Typography>
+                          <Typography variant="caption">{t('grades')}</Typography>
                           <Iconify
                             width={16}
                             icon="healthicons:i-exam-qualification-outline"

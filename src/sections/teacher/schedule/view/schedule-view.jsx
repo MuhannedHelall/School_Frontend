@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import {
   Paper,
@@ -15,7 +16,12 @@ import {
 import { Loader } from 'src/sections/loader';
 
 function ScheduleView({ title, data = {} }) {
+  const lang = useSelector((state) => state.language.value);
   const daysOfWeek = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
+  const renderDays =
+    lang === 'ar'
+      ? ['السبت', 'الأحد', 'الأثنين', 'الثلاثاء', 'الأربعاء', 'الخميس']
+      : ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
   const timesOfDay = [
     { period: 1, start: '08:00 AM', end: '09:30 AM' },
     { period: 2, start: '09:30 AM', end: '11:00 AM' },
@@ -77,9 +83,9 @@ function ScheduleView({ title, data = {} }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {daysOfWeek.map((day) => (
+              {daysOfWeek.map((day, i) => (
                 <TableRow key={day}>
-                  <TableCell sx={styles.timeCell}>{day}</TableCell>
+                  <TableCell sx={styles.timeCell}>{renderDays[i]}</TableCell>
                   {timesOfDay.map((time) => {
                     let scheduleItem = {};
                     if (Array.isArray(data.data)) {

@@ -13,7 +13,7 @@ import StudentTableRow from '../student-table-row';
 
 // -----------------------------------------------------------------------
 const Labels = [
-  { id: 'name', label: { en: 'Name', ar: 'الاسام' } },
+  { id: 'name', label: { en: 'Name', ar: 'الأسم' } },
   { id: 'class', label: { en: 'class', ar: 'الفصل' } },
   { id: 'status', label: { en: 'Status', ar: 'الحالة' } },
   { id: 'action', label: { en: 'Action', ar: 'التصرف' }, align: 'center' },

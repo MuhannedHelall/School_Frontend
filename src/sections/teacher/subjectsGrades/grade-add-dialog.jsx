@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Select from '@mui/material/Select';
@@ -22,6 +23,7 @@ import Iconify from 'src/components/iconify';
 
 export default function GradeAddDialog({ open, setOpen }) {
   const { id } = useParams();
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const students = useSelector((state) => state.student.data);
@@ -66,27 +68,25 @@ export default function GradeAddDialog({ open, setOpen }) {
         {user.role === 'student' ? (
           <>
             <Iconify icon="eva:eye-fill" />
-            View your grades
+            {t('viewGrades')}
           </>
         ) : (
           <>
             <Iconify icon="eva:plus-fill" />
-            Add New Grade
+            {t('addNewGrade')}
           </>
         )}
       </DialogTitle>
       <DialogContent>
         {user.role !== 'student' && (
           <>
-            <DialogContentText>
-              Please fill up the form to add a new student grade.
-            </DialogContentText>
+            <DialogContentText>{t('fillFormToAddNewStudentGrade')}</DialogContentText>
             <FormControl fullWidth required style={{ marginTop: '10px' }}>
-              <InputLabel id="student-select-label">Student</InputLabel>
+              <InputLabel id="student-select-label">{t('student')}</InputLabel>
               <Select
                 labelId="student-select-label"
                 id="student-select"
-                label="Student *"
+                label={`${t('student')} *`}
                 value={studentGrades.student_id}
                 onChange={(e) => setStudentGrades({ ...studentGrades, student_id: e.target.value })}
               >
@@ -102,7 +102,7 @@ export default function GradeAddDialog({ open, setOpen }) {
 
         <TextField
           margin="dense"
-          label="Midterm *"
+          label={`${t('midterm')} *`}
           type="number"
           value={user.role === 'student' ? grades[0]?.grades?.midterm : studentGrades.midterm}
           onChange={(e) => setStudentGrades({ ...studentGrades, midterm: e.target.value })}
@@ -111,7 +111,7 @@ export default function GradeAddDialog({ open, setOpen }) {
         />
         <TextField
           margin="dense"
-          label="Final *"
+          label={`${t('final')} *`}
           type="number"
           value={user.role === 'student' ? grades[0]?.grades?.final : studentGrades.final}
           onChange={(e) => setStudentGrades({ ...studentGrades, final: e.target.value })}
@@ -120,7 +120,7 @@ export default function GradeAddDialog({ open, setOpen }) {
         />
         <TextField
           margin="dense"
-          label="Attendance *"
+          label={`${t('attendance')} *`}
           type="number"
           value={user.role === 'student' ? grades[0]?.grades?.attendance : studentGrades.attendance}
           onChange={(e) => setStudentGrades({ ...studentGrades, attendance: e.target.value })}
@@ -129,7 +129,7 @@ export default function GradeAddDialog({ open, setOpen }) {
         />
         <TextField
           margin="dense"
-          label="Behavior *"
+          label={`${t('behavior')} *`}
           type="number"
           value={user.role === 'student' ? grades[0]?.grades?.behavior : studentGrades.behavior}
           onChange={(e) => setStudentGrades({ ...studentGrades, behavior: e.target.value })}
@@ -138,7 +138,7 @@ export default function GradeAddDialog({ open, setOpen }) {
         />
         <TextField
           margin="dense"
-          label="Total *"
+          label={`${t('total')} *`}
           type="number"
           value={user.role === 'student' ? grades[0]?.grades?.total : studentGrades.total}
           onChange={(e) => setStudentGrades({ ...studentGrades, total: e.target.value })}
@@ -147,8 +147,8 @@ export default function GradeAddDialog({ open, setOpen }) {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Close</Button>
-        {grades[0]?.grades?.total ? '' : <Button onClick={handleAdd}>Add</Button>}
+        <Button onClick={handleClose}>{t('discard')}</Button>
+        {!grades[0]?.grades?.total && <Button onClick={handleAdd}>{t('save')}</Button>}
       </DialogActions>
     </Dialog>
   );

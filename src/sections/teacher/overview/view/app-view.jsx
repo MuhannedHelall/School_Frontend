@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
@@ -22,9 +23,11 @@ import AppWidgetSummary from 'src/sections/superAdmin/overview/app-widget-summar
 export default function AppView() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [selected, setSelected] = useState(0);
   const { data, error, loading } = useSelector((state) => state.dashboard);
+  //   const lang = useSelector((state) => state.language.value);
   const teacher = useSelector((state) => state.auth.data);
   const classes = useSelector((state) => state.class) || {};
   const vark = useSelector((state) => state.vark) || {};
@@ -33,7 +36,8 @@ export default function AppView() {
   let values = [];
   let indexOfMaxLabel = null;
   //   removing the id from the object to dispose the id value
-  if (vark.data.length) {
+  if (vark.data.length > 0) {
+    console.log(vark.data);
     keys = Object.keys(vark.data[selected]).splice(1, 5);
     values = Object.values(vark.data[selected]).splice(1, 5);
     indexOfMaxLabel = values.indexOf(Math.max(...values)) || null;
@@ -42,15 +46,15 @@ export default function AppView() {
   const getLabel = (labelInitial) => {
     switch (labelInitial) {
       case 'v':
-        return 'Visual';
+        return t('visual');
       case 'a':
-        return 'Auditory';
+        return t('auditory');
       case 'r':
-        return 'Read & Write';
+        return t('read&write');
       case 'k':
-        return 'Kinesthetic';
+        return t('kinesthetic');
       default:
-        return 'Undefined';
+        return t('undefined');
     }
   };
 
@@ -67,7 +71,7 @@ export default function AppView() {
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Hi, Welcome back 👋
+        {t('greeting')}
       </Typography>
 
       {error &&
@@ -90,7 +94,7 @@ export default function AppView() {
           <Grid container spacing={3} paddingY={5}>
             <Grid xs={12} sm={6}>
               <AppWidgetSummary
-                title="Periods Today"
+                title={t('periodsToday')}
                 total={data.numOfPeriodsToday}
                 color="info"
                 icon={<img alt="icon" src="/assets/icons/glass/employee.png" />}
@@ -107,7 +111,7 @@ export default function AppView() {
 
             <Grid xs={12} sm={6}>
               <AppWidgetSummary
-                title="Subjects"
+                title={t('subjects')}
                 total={data.numOfSubjects}
                 color="warning"
                 icon={<img alt="icon" src="/assets/icons/glass/students.png" />}
@@ -127,13 +131,13 @@ export default function AppView() {
             <Loader />
           ) : (
             <>
-              <Typography variant="h3">VARK Results</Typography>
+              <Typography variant="h3">{t('varkResults')}</Typography>
 
               <Grid container spacing={2} paddingY={5}>
                 <Grid container xs={12} sm={10} spacing={2}>
                   <Grid xs={12} md={6}>
                     <AppWidgetSummary
-                      title="Visual"
+                      title={t('visual')}
                       total={vark.data[selected]?.v}
                       color="info"
                       icon={<img alt="icon" src="/assets/icons/glass/visual.png" />}
@@ -142,7 +146,7 @@ export default function AppView() {
                   </Grid>
                   <Grid xs={12} md={6}>
                     <AppWidgetSummary
-                      title="Auditory"
+                      title={t('auditory')}
                       total={vark.data[selected]?.a}
                       color="info"
                       icon={<img alt="icon" src="/assets/icons/glass/auditory.png" />}
@@ -151,7 +155,7 @@ export default function AppView() {
                   </Grid>
                   <Grid xs={12} md={6}>
                     <AppWidgetSummary
-                      title="Read & Write"
+                      title={t('read&write')}
                       total={vark.data[selected]?.r}
                       color="info"
                       icon={<img alt="icon" src="/assets/icons/glass/read_write.png" />}
@@ -160,7 +164,7 @@ export default function AppView() {
                   </Grid>
                   <Grid xs={12} md={6}>
                     <AppWidgetSummary
-                      title="Kinesthetic"
+                      title={t('kinesthetic')}
                       total={vark.data[selected]?.k}
                       color="info"
                       icon={<img alt="icon" src="/assets/icons/glass/kinesthetic.png" />}
@@ -203,15 +207,15 @@ export default function AppView() {
               </Grid>
 
               <Typography variant="subtitle1" textAlign="center">
-                Most of students in{' '}
+                {t('mostOfStudentsIn')}{' '}
                 <Typography variant="span" fontWeight="bolder">
                   {`${classes.data[selected]?.grade}/${classes.data[selected]?.class_number}`}
                 </Typography>{' '}
-                are{' '}
+                {t('are')}{' '}
                 <Typography variant="span" fontWeight="bolder">
                   {getLabel(keys[indexOfMaxLabel])}
                 </Typography>{' '}
-                learners.
+                {t('learners')}
               </Typography>
             </>
           )}

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Container from '@mui/material/Container';
@@ -14,7 +15,7 @@ import AppWidgetSummary from 'src/sections/superAdmin/overview/app-widget-summar
 // ----------------------------------------------------------------------
 
 export default function AppView() {
-  //   const data = {};
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, data } = useSelector((state) => state.dashboard);
@@ -26,7 +27,7 @@ export default function AppView() {
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Hi, Welcome back 👋
+        {t('greeting')}
       </Typography>
       {loading ? (
         <Loader />
@@ -34,7 +35,7 @@ export default function AppView() {
         <Grid container spacing={3} padding={10}>
           <Grid xs={12} sm={6}>
             <AppWidgetSummary
-              title="Subjects"
+              title={t('subjects')}
               total={data?.numberOfSubjects || 0}
               color="warning"
               icon={<img alt="icon" src="/assets/icons/glass/students.png" />}
@@ -51,7 +52,7 @@ export default function AppView() {
 
           <Grid xs={12} sm={6}>
             <AppWidgetSummary
-              title="Lectures Today"
+              title={t('lecturesToday')}
               total={data?.todaysLectures || 0}
               color="info"
               icon={<img alt="icon" src="/assets/icons/glass/departments2.png" />}

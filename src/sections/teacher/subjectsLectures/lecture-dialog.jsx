@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Radio from '@mui/material/Radio';
@@ -36,6 +37,7 @@ const VisuallyHiddenInput = styled('input')({
 });
 export default function LectureDialog({ open, setOpen, updateData, setUpdateData }) {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { id } = useParams();
   const user = useSelector((state) => state.auth.data);
   const [label, setLabel] = useState('url');
@@ -108,18 +110,20 @@ export default function LectureDialog({ open, setOpen, updateData, setUpdateData
     <Dialog open={open} onClose={handleClose} fullWidth>
       <DialogTitle style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
         <Iconify icon={`${updateData?.id ? 'bi:pencil' : 'eva:plus-fill'}`} />
-        {updateData?.id ? 'Update Current' : 'Add a new'} Lecture
+        {/* // 'Update Current Lecture' */}
+        {updateData?.id ? t('updateCurrentLecture') : t('addNewLecture')}
+        {/* // 'Add a new Lecture' */}
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Please fill up the form to {updateData?.id ? 'update the current ' : 'add a new '}
-          lecture.
+          {/* 'Please fill up the form to update the current lecture' */}
+          {updateData?.id ? t('fillFormToUpdateLecture') : t('fillFormToAddLecture')}
+          {/* 'Please fill up the form to add a new lecture' */}
         </DialogContentText>
-
         <TextField
           autoFocus
           margin="dense"
-          label="Title"
+          label={t('title')}
           type="text"
           value={updateData?.title ? updateData.title : lectureData.title}
           onChange={
@@ -129,10 +133,9 @@ export default function LectureDialog({ open, setOpen, updateData, setUpdateData
           }
           fullWidth
         />
-
         <TextField
           margin="dense"
-          label="Description"
+          label={t('description')}
           type="text"
           value={updateData?.description ? updateData.description : lectureData.description}
           onChange={
@@ -142,7 +145,6 @@ export default function LectureDialog({ open, setOpen, updateData, setUpdateData
           }
           fullWidth
         />
-
         <FormControl>
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
@@ -151,15 +153,14 @@ export default function LectureDialog({ open, setOpen, updateData, setUpdateData
             onChange={(e) => setLabel(e.target.value)}
             row
           >
-            <FormControlLabel value="url" control={<Radio />} label="URL" />
-            <FormControlLabel value="video" control={<Radio />} label="Video" />
+            <FormControlLabel value="url" control={<Radio />} label={t('url')} />
+            <FormControlLabel value="video" control={<Radio />} label={t('video')} />
           </RadioGroup>
         </FormControl>
-
         {label === 'url' ? (
           <TextField
             margin="dense"
-            label="URL"
+            label={t('url')}
             type="text"
             value={updateData?.url ? updateData.url : lectureData.url}
             onChange={
@@ -177,16 +178,16 @@ export default function LectureDialog({ open, setOpen, updateData, setUpdateData
             size="large"
             sx={{ display: 'block', textAlign: 'center' }}
           >
-            Upload file
+            {t('uploadFile')}
             <VisuallyHiddenInput type="file" onChange={handleFileChange} />
           </Button>
         )}
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose}>{t('discard')}</Button>
         <Button onClick={updateData?.id ? handleUpdate : handleAdd}>
-          {updateData?.id ? 'Update' : 'Add'}
+          {updateData?.id ? t('edit') : t('save')}
         </Button>
       </DialogActions>
     </Dialog>
