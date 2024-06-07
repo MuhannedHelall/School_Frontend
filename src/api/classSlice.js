@@ -19,6 +19,11 @@ export const getClasses = createAsyncThunk('class/getClasses', async () => {
   return response;
 });
 
+export const getTeacherClasses = createAsyncThunk('class/getTeacherClasses', async (id) => {
+  const response = await authAPI(`getClassesForTeacher/${id}`);
+  return response;
+});
+
 export const getClass = createAsyncThunk('class/getClass', async (id) => {
   const response = await authAPI(`class-rooms/${id}`);
   return response;
@@ -73,6 +78,21 @@ const classSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(getClasses.rejected, (state, action) => {
+        state.loading = false;
+        state.data = [];
+        state.error = action.error.message || 'Something went wrong';
+        state.success = '';
+      });
+
+    builder
+      .addCase(getTeacherClasses.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getTeacherClasses.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(getTeacherClasses.rejected, (state, action) => {
         state.loading = false;
         state.data = [];
         state.error = action.error.message || 'Something went wrong';

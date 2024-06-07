@@ -10,7 +10,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
 import route from 'src/routes';
-import { getClasses } from 'src/api/classSlice';
+import { getTeacherClasses } from 'src/api/classSlice';
 import { getVarkResultsForTeacher } from 'src/api/varkSlice';
 import { getTeacherDashboardData } from 'src/api/dashboardSlice';
 
@@ -37,7 +37,6 @@ export default function AppView() {
   let indexOfMaxLabel = null;
   //   removing the id from the object to dispose the id value
   if (vark.data.length > 0) {
-    console.log(vark.data);
     keys = Object.keys(vark.data[selected]).splice(1, 5);
     values = Object.values(vark.data[selected]).splice(1, 5);
     indexOfMaxLabel = values.indexOf(Math.max(...values)) || null;
@@ -65,8 +64,8 @@ export default function AppView() {
     if (Object.keys(data).length < 1) dispatch(getTeacherDashboardData());
   }, [dispatch, data]);
   useEffect(() => {
-    if (classes.data?.length < 1) dispatch(getClasses());
-  }, [dispatch, classes.data]);
+    if (classes.data?.length < 1) dispatch(getTeacherClasses(teacher.id));
+  }, [dispatch, classes.data, teacher.id]);
 
   return (
     <Container maxWidth="xl">
