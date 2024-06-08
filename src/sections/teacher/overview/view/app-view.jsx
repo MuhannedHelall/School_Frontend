@@ -39,7 +39,7 @@ export default function AppView() {
   if (vark.data.length > 0) {
     keys = Object.keys(vark.data[selected]).splice(1, 5);
     values = Object.values(vark.data[selected]).splice(1, 5);
-    indexOfMaxLabel = values.indexOf(Math.max(...values)) || null;
+    indexOfMaxLabel = values.indexOf(Math.max(...values)) ?? null;
   }
 
   const getLabel = (labelInitial) => {
