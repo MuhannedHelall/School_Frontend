@@ -58,10 +58,10 @@ export default function TutionDialog({ open, setOpen, title }) {
           Please fill up the form to add a new {title.slice(0, title.length - 1).toLowerCase()}.
         </DialogContentText>
         <FormControl fullWidth required style={{ marginTop: '10px' }}>
-          <InputLabel id="class-select-label">Class</InputLabel>
+          <InputLabel id="grade-select-label">Grade</InputLabel>
           <Select
-            labelId="class-select-label"
-            id="class-select"
+            labelId="grade-select-label"
+            id="grade-select"
             label="grade *"
             value={studentData.grade}
             onChange={(e) => setStudentData({ ...studentData, grade: e.target.value })}

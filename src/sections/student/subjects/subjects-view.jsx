@@ -57,7 +57,7 @@ export default function SubjectsView() {
         <Loader />
       ) : (
         <Box>
-          {subjects.length < 1 ? (
+          {subjects.data.length < 1 ? (
             <h1 style={{ textAlign: 'center', marginTop: '150px' }}>{t('noSubjectsToShow')}</h1>
           ) : (
             <Grid container spacing={3}>

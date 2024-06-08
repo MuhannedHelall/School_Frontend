@@ -64,7 +64,12 @@ export default function LectureDialog({ open, setOpen, updateData, setUpdateData
       setLectureData((prev) => ({ ...prev, video: null }));
       toast.promise(dispatch(addLecture(lectureData)), {
         pending: 'Lecture is being added ...',
-        success: 'Lecture added successfully !',
+        success: {
+          render() {
+            dispatch(getLectures(id));
+            return 'Lecture added successfully !';
+          },
+        },
         error: 'An Error Occured !',
       });
     } else {
@@ -77,7 +82,12 @@ export default function LectureDialog({ open, setOpen, updateData, setUpdateData
       formData.append('video', lectureData.video);
       toast.promise(dispatch(addLectureWithVideo(formData)), {
         pending: 'Lecture is being added ...',
-        success: 'Lecture added successfully !',
+        success: {
+          render() {
+            dispatch(getLectures(id));
+            return 'Lecture added successfully !';
+          },
+        },
         error: 'An Error Occured !',
       });
     }
@@ -87,10 +97,10 @@ export default function LectureDialog({ open, setOpen, updateData, setUpdateData
       url: '',
       video: '',
       description: '',
-      employee_id: '',
-      subject_id: '',
+      employee_id: user.id,
+      subject_id: id,
     });
-    dispatch(getLectures(id));
+    // dispatch(getLectures(id));
   };
 
   const handleUpdate = () => {
